@@ -25,8 +25,8 @@ Filesystem      Size  Used Avail Use% Mounted on
 que aquele caminho está — então `df -h .` é o jeito mais rápido de perguntar "estou prestes a ficar
 sem espaço *aqui*".
 
-**Size, Used e Avail não fecham a conta, e isso é normal.** 11 usados mais 27 disponíveis não são
-252. Numa instalação ext4 comum a diferença é pequena e tem uma causa principal: **5% do sistema de
+**Size, Used e Avail não fecham a conta, e isso é normal.** 9,6 usados mais 30 disponíveis não são 252.
+Numa instalação ext4 comum a diferença é pequena e tem uma causa principal: **5% do sistema de
 arquivos é reservado para o root**, para que um disco cheio para todo mundo ainda deixe ao
 administrador espaço para entrar e consertar. É também por isso que o `Use%` é calculado contra o
 que *você* pode usar, e não contra o `Size`.

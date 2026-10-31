@@ -149,7 +149,7 @@ o único registro é o próprio arquivo.
 ## Contêineres, que são a outra resposta
 
 O motivo de o `docker` aparecer nas transcrições da seção 09 é que contêineres são como muita gente
-hoje evita esta seção inteira: a aplicação e as dependências dela são empacotadas juntas, nas versões
+hoje evita esta seção inteira. A aplicação e as dependências dela são empacotadas juntas, nas versões
 que a aplicação escolheu, e o gerenciador de pacotes do host é responsável por exatamente uma coisa —
 o runtime de contêiner.
 

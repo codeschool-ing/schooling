@@ -80,7 +80,7 @@ count: 10
 first: a   second: b   tenth: j
 ```
 
-And `$2` printed nothing at all in the first run, because there was no second argument — the same
+And `${10}` printed nothing at all in the first run, because there was no tenth argument — the same
 silent empty expansion as any other unset variable.
 
 ## `"$@"` versus `$@` versus `"$*"`

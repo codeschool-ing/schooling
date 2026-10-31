@@ -38,7 +38,8 @@ apt install --dry-run thing        # the whole plan, without doing any of it
 ```
 
 **O `--dry-run` é o hábito que vale formar.** Ele imprime exatamente o parágrafo que a seção 04 te
-ensinou a ler, e não muda nada. Numa máquina de produção é a diferença entre saber e descobrir.
+ensinou a ler, e não muda nada. Numa máquina de produção, é assim que você lê o plano antes que qualquer
+parte dele aconteça.
 
 O `rdepends` — dependências reversas — responde "o que quebra se eu remover isto", que é a pergunta
 que você quer antes de digitar `apt remove` numa biblioteca.

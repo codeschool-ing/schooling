@@ -81,8 +81,8 @@ The fix is a pair of flags that must be used together:
 
 A null byte cannot appear in a filename, which is why this is the only separator that is always
 safe. **`find … -print0 | xargs -0 …` is the form to type by default**, not the one to remember when
-a filename has a space in it — because the filename with a space in it will be somebody else's, on
-a day you are not expecting it.
+a filename has a space in it. The filename with a space in it will be somebody else's, on a day you
+are not expecting it.
 
 And notice how the failure behaved: it **half worked**. `plain.txt` was counted, the total said 1,
 and a script checking only the exit status of the pipeline would have seen the failure — but a
@@ -147,5 +147,5 @@ find . -name '*.log' -exec gzip {} +             # find already has the names
 printf '%s\n' a b | xargs -I{} mv {} {}.bak      # the argument is not last
 ```
 
-**The second line is the one to make a habit**, because it is correct in every case and costs eight
-characters.
+**The second line is the one to make a habit**, because it is correct in every case and costs two
+flags.

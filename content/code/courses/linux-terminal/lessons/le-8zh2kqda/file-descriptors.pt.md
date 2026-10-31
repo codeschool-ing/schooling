@@ -117,7 +117,7 @@ ana@vm:~/work$ df -h /tmp | tail -1
 Leia as três linhas do `df`. **13G, depois 13G depois de apagar dois gigabytes, e depois 11G depois
 de matar um processo que nem estava escrevendo nele.**
 
-A seção 10 da aula 3 disse que o `rm` remove um nome, não um arquivo. Esta é a consequência: a
+A seção 11 da aula 3 disse que o `rm` remove um nome, não um arquivo. Esta é a consequência: a
 entrada de diretório sumiu — o `ls` não a acha — e os dados continuam lá porque **um descritor também
 é uma referência**. O kernel libera os blocos quando o último nome e o último descritor aberto
 sumiram, e não antes.

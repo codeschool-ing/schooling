@@ -96,7 +96,7 @@ process_api─┬─4
             └─10*[{process_api}]
 ```
 
-Essa não é a árvore de um servidor, e vale dizer o que ela é em vez de arrumá-la. **As transcrições
+Essa não é a árvore de um servidor. **As transcrições
 deste curso são feitas num sandbox**, e é assim que um sandbox se parece por dentro: um supervisor
 no PID 1, a ferramenta que o dirige e — no fim da cadeia — o shell que rodou o `pstree`. Numa
 máquina que deu boot normalmente você veria o `systemd` na raiz e uma dúzia de serviços pendurados

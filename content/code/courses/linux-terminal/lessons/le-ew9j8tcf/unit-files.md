@@ -140,7 +140,7 @@ Restart=always
 RestartSec=10
 ```
 
-Four lines instead of forty, and the package's unit keeps updating underneath.
+Three lines instead of forty, and the package's unit keeps updating underneath.
 
 `systemctl edit --full` gives you the whole file to override instead, when a drop-in will not do.
 And `systemctl edit` runs `daemon-reload` for you afterwards, which is the step section 09 said
@@ -180,8 +180,7 @@ root@vm:~# echo $?
 1
 ```
 
-Ignore the IPv6 line — that is this machine's kernel, not your unit, and it appears whatever you
-verify. The other three are the findings, and **read the last word of the first two: `ignoring`.**
+Three findings, and **read the last word of the first two: `ignoring`.**
 
 A misspelled key name is not an error. systemd drops the line and carries on, so a service with
 `Descriptoin=` has no description and no complaint, and a service with `Restart=maybe` does not
@@ -200,7 +199,7 @@ root@vm:~# echo $?
 0
 ```
 
-The one line is the same machine noise as before, and the exit status is `0`. **That is the
+Nothing is printed, and the exit status is `0`. **That is the
 answer** — and it is why a script checks `$?` rather than whether anything was printed.
 
 **Run it on every unit you write, before you start it.** It costs a second.

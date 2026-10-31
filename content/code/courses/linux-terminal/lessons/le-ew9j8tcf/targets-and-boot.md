@@ -41,8 +41,8 @@ systemctl list-units --type=target          # what is active
 ```
 
 **`set-default` is one symlink**, exactly like section 09's: `/etc/systemd/system/default.target`
-pointing at the one you chose. Everything in systemd is a symlink somewhere, and once you see that
-the design stops being mysterious.
+pointing at the one you chose. Enabling, disabling and the default target are all symlinks, and once you see that the design
+stops being mysterious.
 
 **`isolate` is not `start`.** It starts that target and **stops everything not in it**, which on a
 running server means dropping services out from under whoever is using them. Useful in a rescue

@@ -3,12 +3,11 @@ title: Emacs, honestamente e brevemente
 version: 2
 ---
 
-O emacs é o terceiro editor, e o enquadramento honesto é: é improvável que você o
-encontre por acidente. Ele não vem instalado por padrão em nenhuma distribuição
+O emacs é o terceiro editor, e é improvável que você o encontre por acidente. Ele não vem instalado por padrão em nenhuma distribuição
 mainstream, nenhuma ferramenta o abre a não ser que você tenha pedido, e nada
 neste curso o exige.
 
-Ele está nesta aula porque é genuinamente uma terceira ideia, e porque se você
+Ele está nesta aula porque é uma terceira ideia, e porque se você
 herdar uma máquina em que alguém definiu `EDITOR=emacs` você não deve ficar
 perdido.
 

@@ -9,18 +9,15 @@ different program that you do not know.
 
 ## The ten lines
 
-```vim
-" ~/.vimrc — the minimum
-set number              " line numbers
-set ignorecase          " searching is case-insensitive
-set smartcase           " unless the pattern has a capital in it
-set incsearch           " jump to matches as you type
-set hlsearch            " highlight every match
-set expandtab           " the Tab key inserts spaces
-set tabstop=4           " a Tab character displays as four columns
-set shiftwidth=4        " > and < indent by four
-set scrolloff=3         " keep three lines visible above and below the cursor
-syntax on               " colour, if the terminal has it
+```schooling-example
+{"language": "vim", "file": "~/.vimrc", "parts": [
+ {"code": "\" ~/.vimrc — the minimum\nset number", "note": "Line numbers down the left."},
+ {"code": "set ignorecase\nset smartcase", "note": "Searching is case-insensitive, unless the pattern has a capital in it."},
+ {"code": "set incsearch\nset hlsearch", "note": "Jump to matches as you type, and highlight every match."},
+ {"code": "set expandtab\nset tabstop=4\nset shiftwidth=4", "note": "The Tab key inserts spaces, a Tab character displays as four columns, and `>` and `<` indent by four."},
+ {"code": "set scrolloff=3", "note": "Keep three lines visible above and below the cursor."},
+ {"code": "syntax on", "note": "Colour, if the terminal has it."}
+]}
 ```
 
 A `"` starts a comment, which is vim's own oddity and not a typo.
@@ -93,7 +90,7 @@ ana@vm:~$ which vimtutor || echo 'vimtutor: not installed'
 It opens a copy of a lesson file that you edit as you read it. If you are going
 to use vim at all, it is the best half hour available.
 
-**`:help`** is the manual and it is genuinely good:
+**`:help`** is the manual and it is good:
 
 ```vim
 :help                 " the front page

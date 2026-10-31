@@ -43,7 +43,7 @@ Repare em quem fala: `bash:`, não `cd:`. **`cd` não é um programa** — não 
 programa mudando o próprio diretório não mudaria o do shell. Ele é embutido no shell, e é por isso
 que `man cd` não acha nada e `help cd` acha tudo. A aula 1 seção 16 traçou essa linha.
 
-## `ls`, e as sete opções que importam
+## `ls`, e as dez opções que importam
 
 `ls` puro dá nomes, em colunas, em ordem alfabética, escondendo tudo que começa com ponto:
 
@@ -167,7 +167,7 @@ drwxr-xr-x 2 root root 36864 Mar 31 13:31 /bin/
 ```
 
 `/bin` é um link simbólico para `usr/bin`. Com `-l`, o `ls` mostra **o link**. Acrescente uma barra
-no final e ele segue o link e mostra **o diretório**. Os mesmos sete caracteres digitados, duas
+no final e ele segue o link e mostra **o diretório**. Quase a mesma linha digitada, duas
 perguntas diferentes feitas.
 
 A seção 11 é sobre links. O hábito a levar daqui é menor e imediatamente útil: **uma barra no final

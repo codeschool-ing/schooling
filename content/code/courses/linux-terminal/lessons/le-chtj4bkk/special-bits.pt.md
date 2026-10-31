@@ -55,7 +55,7 @@ Numa máquina normal essa lista é curta — `passwd`, `sudo`, `su`, `mount`, o 
 antigos — e cada entrada é um programa escrito sabendo que rodaria como root.
 
 **Nunca ligue isso em algo que você escreveu.** Um script setuid é a vulnerabilidade clássica, e o
-Linux ignora o bit em scripts exatamente por isso; um binário setuid que recebe um nome de arquivo
+Linux ignora o bit em scripts exatamente por isso. Um binário setuid que recebe um nome de arquivo
 de você e o abre é um jeito de ler qualquer coisa da máquina. Se você se pegar indo atrás de setuid,
 a resposta que você quer é quase certamente `sudo` com uma regra estreita — seção 11.
 

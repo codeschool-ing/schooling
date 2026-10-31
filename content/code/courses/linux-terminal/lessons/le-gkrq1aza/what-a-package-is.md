@@ -63,7 +63,8 @@ is a lookup.
 
 ## What a package promises
 
-Four fields do most of the work, and all four are visible in `apt show`:
+Four fields do most of the work. `apt show` prints the three that `cowsay` has; it declares no
+`Recommends`:
 
 ```
 root@vm:~# apt show cowsay 2>/dev/null | head -14
@@ -107,7 +108,7 @@ small container image and a large one.
 | `-8` | the **packaging** revision: the eighth attempt at packaging that same 3.03 |
 
 **The last number changes without the program changing at all.** A `-8` where you had `-7` can be a
-patched security hole and nothing else, which is exactly what a distribution's stable release is
+patched security hole and nothing else. That is exactly what a distribution's stable release is
 for: the version number stays put and the fixes arrive underneath it.
 
 `5:29.3.1-1~ubuntu.24.04~noble` in section 09 has a fourth part — the `5:` is an **epoch**, a

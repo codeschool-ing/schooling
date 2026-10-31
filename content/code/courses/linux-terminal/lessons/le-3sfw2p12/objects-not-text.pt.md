@@ -107,7 +107,7 @@ ls -l sales.csv | awk '{print $8}'      # the year — if the file is over six m
 ```
 
 **A versão com `awk` está contando colunas numa representação.** A seção do `cut`
-da aula 8 era sobre isso dar errado, e a seção do `awk` mediu: num log de mil e
+da aula 8 era sobre isso dar errado. A seção do `awk` mediu: num log de mil e
 duzentas linhas em que toda linha parece ter a mesma forma, o `awk '{print NF}'`
 informa quatro contagens de campo diferentes, porque um dos campos é texto livre
 com espaços dentro.
@@ -144,7 +144,7 @@ user	0m0.000s
 sys	0m0.003s
 ```
 
-Cento e trinta vezes, nesta máquina. Para um shell em que você digita, ninguém
+Cento e trinta e cinco vezes, nesta máquina. Para um shell em que você digita, ninguém
 nota; para algo que um agendador roda a cada minuto, alguém nota.
 
 **Os objetos são tão bons quanto o comando que os fez.** Um cmdlet que devolve um

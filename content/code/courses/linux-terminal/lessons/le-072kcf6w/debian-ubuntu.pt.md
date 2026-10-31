@@ -54,9 +54,9 @@ ana@vm:~$ cat /etc/debian_version
 trixie/sid
 ```
 
-**É uma máquina Ubuntu afirmando ser Debian trixie.** Ela não está exatamente mentindo — o arquivo
-registra de qual foto do Debian este Ubuntu foi construído — mas se você ler como "em qual sistema
-eu estou", recebe uma resposta errada com confiança total.
+**É uma máquina Ubuntu afirmando ser Debian trixie.** Ela não está exatamente mentindo: o arquivo
+registra de qual foto do Debian este Ubuntu foi construído. Mas leia como "em qual sistema eu
+estou" e você recebe uma resposta errada com confiança total.
 
 `/etc/debian_version`, `/etc/redhat-release` e os outros são arquivos antigos, por família, de
 antes do padrão. Eles ainda existem, ainda são escritos, e são a razão de o `/etc/os-release` ter

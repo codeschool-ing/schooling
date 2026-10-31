@@ -34,7 +34,7 @@ bash: ana: command not found
 ```
 
 **Both of those are valid shell — they just do not mean what you wanted.** The shell splits a
-line into words and runs the first one as a command, so `name = ana` is "run the command `name`
+line into words and runs the first one as a command. So `name = ana` is "run the command `name`
 with arguments `=` and `ana`", and `name= ana` is "run `ana` with `name` set to empty".
 
 That second one is a real feature, and it comes back later in this section. Right now, remember:
@@ -48,7 +48,7 @@ ana@vm:~/work/scripts$ echo $count+1
 3+1
 ```
 
-There is no number type. `count` holds the two characters `3`, and `$count+1` is the string `3+1`.
+There is no number type. `count` holds the character `3`, and `$count+1` is the string `3+1`.
 Arithmetic needs `$(( ))`, which is section 14.
 
 Quotes are only for the shell's benefit — they never end up in the value:

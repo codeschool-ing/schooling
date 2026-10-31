@@ -100,8 +100,7 @@ bruno@vm:/srv/perm$ echo 'bruno' >> teamonly.txt
 bash: teamonly.txt: Permission denied
 ```
 
-Four commands, four different outcomes, and each one is decided by a different set of three
-characters. `public.txt` is `r--` for other, so he reads it. `private.txt` is `---` for other, so
+Four commands, and each answer is read off one row of three characters. `public.txt` is `r--` for other, so he reads it. `private.txt` is `---` for other, so
 he does not. `teamonly.txt` is `r--` for **group**, and he is in `team`, so he reads it and cannot
 write it.
 

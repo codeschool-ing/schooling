@@ -114,8 +114,8 @@ nice -n 19 ./nightly-reindex.sh
 **Something already hurting.** `top` shows a runaway; `renice -n 19 -p PID` gives you the machine
 back without killing the process and losing whatever it has done. Then decide properly.
 
-**Never in a unit file.** systemd has `Nice=` — lesson 5's unit file — and that is where it belongs
-for a service, because it survives restarts and a shell command does not.
+**For a service, the unit file and not the shell.** systemd has `Nice=` — lesson 5's unit file — and
+that is where it belongs, because it survives restarts and a shell command does not.
 
 ## What `nice` cannot do
 

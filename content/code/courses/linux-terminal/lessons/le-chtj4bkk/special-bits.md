@@ -55,7 +55,7 @@ On a normal machine that is a short list — `passwd`, `sudo`, `su`, `mount`, `p
 systems — and every entry is a program that was written knowing it would run as root.
 
 **Never set it on something you wrote.** A setuid shell script is the classic vulnerability, and
-Linux ignores the bit on scripts for exactly that reason; a setuid binary that takes a filename
+Linux ignores the bit on scripts for exactly that reason. A setuid binary that takes a filename
 from you and opens it is a way to read anything on the machine. If you find yourself reaching for
 setuid, the answer you want is almost certainly `sudo` with a narrow rule — section 11.
 

@@ -50,8 +50,8 @@ Because the machine will not tell you. There is no dialog, no countdown, and `ap
 end-of-life release reports that everything is up to date — **which is true and reads as
 reassuring**, and means only that no more updates are ever coming.
 
-That is the honest shape of it: the failure mode of a lifecycle is silence, and the same is true
-of the scheduled job in lesson 13 and the backup in lesson 10. **A system that has stopped
+The failure mode of a lifecycle is silence, and the same is true of the nightly backup in
+lesson 13 that fails for months and tells nobody. **A system that has stopped
 protecting you looks identical to one that has nothing to do.** Learning to check things that
 report nothing is most of what operations is.
 

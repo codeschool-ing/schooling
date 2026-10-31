@@ -57,7 +57,7 @@ Sat 2026-10-17 13:44:00 UTC 1 week 2 days Wed 2026-10-07 13:18:17 UTC           
 
 **`NEXT` and `LAST` are the two columns worth the command.** A timer whose `LAST`
 is older than its period did not run, and that is a fact you can act on.
-`report.timer` from section 12 is there, waiting for 03:01:02 with a dash for
+`report.timer` from section 10 is there, waiting for 03:01:02 with a dash for
 `LAST`, because it has never fired; `anacron.timer` is section 09's anacron,
 started by systemd. The three rows of dashes at the bottom are timers that are
 loaded and not active.
@@ -77,8 +77,8 @@ stopped.
 | `systemctl status report.timer` | when it fires next |
 | `systemctl status report.service` | how the last run ended |
 
-Section 12's `report.timer` will not fire until three in the morning, but its
-service can be started by hand, which is the test section 12 recommended — and
+Section 10's `report.timer` will not fire until three in the morning, but its
+service can be started by hand, which is the test section 10 recommended — and
 then everything in that table has something to say:
 
 ```
@@ -97,8 +97,8 @@ TriggeredBy=report.timer
 **The journal has the run**: systemd starting it, the script's own output under
 its name and process id — `report.sh[5547]: report ran` — and the service
 finishing. `systemctl show` says how the last run ended, `Result=success` with
-an exit status of 0, and which timer starts it. That is everything a cron job's mail would have said, and more,
-with no mail system involved.
+an exit status of 0, and which timer starts it. That is everything a cron job's
+mail would have said, and more, with no mail system involved.
 
 **The journal is the timer's advantage over cron here.** A cron job's output goes
 to mail — if there is an MTA, if somebody reads it. A timer's job runs under

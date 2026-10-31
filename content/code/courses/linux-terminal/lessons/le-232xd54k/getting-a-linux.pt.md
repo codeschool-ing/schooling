@@ -34,9 +34,9 @@ Três propriedades, e elas eliminam algumas opções que parecem convenientes:
 ## O recomendado: uma máquina virtual
 
 **Crie uma máquina virtual e instale nela o Ubuntu Server 24.04 LTS.** É o único caminho que tem as
-três propriedades: um erro fica dentro dela, um snapshot tirado logo depois da instalação a traz de
-volta em um minuto, e ela dá boot, então os serviços da aula 5 e os timers da aula 13 estão lá por
-inteiro. É também o que é a maioria das máquinas de que você vai cuidar no trabalho: um servidor sem
+três propriedades. Um erro fica dentro dela, e um snapshot tirado logo depois da instalação a traz
+de volta em um minuto. E ela dá boot, então os serviços da aula 5 e os timers da aula 13 estão lá
+por inteiro. É também o que é a maioria das máquinas de que você vai cuidar no trabalho: um servidor sem
 desktop, acessado por um terminal.
 
 O custo dá para medir. A documentação do próprio Ubuntu para o 24.04 pede **pelo menos 1,5 GB de

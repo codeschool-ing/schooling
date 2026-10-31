@@ -81,7 +81,7 @@ campo, e essa ainda é quase sempre a troca certa, porque ele remove linhas por 
 ler tudo, e por que alguns programas se recusam a trabalhar dentro de um.
 
 **Ele carrega bytes, não registros.** Toda ferramenta desta aula inventa a própria ideia de linha e
-de campo a partir do mesmo fluxo de bytes, que é por que elas se compõem — e também por que um nome
+de campo a partir do mesmo fluxo de bytes, que é por que elas se compõem. É também por que um nome
 de arquivo com espaço quebra um pipeline que assumiu que espaço separa coisas. A seção 16 é essa
 falha, com o conserto.
 

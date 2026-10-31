@@ -154,7 +154,7 @@ Alias       cd -> Set-Location
 Windows PowerShell they are, pointing at `Get-ChildItem`, `Get-Content` and
 `Get-Process`.
 
-The reason is obvious once you see it: on Linux those are real programs that a
+On Linux those are real programs that a
 person typing `ls` means, so PowerShell removes the aliases and lets the real
 ones through. On Windows there is no `/bin/ls` to collide with.
 

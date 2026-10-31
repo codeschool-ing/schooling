@@ -97,7 +97,7 @@ remember names — `Get-Command -Noun Service` finds them. And `Get-` is safe.
 
 **Three. Parameters are named and typed.** So there are no single-letter flags to
 memorise and no `getopts`: `-Recurse` says what it does, and `[int]$Threshold` in
-a `param` block is four lines of bash validation.
+a `param` block does the check lesson 9's script wrote by hand.
 
 **Four. Values have types.** So `Sort-Object` on a number sorts numerically —
 provided it really is a number, which is the trap this lesson repeats three
@@ -105,7 +105,7 @@ times. Text read from a file is text until you cast it.
 
 ## And the four things bash does better
 
-Symmetry is not honesty. There are things the text pipeline wins outright.
+There are things the text pipeline wins outright.
 
 **Starting.** 0.4 seconds against 0.003. For anything a scheduler runs on a
 timer, that is the whole argument.

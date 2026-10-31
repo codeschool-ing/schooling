@@ -113,7 +113,7 @@ exatamente isso, e qualquer coisa que você queira fazer com o resultado você
 analisa.
 
 **O `Invoke-Command` manda um bloco de script e recebe objetos.** Eles são
-serializados do outro lado, mandados pela rede, e reidratados do seu — então o
+serializados do outro lado, mandados pela rede, e reidratados do seu. Então o
 `Invoke-Command -ComputerName web01,web02 { Get-Service }` te dá uma coleção de
 objetos de serviço de duas máquinas, com uma propriedade `PSComputerName` dizendo
 qual é qual, e dá para passar um `Group-Object` nela.
@@ -152,7 +152,7 @@ Os executáveis têm até nomes diferentes — `powershell.exe` contra `pwsh.exe
 dois podem estar instalados ao mesmo tempo.
 
 **Assuma 5.1 num servidor que você não configurou.** A maior parte desta aula é
-idêntica nele; as diferenças que vão te pegar são o `.Count` num objeto único
+idêntica nele. As diferenças que vão te pegar são o `.Count` num objeto único
 (seção 09), o `ConvertTo-Json -Depth`, os operadores ternário e de coalescência
 nula que o 5.1 não tem, e o `Get-WmiObject` ainda estar presente lá e ter sumido
 aqui.

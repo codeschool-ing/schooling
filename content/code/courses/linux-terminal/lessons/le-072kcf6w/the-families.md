@@ -46,7 +46,7 @@ within a week of touching Docker.
 
 ## What "family" actually buys you
 
-It is not sentiment. Knowing the family tells you four things before you look at anything else:
+Knowing the family tells you four things before you look at anything else:
 
 1. **The package manager** — `apt` on Debian's side, `dnf` on Red Hat's, `zypper` on SUSE's.
 2. **The package format** — `.deb` or `.rpm`, which decides what a vendor's download page offers.

@@ -133,8 +133,8 @@ Repare primeiro que **o `logs.tar` tem o mesmo tamanho do que entrou.** O `tar` 
 ele só empacotou.
 
 Depois os três que comprimiram. Essas taxas são boas demais, porque aquele arquivo é o mesmo bloco
-de texto repetido quarenta vezes, e repetição é exatamente o que um compressor come — mas a
-*ordem* é a lição de verdade e ela vale em toda parte:
+de texto repetido quarenta vezes, e repetição é exatamente o que um compressor come. A *ordem* é o
+que se repete com outros arquivos:
 
 | | uso típico | velocidade |
 |---|---|---|
@@ -205,8 +205,7 @@ Archive:  project.zip
 clique. Use `tar` para tudo que fica no Linux, porque ele preserva as permissões e a propriedade de
 que um deploy ou um backup depende.
 
-E um aviso honesto: o `unzip` não vem instalado em toda parte, e o `zip` também não. O `tar` vem
-sempre.
+E onde o `zip` e o `unzip` faltam, como no Ubuntu Server, o `tar` continua lá.
 
 ## O `file` encerra qualquer discussão sobre o que você tem
 

@@ -80,7 +80,7 @@ is what the pipeline wants.
 
 ## The count that is not there
 
-This is the trap in this section, and it is a real one.
+This is the trap in this section.
 
 ```
 PS /home/ana/work/ps> $empty = @(); $empty.Count; ($empty | Measure-Object).Count

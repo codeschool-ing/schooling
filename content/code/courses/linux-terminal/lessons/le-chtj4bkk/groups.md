@@ -12,7 +12,7 @@ ana@vm:~$ id
 uid=1001(ana) gid=1002(ana) groups=1002(ana),27(sudo),1004(team)
 ```
 
-Three numbers and three names in one line, and it repays reading slowly.
+Four numbers and three names in one line, and it repays reading slowly.
 
 ## Primary and supplementary
 

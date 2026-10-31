@@ -143,7 +143,7 @@ Section 07 is the pattern language itself.
 reinvent with `\b` and it is shorter.
 
 **`grep --include`** narrows a recursive search by filename: `grep -r --include='*.py' TODO .`
-searches only python files. On a large tree that is the difference between a search and a coffee
+searches only Python files. On a large tree that is the difference between a search and a coffee
 break.
 
 And `ripgrep` — `rg` — is the modern replacement: same idea, much faster, respects `.gitignore`, and

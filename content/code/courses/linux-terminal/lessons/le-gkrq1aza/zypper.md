@@ -9,7 +9,7 @@ new words.
 
 **Same caveat as section 10**: these transcripts were captured on Ubuntu with `zypper` installed
 and the lesson's own repository configured. The commands and their output are real; the
-distribution is not SUSE, and the one place that shows is pointed out below. Section 10's block
+distribution is not SUSE, and the two places that shows are pointed out below. Section 10's block
 built the repository; this tells `zypper` about it:
 
 ```sh
@@ -28,7 +28,7 @@ Repository priorities are without effect. All enabled repositories share the sam
 ```
 
 `zypper repos` — `zypper lr` for short — is `dnf repolist`. Note the columns: **zypper shows
-priority and refresh state in the listing**, which dnf does not, and the first line is it telling
+GPG checking and refresh state in the listing**, which dnf does not, and the first line is it telling
 you that with one repository priorities cannot matter.
 
 Adding and refreshing:
@@ -200,7 +200,7 @@ distribution replaces whole sets of packages at once, and `up` refuses the vendo
 changes that requires. Running `up` on Tumbleweed for a few months produces a machine that is
 half-upgraded in a way nothing else in this lesson can produce.
 
-That is the single most SUSE-specific fact in this section, and it is the one people get wrong.
+That is the most SUSE-specific fact in this section, and the one people get wrong.
 
 ## The rest
 
@@ -224,8 +224,8 @@ No core libraries or services have been updated since the last system boot.
 Reboot is probably not necessary.
 ```
 
-Nothing to do here, which is the answer you want — and read the first line against lesson 6 section
-13. **"Processes using deleted files" is exactly the open-descriptor-on-a-deleted-file situation**,
+Nothing to do here, which is the answer you want — and read the first line against lesson 6 section 13.
+**"Processes using deleted files" is exactly the open-descriptor-on-a-deleted-file situation**,
 and this is what it looks like when a package manager uses it deliberately: a library replaced on
 disk while something still has the old one open is a service running code that no longer exists.
 

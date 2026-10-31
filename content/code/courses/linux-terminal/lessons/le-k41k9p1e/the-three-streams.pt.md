@@ -117,7 +117,7 @@ mensagens de erro seria muito mais difícil de depurar do que um que não engole
 
 ## E repare no que mudou de forma
 
-Olhe aquelas duas saídas de novo. Na tela, o `ls` imprimiu os cinco nomes **ao longo da linha, em
+Olhe aquelas duas saídas de novo. Na tela, o `ls` imprimiu os seis nomes **ao longo da linha, em
 colunas**. No arquivo, ele imprimiu **um por linha**.
 
 **O `ls` pergunta se a saída dele é um terminal, e formata conforme a resposta** — a pergunta do

@@ -147,7 +147,7 @@ and the only record is the file itself.
 ## Containers, which are the other answer
 
 The reason `docker` appears in section 09's transcripts is that containers are how a lot of people
-now avoid this whole section: the application and its dependencies are packaged together, at
+now avoid this whole section. The application and its dependencies are packaged together, at
 versions the application chose, and the host's package manager is responsible for exactly one thing
 — the container runtime.
 

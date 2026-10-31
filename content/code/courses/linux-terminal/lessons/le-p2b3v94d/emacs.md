@@ -3,11 +3,10 @@ title: Emacs, honestly and briefly
 version: 2
 ---
 
-Emacs is the third editor, and the honest framing is: you are unlikely to meet
-it by accident. It is not installed by default on any mainstream distribution,
+Emacs is the third editor, and you are unlikely to meet it by accident. It is not installed by default on any mainstream distribution,
 no tool opens it unless you asked for it, and nothing in this course requires it.
 
-It is in this lesson because it is genuinely a third idea, and because if you
+It is in this lesson because it is a third idea, and because if you
 inherit a machine where somebody set `EDITOR=emacs` you should not be lost.
 
 To follow along, install it without the graphical parts, which a server has no

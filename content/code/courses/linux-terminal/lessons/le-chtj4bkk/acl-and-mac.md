@@ -3,7 +3,7 @@ title: Where twelve bits run out
 version: 2
 ---
 
-The model in this lesson has a hard limit, and it is easy to state: **a file has one owner and one
+The model in this lesson has a hard limit, and it is easy to state. **A file has one owner and one
 group.** So it can say *ana, and anybody in team, and everybody else* — and it cannot say *ana and
 carla, and nobody else*.
 
@@ -99,8 +99,8 @@ other::---
 `rw-` under a mask of `r--` gives `r--`. That is not a bug; it is how a file with an ACL still
 behaves sensibly when somebody runs `chmod` on it.
 
-And that is the trap: **`chmod g+w` on a file with an ACL changes the mask, not the group's own
-entry.** The `ls -l` middle row for an ACL'd file *is* the mask, which means the ordinary listing
+**On a file with an ACL, `chmod g+w` changes the mask, not the group's own entry** — and that is
+the trap. The `ls -l` middle row for an ACL'd file *is* the mask, which means the ordinary listing
 is telling you something subtler than it looks. Read `getfacl` when a `+` is present.
 
 ### What they are good for, and what they cost

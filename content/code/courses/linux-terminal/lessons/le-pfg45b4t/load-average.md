@@ -24,7 +24,7 @@ last process id allocated.
 | **D** — uninterruptible sleep | waiting on a disk, usually |
 
 Lesson 6 section 04 named those two states. **The D is the part that surprises
-everyone**, and it is why load average is not a processor metric: a machine with an
+everyone**, and it is why load average is not a processor metric. A machine with an
 idle processor and a saturated disk has a high load average, and a machine using every
 core with nothing queued has a load average equal to its core count.
 

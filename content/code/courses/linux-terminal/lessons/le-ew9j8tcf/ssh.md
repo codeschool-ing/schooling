@@ -3,8 +3,8 @@ title: `ssh`, because every machine is somewhere else
 version: 3
 ---
 
-This is one section in a lesson whose title does not mention it, and it is here because **every
-Linux machine you will ever administer is one you reach over ssh.** The course has no better place
+This lesson's title does not mention ssh. It is here because **every Linux machine you will ever
+administer is one you reach over ssh**. The course has no better place
 for it, and doing without it until then would be dishonest about what the job looks like.
 
 Keys, the fingerprint prompt, and where things live. Tunnels, config files and hardening are
@@ -95,7 +95,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKHhDDaH171LJb/mce2OhMnKDYo5PArO8BPrVDTHdhd
 ```
 
 Publishing that line costs you nothing. Publishing the other file costs you everything. Lesson 4
-section 13 said `.ssh` is the most sensitive directory you own, and this is why — **ssh checks the
+section 04 gave `~/.ssh` the mode `700`, yours and nobody else's, and this is why — **ssh checks the
 permissions and refuses a key that anybody else could read.**
 
 `-t ed25519` is the algorithm to use; it is short, fast and current. `-N ""` means no passphrase,
@@ -182,4 +182,4 @@ works, from a session you have not closed.
 
 **And the host you cannot reach is usually a firewall.** `ssh: connect to host … port 22:
 Connection refused` means something answered and said no; `Connection timed out` means nothing
-answered at all. The two point in different directions, and lesson 11 comes back to the difference.
+answered at all. The two point in different directions.

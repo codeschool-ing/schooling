@@ -61,7 +61,7 @@ Quatro tentativas, três resultados diferentes, e cada um é uma regra.
 | `chmod +x` e aí `./` | funciona — agora o kernel executa o arquivo ele mesmo |
 
 **O `./` não é enfeite.** Ele é um caminho, e é obrigatório porque o diretório atual está
-deliberadamente fora do `$PATH` — se estivesse nele, um arquivo chamado `ls` largado num diretório
+deliberadamente fora do `$PATH`. Se estivesse nele, um arquivo chamado `ls` largado num diretório
 em que você por acaso entrou rodaria no lugar do de verdade. A aula 3 seção 04 tratou disso; aqui é
 onde você sente.
 

@@ -117,8 +117,8 @@ Did you mean:
   rm "$f"
 ```
 
-Nine lines of script. It parses cleanly, `bash -n` is happy with it, and it has a bug on every
-line — four missing quotes, backticks, looping over `ls`, and a comparison that is not a
+Nine lines of script. It parses cleanly, `bash -n` is happy with it, and four of those lines carry
+a bug: four missing quotes, backticks, looping over `ls`, and a comparison that is not a
 comparison.
 
 Every one of those is something from this lesson. Section 04 is `SC2086`, section 10 is `SC2045`,
@@ -195,7 +195,7 @@ total is 7
 
 `PS4` is the prefix `-x` uses, and the default is a single `+`. Setting it to the file and line
 number turns a wall of commands into something you can match against the source — and look at the
-second and third lines of the second run: `3, 4, 3, 4` is the loop, visibly going round.
+line numbers in the second run: `3, 4, 3, 4` is the loop, visibly going round.
 
 The first attempt did nothing, and that is the part worth noticing. **`PS4` has to be exported**,
 because the trace is printed by the `bash` you are starting, not by the shell you typed in.

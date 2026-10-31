@@ -88,7 +88,7 @@ jobs
 ```
 
 **Leia o entrelaçamento antes do resultado, porque ele é real e parece quebrado.** Uma tarefa em
-segundo plano imprime quando quer, e o que você digita é ecoado onde o cursor estiver — então o
+segundo plano imprime quando quer, e o que você digita é ecoado onde o cursor estiver. Por isso o
 `kill -TERM $PID` aparece sem prompt na frente, na linha depois da saída da tarefa. O terminal não
 está confuso; ele está mostrando duas coisas dividindo uma tela. A seção 10 é sobre mantê-las
 separadas.
@@ -142,8 +142,8 @@ y
 yes exit: 141
 ```
 
-**`141` é como um sinal aparece num código de saída**: 128 mais o número do sinal, e o `SIGPIPE` é o
-13. O `yes` não parou porque tinha terminado — ele foi morto, pelo kernel, por escrever num pipe sem
+**`141` é como um sinal aparece num código de saída**: 128 mais o número do sinal, e o `SIGPIPE` é o 13.
+O `yes` não parou porque tinha terminado — ele foi morto, pelo kernel, por escrever num pipe sem
 ninguém do outro lado.
 
 **Esse é o comportamento projetado**, e é por isso que `| head` num comando enorme volta na hora em
@@ -185,5 +185,6 @@ Três respostas diferentes para três perguntas diferentes: sim, ele existe e é
 importa — um script que só olha o `$?` não consegue distinguir "sumiu" de "não permitido", e os dois
 pedem respostas opostas.
 
-Essa é também a sua primeira olhada na recusa. O PID 1 é do `root` e a `ana` não pode tocá-lo; a
-seção 09 é o resto dessa regra.
+Essa é também a sua primeira olhada na recusa: o PID 1 é do `root` e a `ana` não pode tocá-lo. A
+seção 09 é o resto do `kill` — qual processo, como alcançar um grupo inteiro, e como a recusa aparece
+quando o processo não é seu.

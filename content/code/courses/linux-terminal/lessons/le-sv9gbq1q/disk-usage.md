@@ -24,7 +24,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 `-h` for human-readable, always. Give it a path and it answers about the filesystem that path is
 on — so `df -h .` is the fastest way to ask "am I about to run out of room *here*".
 
-**Size, Used and Avail do not add up, and that is normal.** 11 used plus 27 available is not 252.
+**Size, Used and Avail do not add up, and that is normal.** 9.6 used plus 30 available is not 252.
 On an ordinary ext4 installation the gap is small and has one main cause: **5% of the filesystem
 is reserved for root**, so that a disk which is full for everybody else still leaves the
 administrator enough room to log in and fix it. That is also why `Use%` is computed against what

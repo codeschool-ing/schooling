@@ -11,7 +11,7 @@ ana@vm:~/work$ head -1 logs/access.log
 198.51.100.10 - - [14/Sep/2026:06:01:15 +0000] "GET / HTTP/1.1" 200 23295 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 27
 ```
 
-Count the space-separated fields and you have the map the rest of the lesson uses: the address is
+Count the space-separated fields and you have the map the rest of the lesson uses. The address is
 `$1`, the timestamp is `$4` and `$5`, the method is `$6`, the path is `$7`, the status is `$9`, the
 size is `$10`, and the milliseconds are last.
 
@@ -72,8 +72,8 @@ could not open data/report.csv$
 `M-BM-` sequences for non-ASCII bytes.
 
 That last one is the reason to know `cat -A` exists. When a config file will not parse, or a script
-fails on a line that looks perfect, `cat -A` shows you the trailing space, the tab that should have
-been spaces, or the `^M` at the end of every line that means the file came from Windows.
+fails on a line that looks perfect, `cat -A` shows you the trailing space or the tab that should have
+been spaces. It also shows the `^M` at the end of every line that means the file came from Windows.
 
 `nl` is `cat -n` with more control over the numbering, and it only numbers non-empty lines by
 default:

@@ -63,7 +63,7 @@ e a tela diz qual:
 
 | | |
 |---|---|
-| `process ID: 7985` **ainda rodando** | outra pessoa está com este arquivo aberto. Aperte `q` e vá perguntar |
+| `process ID: 3361` **ainda rodando** | outra pessoa está com este arquivo aberto. Aperte `q` e vá perguntar |
 | aquele processo não existe mais | o vim ou a máquina morreu. O seu trabalho não salvo está no arquivo de swap |
 
 Aperte Enter depois do `-- More --` e as escolhas aparecem. As que importam:
@@ -76,9 +76,9 @@ Aperte Enter depois do `-- More --` e as escolhas aparecem. As que importam:
 | `d` | apaga o arquivo de swap |
 
 **A sequência certa quando o trabalho era seu e o editor morreu:** aperte `r`,
-olhe o que voltou, salve em algum lugar, e então `:q` e apague o arquivo de swap
-— o vim não vai fazer isso por você, e enquanto ele existir você vê esta tela
-toda vez.
+olhe o que voltou, salve em algum lugar, e então `:q` e apague o arquivo de swap.
+O vim não vai apagá-lo por você, e enquanto ele existir você vê esta tela toda
+vez.
 
 ```sh
 ls -la .server.conf.swp        # they are hidden, and named after the file

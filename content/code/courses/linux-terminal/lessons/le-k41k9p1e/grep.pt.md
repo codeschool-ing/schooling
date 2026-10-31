@@ -144,7 +144,7 @@ A seção 07 é a própria linguagem de padrões.
 as pessoas reinventam com `\b` e é mais curta.
 
 **O `grep --include`** estreita uma busca recursiva por nome de arquivo: o
-`grep -r --include='*.py' TODO .` busca só em arquivos python. Numa árvore grande é a diferença
+`grep -r --include='*.py' TODO .` busca só em arquivos Python. Numa árvore grande é a diferença
 entre uma busca e um cafezinho.
 
 E o `ripgrep` — `rg` — é o substituto moderno: mesma ideia, muito mais rápido, respeita o

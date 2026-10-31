@@ -7,7 +7,7 @@ Um terminal, várias coisas rodando. **Tarefa é a palavra do shell para um coma
 iniciou** — possivelmente um pipeline, possivelmente um script com filhos, e sempre um grupo de
 processos, que é por que o `kill %1` da seção 09 alcançava tudo aquilo.
 
-O controle de tarefas inteiro são três teclas e quatro comandos, e está todo nesta transcrição:
+O controle de tarefas inteiro são três teclas e quatro comandos, e quase tudo está nesta transcrição:
 
 ```
 ana@vm:~/work$ sleep 300

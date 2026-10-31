@@ -117,8 +117,8 @@ Did you mean:
   rm "$f"
 ```
 
-Nove linhas de script. Ele analisa limpo, o `bash -n` está satisfeito com ele, e há um bug em cada
-linha — quatro aspas faltando, crases, iteração sobre `ls`, e uma comparação que não é uma
+Nove linhas de script. Ele analisa limpo, o `bash -n` está satisfeito com ele, e quatro dessas linhas têm
+um bug: quatro aspas faltando, crases, iteração sobre `ls`, e uma comparação que não é uma
 comparação.
 
 Cada um desses é algo desta aula. A seção 04 é o `SC2086`, a seção 10 é o `SC2045`, a seção 14 é
@@ -196,7 +196,7 @@ total is 7
 
 O `PS4` é o prefixo que o `-x` usa, e o padrão é um `+` sozinho. Definir como arquivo e número de
 linha transforma uma parede de comandos em algo que você consegue casar com o código-fonte — e
-olhe a segunda e a terceira linhas da segunda execução: `3, 4, 3, 4` é o laço, visivelmente dando a
+olhe os números de linha da segunda execução: `3, 4, 3, 4` é o laço, visivelmente dando a
 volta.
 
 A primeira tentativa não fez nada, e essa é a parte que vale notar. **O `PS4` tem que ser

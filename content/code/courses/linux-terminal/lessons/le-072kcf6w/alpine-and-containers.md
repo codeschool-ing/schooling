@@ -16,7 +16,7 @@ lesson 4's groups say otherwise; the first `docker run` of an image downloads it
 
 ## It is small on purpose, and that is the whole design
 
-An Alpine image is a handful of megabytes where a Debian one is a hundred or more. In a container
+An Alpine image is 13MB where an Ubuntu one is 119MB, as the listing below shows. In a container
 that matters more than it sounds: an image is pulled by every machine that runs it, stored in
 every registry that holds it, and rebuilt every time CI runs. Size is bandwidth and money,
 multiplied by a number that keeps growing.

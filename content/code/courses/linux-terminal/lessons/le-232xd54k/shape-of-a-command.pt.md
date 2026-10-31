@@ -121,8 +121,8 @@ Try 'ls --help' for more information.
 ```
 
 Existe um arquivo chamado `-strange` naquele diretório, e o `ls` nunca o considerou. Tudo que
-começa com `-` é lido como opção, então ele pegou as letras uma a uma e parou logo na primeira,
-o `e`, que não é opção nenhuma do `ls`. É por isso que a reclamação nomeia uma letra, e não o
+começa com `-` é lido como opção, então ele pegou as letras uma a uma — `s`, `t`, `r`, `a`, `n` e
+`g` são todas opções reais do `ls` — e parou no `e`, que não é. É por isso que a reclamação nomeia uma letra, e não o
 nome do arquivo.
 
 A correção é uma convenção que quase todo comando respeita — **`--` significa "acabaram as opções,
@@ -138,13 +138,13 @@ hífen, e sem isso o arquivo é praticamente intocável.
 
 ### Leia o erro, e ele diz qual parte estava errada
 
-Três falhas nesta seção e cada uma nomeia o próprio tipo:
+Três falhas até aqui nesta aula, e cada uma nomeia o próprio tipo:
 
 | mensagem | o que quer dizer |
 |---|---|
 | `bash: celar: command not found` | o **comando** está errado — o shell não achou programa com esse nome |
 | `ls: invalid option -- 'e'` | a **opção** está errada — o programa rodou, e recusou a flag |
-| `ls: cannot access 'com'` | o **argumento** está errado — o programa rodou, aceitou a flag, e não achou a coisa |
+| `ls: cannot access 'with'` | o **argumento** está errado — o programa rodou, aceitou a flag, e não achou a coisa |
 
 Que é a mesma regra da seção 03, um nível mais fino: a mensagem diz em qual das três partes olhar.
 Isso é a maior parte do trabalho de consertar.

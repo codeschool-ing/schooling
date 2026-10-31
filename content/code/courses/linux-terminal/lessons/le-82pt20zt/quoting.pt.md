@@ -26,7 +26,7 @@ escaped: $who
 
 **As aspas simples são as fortes.** Qualquer coisa entre elas chega exatamente como escrita, que é
 por que toda expressão regular, todo programa de `awk` e todo comando de `sed` da aula passada
-estava entre aspas simples: o `$1` dentro de aspas duplas teria sido o primeiro argumento do shell,
+estava entre aspas simples. Dentro de aspas duplas, o `$1` teria sido o primeiro argumento do shell,
 não o primeiro campo do awk.
 
 ## O que as aspas duplas de fato impedem
@@ -122,15 +122,17 @@ aspas**, e é mais provável, porque a saída de um comando tem mais chance de c
 
 **Ponha aspas duplas em toda expansão, toda vez.** `"$var"`, `"$@"`, `"$(cmd)"`, `"${arr[@]}"`.
 
-Não "quando o valor puder ter um espaço" — sempre, porque você não sabe o que vai estar naquela
+Não "quando o valor puder ter um espaço" — sempre. Você não sabe o que vai estar naquela
 variável numa máquina que você não viu, num dia em que um nome de arquivo tem um espaço porque
 alguém o exportou de uma planilha.
 
 Há dois lugares em que dá para deixar de fora:
 
-```
-[[ $count -gt 5 ]]      # inside [[ ]] no splitting or globbing happens, so quotes are optional
-cmd $FLAGS              # when you deliberately want one variable to become several arguments
+```schooling-example
+{"language": "bash", "parts": [
+ {"code": "[[ $count -gt 5 ]]", "note": "Dentro do `[[ ]]` não acontece divisão nem globbing, então as aspas são opcionais."},
+ {"code": "cmd $FLAGS", "note": "Quando você quer, de propósito, que uma variável vire vários argumentos."}
+]}
 ```
 
 O `[[ ]]` é a seção 08, e as aspas continuam não sendo *erradas* lá — elas só não mudam nada. A

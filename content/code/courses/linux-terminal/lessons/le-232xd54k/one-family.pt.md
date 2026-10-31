@@ -8,8 +8,8 @@ Mac, dentro de um contêiner e num Raspberry Pi em cima da sua mesa. Não é que
 software. **É que eles combinaram, décadas atrás, como os comandos se chamariam e como se
 comportariam.**
 
-Esse acordo tem nome e tem história, e os dois valem dez minutos, porque explicam o que atravessa
-de uma máquina para outra e o que não atravessa — que é a diferença entre confiança e superstição
+Esse acordo tem nome e tem história, e os dois valem dez minutos. Eles explicam o que atravessa de
+uma máquina para outra e o que não atravessa, e essa é a diferença entre confiança e superstição
 quando você senta num sistema que nunca viu.
 
 ## A árvore genealógica
@@ -42,10 +42,10 @@ mesmo assim.
 
 ## A promessa é a interface, e ela está escrita
 
-O que se herda aqui não é código. É uma especificação, e ela se chama **POSIX** — um documento que
-diz o que um sistema compatível tem de oferecer: que existe um comando chamado `ls`, que ele lista
-um diretório, que `|` manda a saída de um programa para o próximo, que caminhos são separados por
-`/`, que um arquivo tem dono e bits de permissão, que um programa pode receber um sinal.
+O que se herda aqui não é código. É uma especificação, e ela se chama **POSIX**: um documento que
+diz o que um sistema compatível tem de oferecer. Existe um comando chamado `ls`, e ele lista um
+diretório. `|` manda a saída de um programa para o próximo. Caminhos são separados por `/`. Um
+arquivo tem dono e bits de permissão, e um programa pode receber um sinal.
 
 O POSIX é o motivo de isto valer:
 
@@ -113,7 +113,7 @@ arquivos de texto — o que significa que você não pode dar `grep` nela nem co
 não foi deixar o Windows mais parecido com Unix. Foi entregar um kernel Linux de verdade ao lado
 do Windows e deixar você abrir um terminal para dentro dele. Isso é admitir que a distância não se
 fecha por imitação — e, para você, é o jeito mais fácil de fazer este curso numa máquina Windows.
-A próxima seção configura isso.
+A seção 04 configura isso.
 
 ## O que isso te dá, na prática
 

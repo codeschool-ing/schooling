@@ -33,8 +33,8 @@ Three properties, and they rule out some options that look convenient:
 ## The recommended one: a virtual machine
 
 **Make a virtual machine and install Ubuntu Server 24.04 LTS in it.** It is the one path that has
-all three properties: a mistake stays inside it, a snapshot taken once it is installed brings it
-back in a minute, and it boots, so lesson 5's services and lesson 13's timers are there in full. It
+all three properties. A mistake stays inside it, and a snapshot taken once it is installed brings it
+back in a minute. And it boots, so lesson 5's services and lesson 13's timers are there in full. It
 is also what most of the machines you will look after at work are: a server with no desktop,
 reached through a terminal.
 

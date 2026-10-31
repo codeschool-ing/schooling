@@ -68,8 +68,8 @@ line two$
 ```
 
 Um arquivo editado no Windows tem `\r\n` no fim de cada linha. O `cat -A` da seção 05 mostra isso
-como `^M$`, e um script de shell com esses finais falha com um erro que nomeia um comando que você vê
-que está escrito corretamente — porque o comando que ele de fato tentou rodar tinha um retorno de
+como `^M$`. Um script de shell com esses finais falha com um erro que nomeia um comando que você vê
+que está escrito corretamente, porque o comando que ele de fato tentou rodar tinha um retorno de
 carro invisível no fim do nome.
 
 O `-c` complementa o conjunto, então o `-dc` é "apague tudo exceto". Aquela última linha é o

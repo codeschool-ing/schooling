@@ -32,7 +32,7 @@ O `echo` não faz ideia do que é um arquivo. Ele imprimiu quatro palavras porqu
 substituiu o `*` por quatro palavras** a caminho do comando. Isso se chama *globbing*, e acontece
 com todo comando que você digita, sempre, saiba esse comando o que é um arquivo ou não.
 
-## Os quatro padrões
+## Os cinco padrões
 
 | | casa |
 |---|---|
@@ -135,7 +135,7 @@ cp config.yml{,.bak}
 ```
 
 O segundo merece um olhar demorado: `config.yml{,.bak}` expande para `config.yml config.yml.bak`,
-que é uma cópia-de-segurança em onze caracteres. É o truque de chaves que todo mundo acaba
+que é uma cópia-de-segurança sem digitar o nome duas vezes. É o truque de chaves que todo mundo acaba
 aprendendo.
 
 ## Onde a regra do "o shell expande primeiro" se paga

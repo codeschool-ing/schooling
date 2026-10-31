@@ -43,7 +43,7 @@ use a processor if one were free. That distinction is the whole of the load aver
 
 ## The extra letters after the state
 
-The second and third characters are flags, and three of them are worth recognising:
+The second and third characters are flags, and these five are worth recognising:
 
 | | |
 |---|---|
@@ -86,8 +86,8 @@ ana@vm:~/work$ ps -eo pid,ppid,stat,comm,args | grep -E 'zombie|defunct' | grep 
 ```
 
 `1095` is the zombie. It is `Z`, it belongs to `1093` — the parent that will not collect it — and
-`ps` writes `<defunct>` where a command line would be, in square brackets, because there is no
-longer a program to name.
+where a command line would be, `ps` writes the name in square brackets and `<defunct>` after it,
+because there is no longer a program to name.
 
 The first row is another zombie, and it was there before `zombie.py` started: a `sh` whose parent
 is PID 1, on the sandbox these transcripts were captured on, where PID 1 is not an init system and
@@ -103,7 +103,7 @@ entry in the process table and one PID.
 that has already exited. What you do is one of two things:
 
 - **wait.** When the parent exits, the zombie is re-parented to PID 1, which collects it
-  immediately. In the transcript above, the zombie disappeared when the `sleep 60` finished.
+  immediately. For `zombie.py`, that happens when its `time.sleep(60)` finishes.
 - **fix the parent.** A handful of zombies is a program with a bug. Thousands of them is a program
   with a bug and a machine that will soon be unable to start anything.
 
