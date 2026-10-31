@@ -74,7 +74,7 @@ NULL     2026-03    260      <- sales whose region we do not know
 NULL     NULL      9100      <- grand total
 ```
 
-A linha dois e a linha quatro dizem `NULL` para região e querem dizer coisas completamente
+A linha três e a linha quatro dizem `NULL` para região e querem dizer coisas completamente
 diferentes. Uma pessoa lendo a tabela não tem como saber, e o programa que a desenha também não.
 
 `GROUPING()` é a resposta: devolve `1` quando a coluna foi agregada naquela linha e `0` quando o

@@ -53,7 +53,8 @@ is gone.
 
 ## The columns are fixed when it is created
 
-Lesson 4 warned about `SELECT *` in a view and promised the demonstration here:
+Lesson 4 warned that `SELECT *` gets whatever the table happens to have today. In a view it is the
+opposite, and just as quiet:
 
 ```sql
 CREATE VIEW everything AS SELECT * FROM products;
@@ -92,8 +93,8 @@ WITH CHECK OPTION;
 ```
 
 Now the `UPDATE` is rejected. For a view too complicated to be updatable automatically, PostgreSQL
-lets you write `INSTEAD OF` triggers and define what a write means — worth knowing it exists, and
-worth a long look before you use it, because a table that is not a table and a write that is not a
+lets you write `INSTEAD OF` triggers and define what a write means. It is worth knowing it exists,
+and worth a long look before you use it: a table that is not a table and a write that is not a
 write is a lot of surprise for one name.
 
 ## What they hide

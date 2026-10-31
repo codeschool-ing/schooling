@@ -54,7 +54,8 @@ sai do ar.
 
 ## As colunas ficam fixas quando ela é criada
 
-A aula 4 alertou sobre `SELECT *` numa view e prometeu a demonstração aqui:
+A aula 4 alertou que `SELECT *` traz o que a tabela tiver naquele dia. Numa view é o contrário, e
+igualmente calado:
 
 ```sql
 CREATE VIEW everything AS SELECT * FROM products;
@@ -93,9 +94,9 @@ WITH CHECK OPTION;
 ```
 
 Agora o `UPDATE` é rejeitado. Para uma view complicada demais para ser atualizável automaticamente,
-o PostgreSQL permite escrever gatilhos `INSTEAD OF` e definir o que uma escrita quer dizer — vale
-saber que existe, e vale um longo olhar antes de usar, porque uma tabela que não é tabela e uma
-escrita que não é escrita são muita surpresa para um nome só.
+o PostgreSQL permite escrever gatilhos `INSTEAD OF` e definir o que uma escrita quer dizer. Vale
+saber que existe, e vale um longo olhar antes de usar: uma tabela que não é tabela e uma escrita que
+não é escrita são muita surpresa para um nome só.
 
 ## O que elas escondem
 

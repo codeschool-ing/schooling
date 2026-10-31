@@ -107,6 +107,6 @@ You cannot design deadlocks out entirely. A schema change, a new query, a batch 
 — each is a chance for a new pair of orderings. Consistent ordering makes them rare, and rare is
 not never.
 
-So the deadlock error joins the serialization failure from the previous section on the list of
-things your application must be able to run again. That is one section away, and it is the same
-loop for both.
+So the deadlock error joins the serialization failure from the `write-skew` section on the list of
+things your application must be able to run again. That is the `retrying` section, two on, and it
+is the same loop for both.

@@ -94,6 +94,6 @@ key-value stores now offer real transactions, some across multiple keys, and a f
 setups give up durability guarantees for speed on purpose.
 
 The useful habit is not to ask whether something is ACID. It is to ask the four questions
-separately — *what happens if this half fails, what rules are actually enforced, what can another
-connection see, and what survives a power cut* — because a product answers those one at a time,
-and so does a configuration file.
+separately: *what happens if this half fails, what rules are actually enforced, what can another
+connection see, and what survives a power cut.* A product answers those one at a time, and so does
+a configuration file.

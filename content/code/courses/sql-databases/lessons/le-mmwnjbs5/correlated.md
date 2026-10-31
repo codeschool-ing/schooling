@@ -14,7 +14,7 @@ WHERE price > (SELECT avg(price) FROM products p2 WHERE p2.category_id = p.categ
 ```
 
 The second names `p`, which belongs to the query around it. Paste it into a client on its own and
-it is a syntax error. That single reference is what makes it correlated, and it changes when the
+it is an error. That single reference is what makes it correlated, and it changes when the
 subquery runs: conceptually, **once for every row of the outer query**.
 
 *"More expensive than the average for its own category"* is a real question that has no other short

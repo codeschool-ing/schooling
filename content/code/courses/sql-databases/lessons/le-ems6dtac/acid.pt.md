@@ -92,7 +92,7 @@ uma descrição do cenário atual: vários bancos de documentos e de chave-valor
 transações de verdade, alguns sobre várias chaves, e algumas configurações relacionais abrem mão de
 garantias de durabilidade por velocidade, de propósito.
 
-O hábito útil não é perguntar se algo é ACID. É fazer as quatro perguntas separadamente — *o que
+O hábito útil não é perguntar se algo é ACID. É fazer as quatro perguntas separadamente: *o que
 acontece se esta metade falhar, quais regras são de fato impostas, o que outra conexão consegue ver,
-e o que sobrevive a uma queda de energia* — porque um produto responde a elas uma por vez, e um
-arquivo de configuração também.
+e o que sobrevive a uma queda de energia.* Um produto responde a elas uma por vez, e um arquivo de
+configuração também.

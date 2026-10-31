@@ -58,9 +58,9 @@ Duas horas. A consulta terminou num milissegundo; a transação continua aberta 
 confirmou. **`idle in transaction` quer dizer que a conexão está segurando tudo o que está acima e
 não está fazendo nada com isso.**
 
-É quase sempre uma de três coisas: um driver com autocommit desligado, em que um `SELECT` perdido
-abriu uma transação que ninguém queria abrir; um framework que abre uma no começo de uma requisição e
-fecha no fim; ou código que chamou algo lento no meio.
+É quase sempre uma de três coisas. Um driver com autocommit desligado, em que um `SELECT` perdido
+abriu uma transação que ninguém queria abrir. Um framework que abre uma no começo de uma requisição e
+fecha no fim. Ou código que chamou algo lento no meio.
 
 O PostgreSQL tem um instrumento grosseiro para isso, e vale configurar:
 
