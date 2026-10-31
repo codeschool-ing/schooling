@@ -40,8 +40,7 @@ terminal you are typing into. A disk would appear as a *block device*, with a `b
 the names. It is that a program can write to a device with the same `write` it used on a file in the
 last section, and the driver does the rest.
 
-The list here is short because this is a server with no screen, printer or sound. On a desktop,
-`/dev` also holds the disks, the webcam and the sound card.
+The list stops at twelve lines because `head -12` cuts it there. On a desktop, `/dev` also holds the disks, the webcam and the sound card.
 
 ## Devices on Windows
 

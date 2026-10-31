@@ -35,7 +35,7 @@ base que não era só de leitura, escreveu as mudanças de um convidado na base 
 refeita. É por isso que a aula 1 deixou a base só de leitura com `chmod 444`.
 
 O `--shallow` funde uma camada abaixo, no `vm1.qcow2`, e o `--pivot` passa o convidado ligado para ele,
-sem pará-lo. Depois, o registro do snapshot e o arquivo agora vazio dele vão embora. O `vm1.qcow2` guarda
+sem pará-lo. Depois, o registro do snapshot e o arquivo dele, que nada mais lê, vão embora. O `vm1.qcow2` guarda
 as mudanças do convidado, 128M, e a cadeia voltou a ter dois arquivos.
 
 O botão *apagar snapshot* de todo hypervisor faz uma fusão como esta, e ela leva tempo proporcional ao

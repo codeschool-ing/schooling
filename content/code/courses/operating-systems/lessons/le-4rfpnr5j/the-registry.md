@@ -16,7 +16,7 @@ The top of the tree is five **root keys**, and two of them are where nearly ever
 | HKEY_CLASSES_ROOT | file types and what opens them | a view over HKLM and HKCU |
 | HKEY_CURRENT_CONFIG | the current hardware profile | a view into HKLM |
 
-**HKLM and HKCU are `/etc` and the dotfiles of section 04**, in Windows form: one for the machine, one
+**HKLM and HKCU are `/etc` and the dotfiles of section 05**, in Windows form: one for the machine, one
 per person. The files they are stored in are called **hives**.
 
 Inside, *keys* are folders and *values* are the settings, each with a *name*, a *type* and

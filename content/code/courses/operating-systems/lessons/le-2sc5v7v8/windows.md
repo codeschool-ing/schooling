@@ -27,7 +27,7 @@ sc.exe query Spooler                              # the older tool, same service
 ```
 
 **None of the Windows commands were run for this lesson.** The Spooler is the print queue; restarting it
-is the classic cure for a stuck print job, and lesson 17 meets it again.
+is the classic cure for a stuck print job.
 
 ## Scheduled tasks
 

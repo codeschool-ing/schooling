@@ -23,8 +23,10 @@ WARNING: The character device /dev/vboxdrv does not exist.
 
 O aviso vem do script do Ubuntu em volta do `VBoxManage`, que procura o driver antes de cada comando.
 Tudo o que só muda a descrição de uma máquina funciona sem ele, e esta aula inteira faz só isso. **Ligar
-um convidado não funciona**, e a seção 07 mostra a falha. Neste computador o driver nem pode ser
-carregado, porque o processador não oferece nada para ele usar, como a aula 2 descobriu.
+um convidado não funciona**, e a seção 07 mostra a falha. Neste computador o driver nunca foi
+compilado, e o aviso diz o que é preciso para isso: o pacote `virtualbox-dkms` e os cabeçalhos do
+kernel. Mesmo com ele, nenhum convidado ligaria aqui, porque o processador não oferece nada para o
+driver usar, como a aula 2 descobriu.
 
 No computador Linux de um cliente, o mesmo aviso tem duas causas comuns, e vale conhecer as duas porque
 nada mais na mensagem as nomeia:

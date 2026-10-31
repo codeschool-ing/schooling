@@ -4,7 +4,7 @@ version: 2
 ---
 
 Duas perguntas diferentes, e cada uma tem o seu comando. A segunda precisa de uma pasta para medir. A
-aula 12 deixou uma pasta `work` na sua pasta pessoal; isto a troca por quatro arquivos pequenos e um de
+aula 12 deixou uma pasta `work` na sua pasta pessoal; isto a troca por três arquivos pequenos e um de
 3 MB, só zeros, no lugar de um documento escaneado, com as mesmas datas daqui:
 
 ```sh

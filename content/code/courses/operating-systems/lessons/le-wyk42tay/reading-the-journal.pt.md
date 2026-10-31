@@ -25,7 +25,7 @@ ana@server:~$ sudo journalctl -b -p err --no-pager -o cat | cut -c1-90 | tail -2
 - `-b -p err`: só esta inicialização (`-b`), só erros e piores (`-p err`); o `-o cat` tira as
   colunas de data e o `cut` mantém 90 caracteres. Não imprimiu **nada**: este servidor foi iniciado logo
   antes da gravação, e nada desde então foi registrado como erro. Uma resposta vazia ainda é uma
-  resposta, e a seção 03 é uma falha que nunca chega a esta lista.
+  resposta, e a seção 04 é uma falha que nunca chega a esta lista.
 
 | filtro | mostra |
 |---|---|
@@ -36,7 +36,7 @@ ana@server:~$ sudo journalctl -b -p err --no-pager -o cat | cut -c1-90 | tail -2
 | `-f` | linhas novas conforme chegam, como o `tail -f` |
 | `-x` | acrescenta explicações para mensagens conhecidas |
 
-O `-b -1` merece uma nota. Depois de um reinício inesperado, as linhas interessantes estão na
+Depois de um reinício inesperado, o filtro a usar é o `-b -1`: as linhas interessantes estão na
 inicialização **anterior**, as últimas que ela escreveu antes de parar.
 
 Alguns programas ainda escrevem os próprios arquivos de log em **`/var/log`**, e o `tail` e o `grep` da

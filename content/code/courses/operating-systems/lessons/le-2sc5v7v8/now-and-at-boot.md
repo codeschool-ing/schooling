@@ -38,7 +38,7 @@ systemd-timesyncd.service   enabled enabled
 ```
 
 Seven, on this server. The same list on a laptop that "takes ages to start" is where to look for
-something nobody needs, and lesson 16 comes back to startup when a machine is slow.
+something nobody needs, and lesson 17 comes back to these lists when a machine misbehaves.
 
 ## Restart and reload
 

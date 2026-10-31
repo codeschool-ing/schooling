@@ -4,7 +4,7 @@ version: 2
 ---
 
 **O macOS usa os dois modelos.** Por baixo ele é Unix: todo arquivo tem um dono, um grupo e as nove
-letras da seção 01, e o `ls -l` do Terminal as mostra exatamente como no Linux. **Por cima, ele aceita
+letras da seção 02, e o `ls -l` do Terminal as mostra exatamente como no Linux. **Por cima, ele aceita
 ACLs** no estilo do Windows, que o *Obter Informações > Compartilhamento e Permissões* do Finder edita
 quando você acrescenta uma pessoa pelo nome.
 

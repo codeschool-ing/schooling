@@ -17,7 +17,8 @@ SharedFolderNameMachineMapping1="docs"
 SharedFolderPathMachineMapping1="/srv/docs"
 ```
 
-`--readonly` and `--automount` did what they say. In a guest with the **Guest Additions**, an automounted
+`--readonly` and `--automount` mean what they say, though the lines above show only the share's name
+and path. In a guest with the **Guest Additions**, an automounted
 share appears as `/media/sf_docs` on Linux, readable by members of the group `vboxsf`, which a user must
 be added to first, or as a network drive on Windows. VMware's shared folders come with **VMware Tools**
 and appear under `/mnt/hgfs` on Linux.
@@ -25,7 +26,7 @@ and appear under `/mnt/hgfs` on Linux.
 **The shared clipboard** copies text between the host's desktop and the guest's, and **drag and drop**
 moves files the same way. Both need the guest's agent and a graphical desktop in the guest, so neither
 can be shown on this course's host, whose guests have no screen. Each can be set to *disabled*, *host to
-guest*, *guest to host* or *bidirectional*, and that choice is a security one as much as a comfort one:
+guest*, *guest to host* or *bidirectional*. That choice is a security one as much as a comfort one:
 **a bidirectional clipboard hands the guest whatever you copy on the host**, a password from your
 password manager included. For a guest you do not trust, *disabled* is the setting; for one you only
 feed files into, *host to guest*, as `lab1` has for drag and drop.

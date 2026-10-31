@@ -50,4 +50,4 @@ ser apagada e é um mau hábito para uma que não vai. O `virsh undefine` apaga 
 tinha dela, e o `rm` apaga o arquivo. A lista está vazia.
 
 O disco base nunca foi tocado, porque toda escrita foi para o `vm1.qcow2`. O próximo convidado deste
-curso sai da mesma base em um minuto, como se nada tivesse acontecido.
+curso sai da mesma base em uns dois minutos, como se nada tivesse acontecido.

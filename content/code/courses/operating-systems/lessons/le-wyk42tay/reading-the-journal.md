@@ -25,7 +25,7 @@ ana@server:~$ sudo journalctl -b -p err --no-pager -o cat | cut -c1-90 | tail -2
 - `-b -p err`: only this boot (`-b`), only errors and worse (`-p err`); `-o cat` drops the date
   columns and `cut` keeps 90 characters. It printed **nothing**: this server was started just before the
   recording, and nothing since has been recorded as an error. An empty answer is still an answer, and
-  section 03 is a failure that never reaches this list.
+  section 04 is a failure that never reaches this list.
 
 | filter | shows |
 |---|---|
@@ -36,8 +36,8 @@ ana@server:~$ sudo journalctl -b -p err --no-pager -o cat | cut -c1-90 | tail -2
 | `-f` | new lines as they arrive, like `tail -f` |
 | `-x` | adds explanations for known messages |
 
-`-b -1` deserves a note. After an unexpected restart, the interesting lines are in the **previous** boot,
-the last ones it wrote before it stopped.
+After an unexpected restart, `-b -1` is the filter to reach for: the interesting lines are in the
+**previous** boot, the last ones it wrote before it stopped.
 
 Some programs still write their own log files to **`/var/log`**, and lesson 12's `tail` and `grep` read
 them. On a full Ubuntu installation, `/var/log/syslog` and `/var/log/auth.log` also exist; this minimal

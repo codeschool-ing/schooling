@@ -37,6 +37,6 @@ um grupo de processos uma visão própria de uma coisa, a lista de processos, o 
 enquanto todos rodam no mesmo kernel.
 
 A imagem é pequena porque não guarda kernel nem firmware, só arquivos: a `ubuntu:24.04` tem
-80.7 MB, onde o disco Ubuntu do laboratório guarda um sistema de 3,5 GiB. E **a imagem não muda**: o
+80,7 MB, onde o disco Ubuntu do laboratório guarda um sistema de 3,5 GiB. E **a imagem não muda**: o
 contêiner escreve numa camada própria por cima dela, a sobreposição da aula 1 de novo, e essa camada vai
 embora quando o contêiner é removido.

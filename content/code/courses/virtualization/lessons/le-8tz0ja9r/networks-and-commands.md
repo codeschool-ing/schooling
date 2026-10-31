@@ -24,13 +24,14 @@ right adapter fixes it. Lesson 11 builds all three with libvirt and looks at why
 Workstation also has a command line, `vmrun`, for starting, stopping and snapshotting guests from a
 script, and VMware's `ovftool` converts between OVA and `.vmx`:
 
-```sh
-vmrun list                                       # the guests that are running
-vmrun start "C:\VMs\lab1\lab1.vmx" nogui        # start one with no window
-vmrun snapshot "C:\VMs\lab1\lab1.vmx" clean      # take a snapshot called clean
-vmrun revertToSnapshot "C:\VMs\lab1\lab1.vmx" clean
-vmrun stop "C:\VMs\lab1\lab1.vmx" soft          # ask the guest to shut down
-ovftool lab1.ova "C:\VMs\lab1\lab1.vmx"          # convert an OVA into a Workstation machine
+```schooling-example
+{"language": "sh", "parts": [
+ {"code": "vmrun list", "note": "The guests that are running."},
+ {"code": "vmrun start \"C:\\VMs\\lab1\\lab1.vmx\" nogui", "note": "Starts one with no window."},
+ {"code": "vmrun snapshot \"C:\\VMs\\lab1\\lab1.vmx\" clean\nvmrun revertToSnapshot \"C:\\VMs\\lab1\\lab1.vmx\" clean", "note": "Takes a snapshot called clean, then goes back to it."},
+ {"code": "vmrun stop \"C:\\VMs\\lab1\\lab1.vmx\" soft", "note": "Asks the guest to shut down."},
+ {"code": "ovftool lab1.ova \"C:\\VMs\\lab1\\lab1.vmx\"", "note": "Converts an OVA into a Workstation machine."}
+]}
 ```
 
 **None of these were run for this lesson**, as VMware is not installed here. The paths are the kind

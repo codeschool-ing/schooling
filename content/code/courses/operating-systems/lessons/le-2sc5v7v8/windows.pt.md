@@ -27,7 +27,7 @@ sc.exe query Spooler                              # the older tool, same service
 ```
 
 **Nenhum dos comandos do Windows foi rodado para esta aula.** O Spooler é a fila de impressão;
-reiniciá-lo é a cura clássica para um trabalho de impressão travado, e a aula 17 o encontra de novo.
+reiniciá-lo é a cura clássica para um trabalho de impressão travado.
 
 ## Tarefas agendadas
 

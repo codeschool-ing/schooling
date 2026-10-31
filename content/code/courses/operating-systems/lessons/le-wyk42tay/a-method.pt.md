@@ -19,7 +19,7 @@ As ferramentas mudam entre sistemas; a ordem das perguntas não.
    você sem saber qual funcionou.
 5. **Conserte a menor coisa** que remove a causa, e prefira o conserto que pode ser desfeito, a regra da
    aula 15.
-6. **Confirme, e anote.** Confira a saída, como a seção 03 fez com o arquivo do relatório, e registre o
+6. **Confirme, e anote.** Confira a saída, como a seção 04 fez com o arquivo do relatório, e registre o
    que aconteceu, o que resolveu e como você soube. A próxima pessoa com esse problema pode ser você,
    daqui a um ano.
 

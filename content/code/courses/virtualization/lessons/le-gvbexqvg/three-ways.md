@@ -12,7 +12,7 @@ ways it would between any two computers, plus two the hypervisor adds:
 | a **shared folder** | the hypervisor's support and, usually, the guest's agent | files both sides keep working on |
 | a **shared clipboard**, and drag and drop | the guest's agent, and a graphical desktop | a line of text, a path, one small file |
 
-The network is the one that always works and never surprises anyone, and for a single file it is often
+**The network is the one that always works and never surprises anyone**, and for a single file it is often
 the quickest: this whole course has been doing it with `ssh`. The other two are conveniences, and like
 most conveniences they trade a little safety for it. This lesson builds a shared folder in the lab, and
 shows the clipboard's settings in VirtualBox.

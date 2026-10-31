@@ -16,7 +16,7 @@ ana@server:~/work$ ls
 backup.log  clients.csv  invoices  notes-todo.txt  notes.txt  reports
 ```
 
-- `rm` deletes files. `rm invoices/*.tmp` removed the two names `echo` had shown in section 04, and
+- `rm` deletes files. `rm invoices/*.tmp` removed the two names `echo` had shown in section 05, and
   nothing else.
 - `rmdir` deletes only an **empty** folder, and refused `reports-copy`. That refusal is a safety
   net: it cannot remove anything you have not already emptied.

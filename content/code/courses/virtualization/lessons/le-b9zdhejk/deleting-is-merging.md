@@ -35,7 +35,7 @@ command, run against a base that was not read-only, wrote one guest's changes in
 them, and it had to be rebuilt. That is why lesson 1 made the base read-only with `chmod 444`.
 
 `--shallow` merges one layer down, into `vm1.qcow2`, and `--pivot` switches the running guest onto it,
-without stopping it. Then the snapshot's record and its now-empty file go. `vm1.qcow2` holds the
+without stopping it. Then the snapshot's record and its file, which nothing reads any more, go. `vm1.qcow2` holds the
 guest's changes, 128M, and the chain is back to two files.
 
 Every hypervisor's *delete snapshot* button does a merge like this one, and it takes time in proportion

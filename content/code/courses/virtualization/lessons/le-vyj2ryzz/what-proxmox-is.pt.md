@@ -28,5 +28,5 @@ servidor. Toda máquina recebe um **número**, começando em `100`, e o número 
 arquivos e os comandos.
 
 O Proxmox não está instalado no host deste curso, que é ele mesmo uma máquina virtual sem VT-x, como a
-aula 2 descobriu. O que o laboratório tem é o motor que o Proxmox roda, e as próximas três seções o
+aula 2 descobriu. O que o laboratório tem é o motor que o Proxmox roda, e as próximas quatro seções o
 olham pelos nomes que o Proxmox dá a cada parte.

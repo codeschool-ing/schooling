@@ -30,7 +30,7 @@ ana@client:~$ curl -sS -o /dev/null -w "%{http_code}\n" http://target/
 200
 ```
 
-`200` from the client: fixed, and verified from the client, which is the only verification the user
+`200` from the client: fixed, and verified from where the user sits, the only check the user
 cares about. Then the part that makes this a lab:
 
 ```

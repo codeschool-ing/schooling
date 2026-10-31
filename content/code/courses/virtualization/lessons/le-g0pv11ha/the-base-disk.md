@@ -21,7 +21,7 @@ something fails. `sha256sum --check` computed the image's checksum and found it 
 **`OK`**. `--ignore-missing` skips the other files the list names, which were not downloaded. A file that
 was cut short or changed on the way says `FAILED` here instead, and is downloaded again.
 
-The image is used as it is, plus five programs the lessons need inside every guest, which go in now
+The image is used as it is, plus five programs the lessons need inside every guest. They go in now
 because some later guests have no internet to fetch them: `qemu-guest-agent`, lesson 3; `nginx-light`,
 a small web server, switched off until a lesson starts it; and `curl`, `netcat-openbsd` and `tcpdump`,
 for testing networks. `virt-customize` puts them in **without starting the image as a guest**: it boots

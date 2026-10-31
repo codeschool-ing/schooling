@@ -53,4 +53,4 @@ rebuilds exist so that software certified on RHEL runs on them, although the ven
 still ask for the real thing.
 
 *SUSE* and *Arch* complete the four. **Alpine** stands on its own: tiny, with `apk` and a different
-C library, and found mostly inside containers, which is where the virtualization course meets it.
+C library, and found mostly inside containers, which is where the virtualisation course meets it.

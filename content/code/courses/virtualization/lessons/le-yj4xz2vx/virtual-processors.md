@@ -32,7 +32,8 @@ ana@vm1:~$ nproc
 the running guest (`live`). `vcpuinfo` shows that each vCPU is running **on some real processor of the
 host**: at that moment, vCPU 0 on host processor 3 and vCPU 1 on processor 1. `CPU Affinity:
 yyyy` means either may run on any of the host's four; the host's scheduler moves them as it moves any
-thread. Each has used about 90.2 seconds of processor time, most of it booting under imitation.
+thread. vCPU 0 has used 90.2 seconds of processor time and vCPU 1 90.4,
+most of it booting under imitation.
 
 So a vCPU is a promise of turns, not a processor set aside. Two guests with two vCPUs each on a host
 with four processors fit; ten of them also start, and take turns, and each runs slower. That is fine for

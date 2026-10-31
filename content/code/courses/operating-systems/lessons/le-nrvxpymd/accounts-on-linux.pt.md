@@ -48,4 +48,4 @@ especial. Outras distribuições chamam esse grupo de `wheel`.
 
 O `/etc/passwd` tem de ser legível por todos, porque todo `ls -l` transforma IDs de usuário em nomes.
 Então os hashes das senhas moram no **`/etc/shadow`**, legível só pelo root. O `passwd -S` informa sobre
-eles sem mostrá-los, e a seção 02 o usa.
+eles sem mostrá-los, e a seção 03 o usa.

@@ -24,9 +24,9 @@ compartilhada; **nenhum `graphics`**, então nenhuma tela para levar área de tr
 soltar.
 
 O VirtualBox guarda as mesmas portas como configurações. A `lab1`, uma máquina vazia feita como na aula
-4, começou com a área de transferência compartilhada nos dois sentidos, arrastar e soltar do host para o convidado e NAT, o arranjo da aula 12.
-Um comando desliga os dois primeiros e põe a placa de rede dela numa **internal network**, o nome do
-VirtualBox para o quarto modo da aula 11. Os convidados se alcançam, e o host não tem endereço nenhum nela,
+4, começou com o arranjo da aula 12, a área de transferência compartilhada nos dois sentidos e arrastar e
+soltar do host para o convidado, e com a placa de rede em NAT. Um comando desliga os dois primeiros e põe
+a placa numa **internal network**, o nome do VirtualBox para o quarto modo da aula 11. Os convidados se alcançam, e o host não tem endereço nenhum nela,
 então não há serviço do host para alcançar.
 
 Antes de um convidado rodar algo em que você não confia, então:

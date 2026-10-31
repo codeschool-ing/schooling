@@ -30,8 +30,8 @@ Three rules decide what a person actually gets:
 3. **Entries are inherited** from the folder above unless inheritance is turned off. An entry set
    directly on a folder beats an inherited one.
 
-The *Security* tab's **Advanced > Effective Access** answers the only question that matters in a
-ticket: given all the entries, what can *this* person do here?
+The *Security* tab's **Advanced > Effective Access** answers the question a
+ticket usually comes down to: given all the entries, what can *this* person do here?
 
 Over the network there is a second list, the **share permissions** of the shared folder. **A user gets
 the more restrictive of the two**, which is why a common arrangement is to share with *Everyone: Full

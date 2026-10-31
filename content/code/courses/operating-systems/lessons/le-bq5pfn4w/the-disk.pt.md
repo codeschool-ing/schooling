@@ -25,13 +25,13 @@ Os dois que importam são estes:
   os ajustes.
 
 O Finder junta os dois e mostra um disco só, **Macintosh HD**. É essa divisão que torna possível a
-primeira opção da seção 04: o macOS pode ser trocado sem mexer nos dados ao lado.
+primeira opção da seção 05: o macOS pode ser trocado sem mexer nos dados ao lado.
 
 ## Criptografia desde o começo
 
 No Apple silicon, e nos Macs Intel com o chip de segurança T2, o disco interno está **sempre
 criptografado pelo hardware**. O que o **FileVault** acrescenta é que a chave fica trancada atrás da
-senha de um usuário, então o disco não pode ser lido até alguém entrar. A seção 05 o liga.
+senha de um usuário, então o disco não pode ser lido até alguém entrar. A seção 06 o liga.
 
 É também por isso que apagar um Mac moderno é rápido. Destruir a chave torna ilegível cada byte do
 disco, então nada precisa ser sobrescrito.

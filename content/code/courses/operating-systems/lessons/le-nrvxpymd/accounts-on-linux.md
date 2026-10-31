@@ -47,4 +47,4 @@ otherwise. Other distributions call that group `wheel`.
 
 `/etc/passwd` has to be readable by everybody, because every `ls -l` turns user IDs into names. So the
 password hashes live in **`/etc/shadow`**, readable only by root. `passwd -S` reports on them without
-showing them, which section 02 uses.
+showing them, which section 03 uses.

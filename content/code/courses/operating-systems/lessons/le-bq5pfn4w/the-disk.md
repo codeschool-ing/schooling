@@ -25,13 +25,13 @@ The two that matter are these:
   the settings.
 
 Finder joins the two and shows one disk, **Macintosh HD**. That split is what makes the first option in
-section 04 possible: macOS can be replaced without touching the data beside it.
+section 05 possible: macOS can be replaced without touching the data beside it.
 
 ## Encryption from the start
 
 On Apple silicon, and on Intel Macs with the T2 security chip, the internal disk is **always
 encrypted by the hardware**. What **FileVault** adds is that the key is locked behind a user's password,
-so the disk cannot be read until somebody signs in. Section 05 turns it on.
+so the disk cannot be read until somebody signs in. Section 06 turns it on.
 
 This is also why erasing a modern Mac is fast. Destroying the key makes every byte on the disk
 unreadable, so nothing has to be overwritten.

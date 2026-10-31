@@ -31,7 +31,7 @@ The program that runs it is a *hypervisor*, and which one depends on what your c
 | a Mac with Apple silicon (M1 and later) | UTM, free | Ubuntu Server, `arm64` |
 | Linux | virt-manager, or VirtualBox | Ubuntu Server, `amd64` |
 
-The virtualization course explains what a hypervisor does. Here it is only the window the server runs in.
+The virtualisation course explains what a hypervisor does. Here it is only the window the server runs in.
 
 **Installed** is right if you have a spare computer you can wipe. Beside Windows it is possible, and
 lesson 3 shows how, but the course's later lessons break things on purpose and you would be breaking the
