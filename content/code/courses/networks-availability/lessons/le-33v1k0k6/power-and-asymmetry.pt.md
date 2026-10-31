@@ -26,7 +26,7 @@ ponto de acesso que não consegue ouvi-lo de volta. O usuário vê as barrinhas 
 vez. O enlace fica simétrico, então as barrinhas dizem a verdade. A célula encolhe, então um celular que
 se afasta para de se agarrar a um ponto de acesso distante e passa para um mais perto; a aula 9 trata
 dessa decisão, que é do celular. E menos pontos de acesso se ouvem no mesmo canal. Essa é a contenção cocanal da
-terceira seção desta aula: com três canais em 2,4 GHz, um ponto de acesso alto o bastante para alcançar o próximo do seu canal
+seção sobre dividir um canal: com três canais em 2,4 GHz, um ponto de acesso alto o bastante para alcançar o próximo do seu canal
 divide tempo de ar com ele.
 
 **Uma rede densa é feita de muitas células baixas, não de poucas altas.** É a conta do tempo de ar da aula 6

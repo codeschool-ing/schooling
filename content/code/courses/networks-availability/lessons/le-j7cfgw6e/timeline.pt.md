@@ -18,8 +18,8 @@ perde. Num terminal isso quer dizer um prompt que mostra a hora, ou um `date` ro
 que importa; nas notas quer dizer o relógio antes da frase. Nenhum dos dois foi feito no laboratório da
 aula 21, e por isso o registro dela tem ordem e não tem horários.
 
-Quando os horários são escritos, o fuso decide se eles podem ser comparados. O único horário de relógio
-que estas aulas imprimiram está na aula 22, onde o mtr abriu cada relatório com uma linha como `Start:
+Quando os horários são escritos, o fuso decide se eles podem ser comparados. Na aula 22,
+o mtr abriu cada relatório com uma linha como `Start:
 2026-09-28T18:17:16-0300`. **O `-0300` é a diferença para o UTC**, e está ali porque o relógio do
 laboratório segue `America/Sao_Paulo`. Um sistema de chamados em UTC, o suporte de um provedor em outro
 país e um console de nuvem num fuso próprio vão escrever o mesmo instante cada um de um jeito. Umas linhas

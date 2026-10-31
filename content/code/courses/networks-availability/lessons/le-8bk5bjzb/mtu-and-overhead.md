@@ -54,7 +54,7 @@ The overhead also has a price in throughput, smaller than people fear. Twenty-ei
 carries 160 bytes of audio, the same 28 bytes are much more of the total, and a bandwidth plan that
 forgets them is short.
 
-The two tunnel interfaces show the arithmetic side by side:
+The tunnel and the link under it show the arithmetic side by side:
 
 ```
 ana@hq:~$ ip link show tun0; ip link show eth1

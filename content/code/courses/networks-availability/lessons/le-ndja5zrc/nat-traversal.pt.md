@@ -57,8 +57,8 @@ IP 203.0.113.2.4500 > 198.51.100.77.4500: UDP-encap: ESP(spi=0x8d6d0dca,seq=0x1)
 
 Cada lado calcula um hash dos endereços e portas que acredita que o pacote levava e manda os hashes como
 `N(NATD_S_IP)` e `N(NATD_D_IP)`. `remote` usou `192.168.1.50`, enquanto `hq` viu o pacote chegar de
-`198.51.100.77`, como mostra a captura do provedor. Os hashes não bateram, e **os dois lados concluíram
-`local host is behind NAT` antes de qualquer chave ser combinada.** A primeira troca rodou na porta 500
+`198.51.100.77`, como mostra a captura do provedor. Os hashes não bateram, então **os dois lados souberam do NAT antes de qualquer chave ser
+combinada**, e o laptop registrou `local host is behind NAT`. A primeira troca rodou na porta 500
 e a segunda na 4500.
 
 IKE e ESP agora dividem a porta 4500, então quem recebe precisa separá-los. Uma mensagem IKE ali começa

@@ -94,7 +94,7 @@ ana@web1:~$ tail -n 2 /lab/web1/www/logs/access.log | cut -d" " -f1-7
 
 Now the route to `web1` is `dev wg0 table 51820`, and the traceroute goes to `hq` first, `10.20.0.1`,
 then out to the ISP from the head office. The page is the same. The last two lines of `web1`'s access
-log, which `netlab.sh` keeps under `/lab/web1`, are the two requests, made in the same second: **the same laptop and the same page, and `web1` saw
+log, which `netlab.sh` keeps under `/lab/web1`, are the two requests, made in the same second. **The same laptop asked for the same page, and `web1` saw
 two different clients.** Split, the request came from `198.51.100.77`, Ana's home router. Full, it came
 from `203.0.113.2`, because `hq` forwarded her traffic to the internet and translated it to its own
 address (NAT, covered in `networks-addressing`).

@@ -9,7 +9,7 @@ behind it a data centre with a DNS server, two load balancers and three web serv
 machine belongs to an analyst who captures traffic. **You build all of them yourself, inside one Linux
 machine, and every command in every lesson is typed there.** Nothing runs on a computer we host.
 
-They are not twenty virtual machines. Each one is a **network namespace**: a copy of the Linux network
+They are not sixteen virtual machines. Each one is a **network namespace**: a copy of the Linux network
 stack with its own interfaces, addresses, routes and firewall, inside one running system. A cable is a
 pair of virtual Ethernet interfaces, and a switch is a Linux bridge. To the programs running on them,
 they are separate machines; `tcpdump` on one sees only that machine's traffic, and a ping between two of
@@ -22,7 +22,7 @@ a reason not to.
 
 | | what it is | what it costs |
 |---|---|---|
-| installed | Ubuntu 24.04 on a computer of its own, or as the system of the one you use | nothing to buy, and twenty-six packages on that computer for good, a DNS server and a VPN server among them |
+| installed | Ubuntu 24.04 on a computer of its own, or as the system of the one you use | nothing to buy, and twenty-five packages on that computer for good, a DNS server and a VPN server among them |
 | **a virtual machine with Multipass** (recommended) | Canonical's tool that creates an Ubuntu Server 24.04 machine with one command, on Windows, macOS and Linux | 2 processors, 2 GB of memory and 10 GB of disk while it runs |
 | online | a small Linux server rented by the hour from a cloud provider | money for every hour it exists, and a machine on the internet from its first minute |
 
@@ -32,9 +32,9 @@ computer you use every day is not.
 
 **The virtual machine** is the recommended path because it costs nothing and goes away with one
 command. Multipass uses the hypervisor each system already has: Hyper-V on Windows, the macOS
-virtualisation framework on a Mac, KVM on Linux. Any other hypervisor works too, at the price of the Ubuntu
-Server 24.04 installer image and half an hour of its screens: VirtualBox on Windows, Linux or an Intel
-Mac, UTM on an Apple-silicon Mac, Hyper-V Manager on Windows, GNOME Boxes or virt-manager on Linux.
+virtualisation framework on a Mac, KVM on Linux. Any other hypervisor works too: VirtualBox on Windows, Linux or
+an Intel Mac, UTM on an Apple-silicon Mac, Hyper-V Manager on Windows, GNOME Boxes or virt-manager on
+Linux. The price is the Ubuntu Server 24.04 installer image and half an hour of its screens.
 
 **Online** is named so that you know it exists. Any provider's smallest Ubuntu 24.04 server is enough.
 The network the course builds never reaches the internet, so being online is not a risk to it, but the

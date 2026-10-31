@@ -41,8 +41,8 @@ a chave pública de cada par com quem conversa. Escreva cada um com `sudo nano` 
 ```
 
 **As chaves destas listagens são as que esta gravação gerou, e as suas são outras.** Em cada linha
-`PrivateKey` vai a chave privada daquela máquina, que `sudo cat /etc/wireguard/hq.key` imprime em `hq`;
-em cada linha `PublicKey` vai a chave pública do par, do arquivo `.pub` dele na própria máquina. Uma
+`PrivateKey` vai a chave privada daquela máquina, que `sudo cat /etc/wireguard/hq.key` imprime em `hq`.
+Em cada linha `PublicKey` vai a chave pública do par, do arquivo `.pub` dele na própria máquina. Uma
 chave pública copiada desta página nomearia uma máquina que você não tem.
 
 `branch` tem um par, `hq`:

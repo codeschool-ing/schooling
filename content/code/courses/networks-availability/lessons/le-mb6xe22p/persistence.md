@@ -60,7 +60,7 @@ said, the connection failed, and there was nowhere else it was allowed to send i
 outage for exactly the users who were on it, while everybody else carries on and the dashboards look
 fine.
 
-Two lines fix it. Here is the backend as `sed` printed it on `lb1` after the change, with what each line
+Two changes fix it. Here is the backend as `sed` printed it on `lb1` after the change, with what each line
 does; write it in place of the last one and restart HAProxy as before:
 
 ```schooling-example

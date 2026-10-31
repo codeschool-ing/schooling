@@ -5,7 +5,7 @@ version: 1
 
 `remote` é o laptop da Ana em casa, `192.168.1.50`, atrás de um roteador doméstico, `homegw`, que o
 traduz para `198.51.100.77`. O arquivo de `hq` não tem `Endpoint` para ela. O arquivo dela, o terceiro da
-primeira seção, aponta para `hq` como `vpn.example.com:51820` e tem uma linha a mais,
+seção sobre chaves e configuração, aponta para `hq` como `vpn.example.com:51820` e tem uma linha a mais,
 `PersistentKeepalive = 25`. Ela sobe o túnel, `sudo wg-quick up wg0` em `remote`, e pinga o servidor de
 arquivos:
 

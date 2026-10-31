@@ -41,7 +41,7 @@ with the private key hidden, since the real file holds it in clear:
 
 **The keys in these listings are the ones this recording made, and yours are different.** On each
 `PrivateKey` line goes that machine's own private key, which `sudo cat /etc/wireguard/hq.key` prints on
-`hq`; on each `PublicKey` line goes the peer's public key, from its `.pub` file on its own machine. A
+`hq`. On each `PublicKey` line goes the peer's public key, from its `.pub` file on its own machine. A
 public key copied from this page would name a machine you do not have.
 
 `branch` has one peer, `hq`:

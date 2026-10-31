@@ -8,7 +8,7 @@ narrow sense that it will keep that many associated. **What runs out first is ai
 one transmission at a time, as lesson 6 showed, so every client on it takes turns, and a client's turn
 lasts as long as its data takes to send at its rate.
 
-That is why the sticky client of the first section matters to everybody else. The same download, at three
+That is why the sticky client of the section on when the client roams matters to everybody else. The same download, at three
 data rates:
 
 ```schooling-example

@@ -17,8 +17,8 @@ de 365 dias, que é um mês médio de cerca de 30,4 dias. Aqui, com um mês de 3
 discutindo, e é por isso que um SLA diz qual é a janela.
 
 **Failovers são baratos e pessoas são caras.** Com três noves, 794 failovers de 3,264 segundos cabem num
-mês; com quatro noves, 79 ainda cabem. Um único incidente que precisa de uma pessoa, um chamado de
-madrugada, alguém entrando no sistema, um diagnóstico e um reinício, leva muito mais. Mesmo em rápidos 45 minutos ele gasta sozinho mais do que o mês inteiro de 99,9%, 43,20 minutos. **O orçamento não é gasto
+mês; com quatro noves, 79 ainda cabem. Um único incidente que precisa de uma pessoa — um chamado de
+madrugada, alguém entrando no sistema, um diagnóstico e um reinício — leva muito mais. Mesmo um rápido, de 45 minutos, gasta sozinho mais do que o orçamento inteiro do mês a 99,9%, de 43,20 minutos. **O orçamento não é gasto
 pelas falhas que as máquinas resolvem; é gasto pelas que esperam alguém.** Esse é o argumento a favor do failover automático das aulas 15 e 16, dito em minutos.
 
 ## Gastando de propósito

@@ -20,8 +20,8 @@ a recuperação são relógios separados, e só o segundo está na promessa.
 
 O erro comum com o RPO é esquecer que ele existe. Um sistema que não guarda dados tem RPO zero de graça, e
 é por isso que os failovers medidos até aqui pareceram tão limpos. Qualquer coisa que guarde o que os
-usuários fazem precisa responder à pergunta explicitamente, e a resposta é definida pela frequência com
-que os dados são copiados para outro lugar, que é a última seção desta aula.
+usuários fazem precisa responder à pergunta explicitamente. A resposta é definida pela frequência com
+que os dados são copiados para outro lugar, o assunto da seção sobre backups e replicação no fim desta aula.
 
 ## Os dois números para os sistemas deste curso
 

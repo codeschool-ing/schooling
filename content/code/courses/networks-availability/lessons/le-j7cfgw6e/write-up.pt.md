@@ -35,8 +35,8 @@ constatação para o próximo incidente. Em ordem, como as transcrições mostra
 
 1. `/` a partir do caixa: `200 16 bytes`.
 2. `big.bin` a partir do caixa: 0 bytes, o curl desiste depois de 8002 ms.
-3. Captura no lado do escritório de `hq`: segmentos de 1448 bytes saem de `files`, e nenhum dos nove
-   pacotes capturados confirma dados.
+3. Captura no lado do escritório de `hq`: segmentos de 1448 bytes saem de `files`, e nos nove pacotes
+   capturados o caixa não confirma nenhum dos dados deles.
 4. De `files`, pings com Don't Fragment: `-s 1392` atravessa, `-s 1400` se perde sem erro.
 5. O `wg0` em `hq` tem `mtu 1420`.
 6. `nft list ruleset` em `hq` mostra a regra `hardening` descartando destination unreachable na saída.
@@ -48,7 +48,7 @@ constatação para o próximo incidente. Em ordem, como as transcrições mostra
 | | hipótese | teste | resultado | veredito |
 |---|---|---|---|---|
 | 1 | o nome, a rota, o túnel ou o servidor web caiu | `/` a partir do caixa | `200 16 bytes` | refutada: os quatro funcionam |
-| 2 | pacotes cheios se perdem a caminho do caixa | `tcpdump` no lado do escritório de `hq` durante o download | segmentos de 1448 bytes enviados, nenhum dado confirmado em nove pacotes | sustentada |
+| 2 | pacotes cheios se perdem a caminho do caixa | `tcpdump` no lado do escritório de `hq` durante o download | segmentos de 1448 bytes enviados, nenhum confirmado em nove pacotes | sustentada |
 | 3 | o MTU do túnel é menor que esses pacotes | pings com Don't Fragment a partir de `files`; `ip link show wg0` | 1392 atravessa, 1400 se perde; `mtu 1420` | confirmada |
 | 4 | o "fragmentation needed" de `hq` nunca chega a `files` | a estatística do ping de 1400; `nft list ruleset` em `hq` | nenhum `+1 errors`; uma regra descarta destination unreachable na saída | confirmada |
 

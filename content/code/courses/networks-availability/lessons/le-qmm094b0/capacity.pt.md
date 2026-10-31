@@ -7,7 +7,7 @@ O datasheet de um ponto de acesso diz que ele suporta algumas centenas de client
 verdadeiro no sentido estreito de que ele mantém essa quantidade associada. **O que acaba primeiro é o
 tempo de ar.** Um canal leva uma transmissão por vez, como a aula 6 mostrou, então todo cliente nele espera a vez. E a vez de um cliente dura o tempo que os dados dele levam para ir na taxa dele.
 
-É por isso que o cliente grudento da primeira seção importa para todo mundo. O mesmo download, em três
+É por isso que o cliente grudento da seção sobre quando o cliente faz roaming importa para todo mundo. O mesmo download, em três
 taxas de dados:
 
 ```schooling-example

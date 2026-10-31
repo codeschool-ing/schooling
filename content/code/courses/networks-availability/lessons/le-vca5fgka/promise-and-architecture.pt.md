@@ -5,7 +5,7 @@ version: 1
 
 O número de um contrato costuma ser decidido numa reunião de vendas, e o número que a arquitetura consegue
 entregar é decidido pela arquitetura. **Nada obriga os dois a concordarem**, e a distância entre eles é
-onde os créditos da primeira seção são pagos.
+onde os créditos da seção sobre SLI, SLO e SLA são pagos.
 
 A primeira verificação é uma conta que a aula 14 já fez. O programa dela deu ao data center do laboratório,
 com dois balanceadores e três servidores web mas um enlace de provedor e um servidor DNS, uma

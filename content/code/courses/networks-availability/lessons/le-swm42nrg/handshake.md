@@ -59,7 +59,7 @@ Data`.** TLS 1.3 encrypts certificates, and lesson 5 of `networks` saw the same 
 
 `Continuation Data` is the rest of one record, split across packets of 1264 bytes. **The `P_ACK_V1`
 packets are OpenVPN acknowledging its control packets itself, because UDP does not.** Packets 9 to 11
-go the other way: the laptop's own certificate and proof, encrypted, about 2.7 kilobytes of them. They
+go the other way: the laptop's own certificate and proof, encrypted, 2756 bytes of frames between them. They
 are the check the server makes of the client. Twelve packets, 3.8 milliseconds, on one computer
 talking to itself.
 

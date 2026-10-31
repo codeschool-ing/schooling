@@ -19,9 +19,9 @@ difference is small, and it is exactly the kind of difference two parties to a c
 about, which is why an SLA states its window.
 
 **Failovers are cheap and people are expensive.** At three nines, 794 failovers of 3.264 seconds fit in a
-month; at four nines, 79 still do. A single incident that needs a person, a page at night, somebody
-logging in, a diagnosis and a restart, takes far longer. Even at a quick 45 minutes it spends more than
-the whole 99.9% month, 43.20 minutes, on its own. **The budget is not spent by failures the machines
+month; at four nines, 79 still do. A single incident that needs a person — a page at night, somebody
+logging in, a diagnosis and a restart — takes far longer. Even a quick one of 45 minutes spends more than
+the month's whole 99.9% budget of 43.20 minutes on its own. **The budget is not spent by failures the machines
 handle; it is spent by the ones that wait for somebody.** That is the argument for the automatic failover of lessons 15 and 16, stated in minutes.
 
 ## Spending it on purpose

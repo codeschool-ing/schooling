@@ -33,7 +33,7 @@ rtt min/avg/max/mdev = 0.094/0.106/0.129/0.014 ms
 ```
 
 `rate 5Mbit` é a nova velocidade do enlace e `pfifo ... limit 100p` é a fila: primeiro a entrar, primeiro
-a sair, no máximo 100 pacotes. O ping logo depois dá **0,106 ms**, o mesmo de antes. Um enlace de 5 Mbit/s
+a sair, no máximo 100 pacotes. O ping logo depois dá **0,106 ms**, nada mais lento que os 0,161 ms de antes. Um enlace de 5 Mbit/s
 é lento para um arquivo e rápido para cinco pings, então a fila estava vazia a cada vez e não havia nada
 atrás do que esperar.
 
