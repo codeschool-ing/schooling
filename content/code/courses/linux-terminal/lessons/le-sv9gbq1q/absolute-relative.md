@@ -53,10 +53,10 @@ Standing in `/home/ana/work/notes`, every one of these names the same file:
 | `/home/ana/work/src/main.c` | absolute | from the root, spelled out |
 | `../src/main.c` | relative | up one, then down |
 | `~/work/src/main.c` | absolute, after expansion | `~` becomes `/home/ana` before the command runs |
-| `../../ana/work/src/main.c` | relative | silly, and correct |
+| `../../../ana/work/src/main.c` | relative | silly, and correct |
 
 The last one is there to make a point: **a path does not have to be the shortest route, only a
-valid one.** Going up two and back down three is exactly as correct as going up one — the kernel
+valid one.** Going up three and back down three is exactly as correct as going up one — the kernel
 walks whatever you hand it.
 
 ## When to use which
