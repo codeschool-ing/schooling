@@ -3,7 +3,7 @@ title: Encrypting the state before it leaves the laptop
 version: 2
 ---
 
-The last three sections keep secrets out of the state where a provider allows it. Something always
+The last two sections keep secrets out of the state where a provider allows it. Something always
 gets in anyway: a resource with no write-only argument, a data source that reads a secret, a key a
 provider generates and returns. For that remainder, the state's own protection is the last line,
 and lesson 7's "protecting" section built most of it: a bucket nobody outside the team can read,

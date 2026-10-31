@@ -236,6 +236,6 @@ which changes need a replacement; moto cannot create one for an existing stack, 
 `--method=template` and compare templates only.
 
 The state is the stack, as in the last section. `cdk.out` is build output the next synth rewrites,
-and it is left out of version control, as `node_modules` is. What goes in git is the program, which is the point of the
+and you leave it out of version control, as you do `node_modules`. What goes in git is the program, which is the point of the
 CDK: **loops, functions and classes for the description, with CloudFormation still doing the
 deploying.**

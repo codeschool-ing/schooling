@@ -95,7 +95,7 @@ ls: cannot access '/proc/net/if_inet6': No such file or directory
 The second `listen` line of the default site, `[::]:80`, is the one nginx cannot open, and the
 missing `/proc/net/if_inet6` is the kernel saying there is no IPv6 here. **On your computer the
 image probably starts**, because an ordinary Linux kernel has IPv6 even where Docker gives the
-container no address of its own: `docker run` then prints nothing and keeps nginx running until you
+container no address of its own. Then `docker run` prints nothing and keeps nginx running until you
 press Ctrl+C, and the `ls` prints the file's name. That is the point: the build ran on one machine and the image runs on others, and
 **a provisioner's exit code says nothing about whether the result works where it is going**. Only
 starting it does, which is why an image pipeline runs the image and asks it something before

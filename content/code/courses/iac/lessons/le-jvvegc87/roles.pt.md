@@ -61,7 +61,7 @@ shop_server_name: shop.example.com
 shop_root: /var/www/shop
 ```
 
-As tarefas se mudam sem alteração, com um nível de indentação a menos porque não estão mais dentro
+As tarefas se mudam sem alteração, com quatro espaços a menos de indentação porque não estão mais dentro
 de uma play:
 
 ```yaml

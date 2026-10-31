@@ -139,7 +139,7 @@ Planning failed. Terraform encountered an error while generating this plan.
 
 **A cost that cannot be attributed is refused at the cheapest moment there is**, on a laptop, before
 review. The same rule can be checked by a scanner in the pipeline, which is how lesson 14's tools
-enforce it across configurations that do not share this variable, and the account can check its own
+enforce it across configurations that do not share this variable. The account can also check its own
 tags against a tag policy, which the cloud course named.
 
 ## What the defaults do not reach

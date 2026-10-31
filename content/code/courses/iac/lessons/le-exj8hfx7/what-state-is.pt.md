@@ -91,7 +91,7 @@ ana@laptop:~/shop$ jq "{version, terraform_version, serial, lineage}" terraform.
 `version` é o formato do próprio arquivo, não de algo dentro dele. `terraform_version` é o Terraform
 que o gravou por último. `serial` sobe de um em um a cada gravação, então, de duas cópias, a de
 serial maior é a mais nova. `lineage` é um id aleatório dado ao estado quando ele foi criado e
-mantido em todos os seriais seguintes: dois arquivos com lineages diferentes não são duas versões de
+mantido em todos os seriais seguintes. Dois arquivos com lineages diferentes não são duas versões de
 uma história, são duas histórias, e o Terraform se recusa a gravar uma por cima da outra. Você vai
 ver esses dois números fazendo o seu trabalho na última seção desta aula.
 
@@ -135,7 +135,7 @@ ana@laptop:~/shop$ jq ".resources[] | select(.name == \"web\") | .instances[0] |
 A lista `dependencies` está ali para o dia em que a configuração já não disser nada. Apague o
 `main.tf` inteiro e o Terraform ainda sabe, só pelo estado, que o security group tem de sair antes da
 VPC onde ele vive. A cópia dos atributos é o que permite a um plan mostrar `~ update in-place` com o
-valor antigo ao lado do novo, e é também por isso que o estado é **sensível**: o que quer que um
+valor antigo ao lado do novo. É também por isso que o estado é **sensível**: o que quer que um
 provider devolva vai parar nele, e a aula 12 encontra lá uma senha em texto puro.
 
 Então são três coisas, e todo comando desta aula serve para mantê-las de acordo: **a configuração**

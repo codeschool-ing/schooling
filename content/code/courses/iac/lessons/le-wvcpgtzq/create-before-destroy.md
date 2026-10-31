@@ -144,7 +144,7 @@ a `name_prefix`, it is there for this. Ana commits the new name before going on.
 
 **Why a security group is the usual case.** On a real account AWS refuses to delete a group that
 is still attached to a running instance, so the default order would try to destroy first and fail.
-The group in this lab is attached to nothing: moto lost an instance's list of groups when
-the group was replaced, which AWS does not do, so the lesson leaves the attachment out rather
+The group in this lab is attached to nothing. When the group was replaced, moto lost the
+instance's list of groups, which AWS does not do, so the lesson leaves the attachment out rather
 than quote a plan only moto would print. And one rule the documentation states: Terraform also
 applies `create_before_destroy`, implicitly, to every resource the marked one depends on.

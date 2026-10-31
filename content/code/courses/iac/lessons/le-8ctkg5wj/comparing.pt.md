@@ -34,7 +34,7 @@ agora. O Ansible pertence à Red Hat, que é parte da IBM.
 ## Quando um agente compensa
 
 Comece pelo que as máquinas são. **Máquinas de vida longa, que são consertadas em vez de substituídas,
-são onde um agente se paga**: centenas de servidores que precisam ficar como descritos por anos, sob
+são onde um agente se paga.** Centenas de servidores que precisam ficar como descritos por anos, sob
 uma auditoria que pede provas, são mantidos certos por algo que confere a cada meia hora e informa o
 que corrigiu. Se você entrar num time que roda Puppet, Chef ou Salt, esse é o motivo provável, e
 reconhecer o modelo é a habilidade de que você precisa ali.

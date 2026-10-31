@@ -106,12 +106,12 @@ git init -q . && printf ".terraform/\n*.tfstate*\ntfplan*\n" > .gitignore
 git add -A && git commit -qm 'the shop network, web and its role'
 ```
 
-The two AMI ids are sample images that moto ships, and AWS has no images with those ids. On a real
+The AMI ids in this lesson are sample images that moto ships, and AWS has no images with those ids. On a real
 account you would put a real image's id in their place, looked up with a data source as lesson 5
 did.
 
-To see all of them at once, Ana makes four edits in one go to the shop's configuration: she
-renames subnet `a`, moves the `web` instance to a newer image, deletes subnet `b`, and adds an
+To see all of them at once, Ana makes four edits in one go to the shop's configuration. She
+changes the name tag on subnet `a`, moves the `web` instance to a newer image, deletes subnet `b`, and adds an
 assets bucket, a policy that lets `web` read it, and a password for a database that comes later:
 
 ```

@@ -69,8 +69,8 @@ page come from that and not from Terraform:
   against its published checksums, and served from a directory. Where `terraform init` prints
   `(unauthenticated)`, yours prints that the provider is signed by HashiCorp, and the lock file it
   writes has more lines than the page shows. Lesson 2 shows that file.
-- **Two transcripts show the Terraform Registry failing to answer**, in lessons 10 and 17. Yours
-  will download what they could not.
+- **Three transcripts show a provider or module registry out of reach**, in lessons 2, 10 and 17.
+  Yours will download what they could not.
 - **Two scanners print a complaint about the network** in lesson 14, and yours will not.
 - **A few tools were built from their source code**, because their downloads are on a site the
   recording machine could not reach. You install the released programs, and each lesson that needs

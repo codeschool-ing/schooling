@@ -113,13 +113,13 @@ ana@laptop:~/shop$ terraform show -json tfplan | jq -c '.resource_changes[] | se
 
 **The prices are written into the script, not looked up when it runs.** The AWS price list is a
 download that changes, so the prices below are lines of the cloud course's price sheet, `prices.py`,
-copied from its `sa-east-1` column as that course prints them: AWS's public list prices in USD,
-before tax, at the offer versions it pins, `AmazonEC2` 20260925174521 and `AmazonVPC`
+copied from its `sa-east-1` column as that course prints them. They are AWS's public list prices in
+USD, before tax, at the offer versions that sheet pins, `AmazonEC2` 20260925174521 and `AmazonVPC`
 20260917190528. Lesson 10 of the cloud course explains how that sheet is read and why a pinned
 version prints the same numbers next year. What this lesson does is the arithmetic, so your run of
 it prints the figures on this page.
 
-`price.py`, saved in `~/shop`, reads a plan on its standard input, prices the four kinds of resource it has a line for,
+`price.py`, saved in `~/shop`, reads a plan on its standard input, prices the three kinds of resource it has lines for,
 and counts a month as 730 hours, the cloud course's convention:
 
 ```python
@@ -186,7 +186,7 @@ no line on the sheet: aws_internet_gateway.shop, aws_subnet.private_c, aws_subne
 ```
 
 Before a single resource exists, the plan is worth **175.73 USD a month** at list price. The
-surprise is the order. The NAT gateway, one line in `network.tf` with a comment above it, costs
+surprise is the order. The NAT gateway, one block in `network.tf` with a comment above it, costs
 67.89, more than either web server at 52.10. Each server's 52.10 is its hours plus its 20 GB disk;
 the address the gateway holds adds 3.65. The VPC, the subnets and the internet gateway have no
 line, because AWS does not charge for them by the hour.

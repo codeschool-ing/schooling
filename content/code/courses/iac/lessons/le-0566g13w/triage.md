@@ -24,7 +24,7 @@ cannot do it for you, because the one thing it does not know is your system.
 
 ## Severity is not exposure
 
-Look at two lines from Trivy's list in the trivy section. `AWS-0107`, SSH open to any address, is
+Look at two lines from Trivy's list in section 04. `AWS-0107`, SSH open to any address, is
 `HIGH`. `AWS-0132`, a bucket not encrypted with a key the shop manages itself, is also `HIGH`. The
 first is a port that answers anybody on the internet, on every server that will ever join the
 group. The second is a choice of key for photos that the shop's website shows to every visitor

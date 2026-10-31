@@ -48,8 +48,8 @@ resource "aws_vpc" "shop" {
 }
 ```
 
-In a new directory Terraform needs `terraform init` first, which downloads the AWS provider and
-which lesson 2 reads line by line. Then the first `terraform apply` finds no such VPC and creates
+In a new directory Terraform needs `terraform init` first, which downloads the AWS provider; lesson
+2 shows what it prints. Then the first `terraform apply` finds no such VPC and creates
 it. Look at the last lines:
 
 ```

@@ -92,7 +92,7 @@ somebody committed.
 
 The objection to all this is the right one: a pinned image never receives a security fix. **Pins
 make updates deliberate, not rare.** The arrangement that works is a scheduled rebuild, say once a
-week, from the pipeline lesson 15 describes: it checks for a newer base digest and newer package
+week, from the pipeline lesson 15 describes. It checks for a newer base digest and newer package
 versions, writes them into the template as a commit, builds the next version, runs it, and
 publishes it. The updates arrive on a schedule, each one a reviewed diff and a new version number,
 and each rollout is the one-line change of the previous section. A fix that cannot wait is the same

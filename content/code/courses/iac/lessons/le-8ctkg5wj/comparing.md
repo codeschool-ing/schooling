@@ -34,7 +34,7 @@ to Red Hat, which is part of IBM.
 ## When an agent earns its place
 
 Start from what the machines are. **Long-lived machines that are repaired rather than replaced are where
-an agent pays for itself**: hundreds of servers that must stay as described for years, under an audit
+an agent pays for itself.** Hundreds of servers that must stay as described for years, under an audit
 that asks for proof, are kept right by something that checks every half hour and reports what it fixed.
 If you join a team that runs Puppet, Chef or Salt, that is the likely reason, and recognising the model
 is the skill you need there.

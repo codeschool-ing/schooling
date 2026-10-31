@@ -182,7 +182,7 @@ guarantee to take exactly these actions if you run "terraform apply" now.
 ```
 
 **`Plan: 1 to import, 0 to add, 0 to change, 0 to destroy`** is the line to read. It means the
-bucket will enter the state, and that the block in `main.tf` already describes it as it is: had
+bucket will enter the state, and that the block in `main.tf` already describes it as it is. Had
 the configuration disagreed with the real bucket, the same plan would also show a change, and the
 team would see it before anything happened. The apply does what the plan said:
 

@@ -50,7 +50,7 @@ escreve e que diz exatamente de onde cada um vem quando outras coleções estão
 
 `cache_valid_time: 3600` quer dizer que as listas de pacotes só são atualizadas se tiverem mais de
 uma hora, então uma segunda execução não as baixa de novo. A tarefa `Configure the site` troca o
-site padrão do Ubuntu por um bloco server de três linhas, o bastante para o nginx servir a página.
+site padrão do Ubuntu por um bloco server de quatro linhas, o bastante para o nginx servir a página.
 
 ```
 ana@laptop:~/shop/ansible$ ansible-playbook site.yml

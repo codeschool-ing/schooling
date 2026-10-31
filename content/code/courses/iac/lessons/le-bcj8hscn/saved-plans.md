@@ -6,8 +6,8 @@ version: 2
 Every plan in this course that was not saved has ended with the same note, and it is worth taking
 literally: without `-out`, Terraform "can't guarantee to take exactly these actions" if you run
 `apply` now. **The plan you read and the plan `apply` carries out are two different computations.** `terraform
-apply` with no argument plans again from scratch, and anything that changed in between, a
-colleague's apply, a manual edit in the console, another branch's change, changes what it does.
+apply` with no argument plans again from scratch, and anything that changed in between — a
+colleague's apply, a manual edit in the console, another branch's change — changes what it does.
 The question it asks shows you the new plan, but it is the old one you reviewed.
 
 `-out` writes the plan to a file instead:

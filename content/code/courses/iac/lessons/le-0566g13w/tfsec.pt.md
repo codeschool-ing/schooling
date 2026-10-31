@@ -78,8 +78,8 @@ Result #12 LOW EBS volume does not use a customer-managed KMS key.
 ```
 
 Doze resultados, três severidades, e os mesmos temas dos outros dois scanners. Mas leia os lugares:
-todos estão no `main.tf`. **A regra de SSH no `ssh.tf`, o achado que os outros dois puseram em
-primeiro plano, não está lá.**
+todos estão no `main.tf`. **A regra de SSH no `ssh.tf`, o achado que os outros dois
+relataram, não está lá.**
 
 ## Um recurso que ninguém ensinou a ele
 

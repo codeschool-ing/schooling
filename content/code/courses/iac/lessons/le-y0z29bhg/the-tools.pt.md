@@ -31,7 +31,7 @@ código.
 AWS, um programa à parte, sabe transformar `resource "aws_vpc"` nas chamadas certas e ler o
 resultado de volta. Há providers para toda nuvem grande, para serviços de DNS, para o GitHub, para
 sistemas de monitoramento, e para coisas que nem são serviços, como gerar um nome aleatório ou
-escrever um arquivo local. A aula 2 encontra quatro deles.
+escrever um arquivo local. A aula 2 encontra três deles.
 
 A tabela não tem linha para "a ferramenta que faz bem os dois trabalhos", de propósito.
 Uma configuração que funciona usa uma ferramenta das linhas de provisionamento, uma das linhas de

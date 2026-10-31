@@ -7,8 +7,8 @@ Todo plano deste curso que não foi salvo terminou com a mesma nota, e vale lev�
 sem `-out`, o Terraform "can't guarantee to take exactly these actions", não garante executar
 exatamente essas ações se você rodar o `apply` agora. **O plano que você lê e o plano que o `apply`
 executa são dois cálculos diferentes.** O `terraform apply` sem argumento planeja de novo do zero,
-e qualquer coisa que tenha mudado no meio, o apply de um colega, uma edição manual no console, a
-mudança de outro branch, muda o que ele faz. A pergunta que ele faz mostra o plano novo, mas o que
+e qualquer coisa que tenha mudado no meio — o apply de um colega, uma edição manual no console, a
+mudança de outro branch — muda o que ele faz. A pergunta que ele faz mostra o plano novo, mas o que
 você revisou foi o antigo.
 
 O `-out` grava o plano num arquivo:
@@ -60,7 +60,7 @@ isso que deve ser tratado como o estado: qualquer segredo que esteja no estado e
 ## Um plano que ficou desatualizado
 
 A Ana salva o plano no branch dela, `change`, para um colega revisar. Enquanto ele espera, surge
-algo urgente: a VPC precisa de uma tag `Owner` hoje. Ela faz essa mudança num branch só dela,
+algo urgente: a VPC precisa de uma tag `Owner` hoje. Ela faz essa mudança num branch próprio,
 `hotfix`, e aplica na hora. No Git, ela faz commit da mudança no `main`, marca esse commit com o
 branch `change`, e começa o `hotfix` a partir do commit anterior:
 

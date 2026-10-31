@@ -173,9 +173,9 @@ state**, so that a plan for one cannot even see the other's resources. The rest 
 - each state has its own lock, so a long apply in dev never blocks an urgent fix in prod.
 
 There are three common ways to give each environment its state, and the next sections take them
-in turn: **workspaces**, which keep one directory and switch the state underneath it; **one
-directory per environment**, each with its own backend key; and **Terragrunt**, a tool that
-generates the second arrangement for you. They differ in where the choice of environment lives,
+in turn. **Workspaces** keep one directory and switch the state underneath it; **one directory per
+environment** gives each its own backend key; and **Terragrunt** is a tool that generates the
+second arrangement for you. They differ in where the choice of environment lives,
 and that decides how easily a command reaches the wrong one.
 
 Isolation also has a layer below the state. Two states in the same AWS account, reached with the

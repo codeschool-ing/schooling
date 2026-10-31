@@ -5,7 +5,7 @@ version: 2
 
 Um scanner de segurança para código de infraestrutura parece algo que olha a sua nuvem. **Ele olha
 os seus arquivos.** Ele lê a configuração do Terraform, pega cada recurso com seus argumentos e o
-compara com um catálogo de regras, e cada regra é uma pequena função: *este security group deixa a
+compara com um catálogo de regras. Cada regra é uma pequena função: *este security group deixa a
 porta 22 entrar vinda de `0.0.0.0/0`?*, *este bucket tem um bloqueio de acesso público?*, *este
 volume está criptografado?* Ele não precisa de credenciais, não chama API nenhuma e nunca abre o
 state. A aula 13 o colocou na escada de verificações entre o `terraform validate` e uma execução de

@@ -92,7 +92,7 @@ qualquer diferença seja um diff que alguém commitou.
 
 A objeção a tudo isso é a certa: uma imagem fixada nunca recebe correção de segurança. **Fixar torna
 as atualizações deliberadas, não raras.** O arranjo que funciona é um rebuild agendado, digamos uma
-vez por semana, no pipeline que a aula 15 descreve: ele procura um digest de base mais novo e versões
+vez por semana, no pipeline que a aula 15 descreve. Ele procura um digest de base mais novo e versões
 de pacote mais novas, escreve isso no template como um commit, constrói a próxima versão, roda e
 publica. As atualizações chegam num calendário, cada uma um diff revisado e um número de versão novo,
 e cada rollout é a mudança de uma linha da seção anterior. Uma correção que não pode esperar segue o

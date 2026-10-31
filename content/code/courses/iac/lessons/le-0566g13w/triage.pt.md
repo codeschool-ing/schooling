@@ -23,7 +23,7 @@ por você, porque a única coisa que ele não conhece é o seu sistema.
 
 ## Severidade não é exposição
 
-Olhe duas linhas da lista do Trivy na seção dele. `AWS-0107`, SSH aberto para qualquer endereço, é
+Olhe duas linhas da lista do Trivy na seção 04. `AWS-0107`, SSH aberto para qualquer endereço, é
 `HIGH`. `AWS-0132`, um bucket que não é criptografado com uma chave gerida pela própria loja, também é
 `HIGH`. O primeiro é uma porta que atende qualquer um na internet, em todo servidor que um dia entrar
 no grupo. O segundo é a escolha de chave para fotos que o site da loja mostra a todo visitante de
