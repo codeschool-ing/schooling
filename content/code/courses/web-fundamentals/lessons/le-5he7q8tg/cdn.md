@@ -63,8 +63,8 @@ reading, now distributed across a hundred countries.
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Public files and pages identical for everybody belong at the edge, cached for a long time. Anything personal must be marked private, because a shared cache handing one visitor's page to the next is now distributed worldwide.\"> <text x=\"180\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">cache it at the edge</text> <rect x=\"20\" y=\"36\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"55\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">files with a fingerprint in the name</text> <rect x=\"20\" y=\"82\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"101\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">images, fonts, stylesheets</text> <rect x=\"20\" y=\"128\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"147\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">pages identical for everybody</text> <text x=\"540\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--amber)\">mark it private</text> <rect x=\"380\" y=\"36\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"55\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">anything behind a login</text> <rect x=\"380\" y=\"82\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"101\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">a basket, an order, a balance</text> <rect x=\"380\" y=\"128\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"147\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">anything with a name on it</text> <text x=\"360\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">the failure from lesson seven, now distributed across a hundred countries</text> <text x=\"360\" y=\"232\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">decide per route, when the route is written, rather than during an incident</text> </svg>", "caption": "One header decides which column a response is in, and one of the two columns is a disclosure."}
 ```
 
-The header that separates them is the one from that reading, and the practical habit is to decide
-per route rather than globally: files and public pages cached at the edge, anything behind a login
+The header that separates them is the one from that reading. The practical habit is to decide per
+route rather than globally: files and public pages cached at the edge, anything behind a login
 marked `private`, and the decision made when the route is written rather than during an incident.
 
 ## The other things it does
@@ -98,7 +98,7 @@ publishing into a step in your build.
 
 The word to be careful with is **origin**. It means your own server, the thing behind the edges,
 and it appears in every provider's settings and in every explanation of why something is stale.
-Getting comfortable with it now saves reading three paragraphs twice later.
+Getting comfortable with it now saves reading three paragraphs twice on the day something is stale.
 
 ## What it cannot help with at all
 
@@ -120,6 +120,6 @@ Both are common and both are recognisable.
 **Caching something personal**, discussed above, which is the serious one.
 
 **Not being able to see past it.** When a page is wrong, the question *is my server wrong or is the
-edge holding something old?* is the same question as the DNS one from the last lesson, and it has
-the same answer: ask the origin directly, with the edge bypassed. Every provider offers a way; find
+edge holding something old?* is the same question as the DNS one from the last lesson. It has the
+same answer: ask the origin directly, with the edge bypassed. Every provider offers a way; find
 out what it is on the day you set it up rather than on the day you need it.

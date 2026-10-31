@@ -54,7 +54,7 @@ diferentes, e quem ler os resultados depois não tem como distingui-las.** A aul
 temperatura em si é medida; aqui ela é só a configuração mais fácil de mudar por acidente.
 
 É por isso que o harness lê parâmetros do topo do arquivo do prompt, como fazem o `v6-header.txt` da
-aula 4 e o `reply-varied.txt` da aula 8: um arquivo pode começar com linhas `nome: valor` e uma linha
+aula 4 e o `reply-varied.txt` da aula 8. Um arquivo pode começar com linhas `nome: valor` e uma linha
 `---`, e tudo acima do `---` é uma configuração. **Um parâmetro escrito ali faz parte dos bytes,
 então mudá-lo muda o id. Um parâmetro passado na linha de comando pertence à execução, e nada o
 registra.**

@@ -23,11 +23,11 @@ X509v3 Basic Constraints: critical
     CA:FALSE
 ```
 
-- **`subject`**: sobre quem é o certificado, `CN = www.example.com`. O *common name* é o lugar antigo
+- `subject`: sobre quem é o certificado, `CN = www.example.com`. O *common name* é o lugar antigo
   do nome, mantido para pessoas lerem.
-- **`issuer`**: quem assinou, `Example Issuing CA 1`. A seção 03 o segue.
-- **`notBefore` e `notAfter`**: a validade, em GMT. Este vale por 90 dias, de setembro a dezembro.
-- **`Subject Alternative Name`**: os nomes para os quais ele vale, e **o campo que os clientes de fato
+- `issuer`: quem assinou, `Example Issuing CA 1`. A seção 03 o segue.
+- `notBefore` e `notAfter`: a validade, em GMT. Este vale por 90 dias, de setembro a dezembro.
+- `Subject Alternative Name`: os nomes para os quais ele vale, e **o campo que os clientes de fato
   conferem**. Um certificado aqui cobre três nomes: `www.example.com`, `example.com` e
   `shop.example.com`. Um nome fora dessa lista falha, diga o que disser o subject.
 - `Extended Key Usage: TLS Web Server Authentication` o limita a identificar servidores, e `CA:FALSE`

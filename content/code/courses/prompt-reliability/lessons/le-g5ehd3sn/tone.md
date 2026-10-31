@@ -5,9 +5,9 @@ version: 2
 
 Correctness and format have answers somebody wrote down. Tone does not, and the usual first move is
 to give up on measuring it. The other move is to write down the parts of it that **can** be said as
-rules. Five rules for a reply to a customer of Folio, as a file the program reads: at most one
-exclamation mark, at most eighty words, none of the phrases the shop never uses, no promise from a
-short list of patterns, and some acknowledgement of the customer. Save them as `checks/tone.json`:
+rules. Here are five rules for a reply to a customer of Folio, as a file the program reads. A reply
+has at most one exclamation mark and at most eighty words, none of the phrases the shop never uses,
+no promise from a short list of patterns, and some acknowledgement of the customer. Save them as `checks/tone.json`:
 
 ```json
 {

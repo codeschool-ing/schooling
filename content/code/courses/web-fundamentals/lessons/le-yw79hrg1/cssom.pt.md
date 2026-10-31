@@ -31,8 +31,6 @@ vence um nome de elemento — independentemente de onde apareça.
 
 ## Por que a tela fica em branco
 
-Aqui está a parte que explica um sintoma que você já viu.
-
 O navegador não vai pintar antes de ter os estilos. Não porque não consiga — ele poderia desenhar o
 texto na hora — mas porque desenhá-lo sem estilo e desenhar de novo produziria um lampejo de conteúdo
 sem estilo em cada carregamento, e a segunda versão não se pareceria nada com a primeira.
@@ -96,8 +94,8 @@ regras, das quais uma página usa quarenta, custa o download, a leitura, e uma p
 contra cada elemento.
 
 A maior parte disso é rápida — navegadores são extremamente bons nisso — mas numa página grande num
-celular modesto é um número real, e é a razão de um build que remove regras não usadas aparecer nas
-medições em vez de apenas no tamanho do arquivo.
+celular modesto é um número real. É por isso que um build que remove regras não usadas aparece nas
+medições, e não só no tamanho do arquivo.
 
 O instinto: uma folha de estilo não é um custo que você paga uma vez. É um custo que você paga de novo
 a cada layout, e as próximas leituras são sobre com que frequência eles acontecem.

@@ -74,9 +74,9 @@ about changes that take five minutes.
 
 This one surprises people, and it has a memorable shape.
 
-When a resolver is told a name does not exist, it caches that too — that is **negative caching**,
-and its length comes from a field in the domain's `SOA` record rather than from any TTL you set on
-the record you are creating, because the record did not exist to carry one.
+When a resolver is told a name does not exist, it caches that too — that is **negative caching**.
+Its length comes from a field in the domain's `SOA` record rather than from any TTL you set on the
+record you are creating, because the record did not exist to carry one.
 
 So: look up a name before you create it, and you may wait longer for it to appear than if you had
 never asked. The nonexistence is in a cache, with a lifetime chosen by the domain's defaults, and

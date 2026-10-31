@@ -27,7 +27,7 @@ up 31 minutes
 `ssh office` agora quer dizer o usuário `ana` em `192.168.10.10`. Tudo que cabe na linha de comando
 cabe num bloco `Host`: `Port`, `IdentityFile` para uma chave específica, `ProxyJump` para o salto da
 seção 08. Toda ferramenta feita sobre SSH lê o mesmo arquivo, então `scp office:…`, `sftp office` e o
-`git` também entendem o nome curto; a aula 8 usa todos eles.
+`git` também entendem o nome curto; a aula 8 usa os dois primeiros.
 
 O arquivo é lido de cima para baixo, e **para cada opção vale o primeiro valor encontrado**. Hosts
 específicos vêm primeiro e um bloco `Host *` com os padrões vem por último, senão os padrões ganham em

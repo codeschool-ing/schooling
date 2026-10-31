@@ -47,7 +47,7 @@ version of this happens:
 1. Your browser asks for the page at that address. One exchange. It gets back a document — a few
    dozen kilobytes of HTML, and **no images, no styling, no code**.
 2. Reading that document, the browser discovers it needs a stylesheet, four scripts, a font and
-   nine images. It asks for each of them. **Fourteen more exchanges**, most of them started before
+   eight images. It asks for each of them. **Fourteen more exchanges**, most of them started before
    the first one has finished being read.
 3. One of those scripts, once running, asks for your notification count. **Another exchange**, this
    one to a different machine entirely.

@@ -68,8 +68,6 @@ change wrong* and *is my change not live yet*. If the authoritative answer is ri
 resolver's is old, you are waiting for a TTL and there is nothing to fix. If the authoritative
 answer is wrong, no amount of waiting will help.
 
-That one command has settled more arguments than any other in this lesson.
-
 ## The three faults that account for most of it
 
 **A change made at the wrong provider.** After the `NS` records were pointed somewhere new, the old

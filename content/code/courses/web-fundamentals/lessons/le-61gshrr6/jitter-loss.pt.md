@@ -14,7 +14,7 @@ abrem, e para tráfego ao vivo eles importam bem mais que largura de banda.
 ## Jitter: a média estava ótima
 
 A latência costuma ser citada como um número só, o que esconde justamente o que importa. Dez
-pacotes que levam 40 ms cada e dez pacotes que levam 10, 90, 15, 80, 20, 95, 12, 75, 30 e 73 têm a
+pacotes que levam 40 ms cada e dez pacotes que levam 10, 90, 15, 80, 20, 95, 12, 25, 30 e 23 têm a
 mesma média e produzem experiências completamente diferentes.
 
 ```schooling-figure
@@ -59,7 +59,7 @@ taxa de perda pequena custa uma quantidade grande de banda** — que é por que 
 está lenta" tantas vezes quer dizer um cabo descartando pacotes em silêncio.
 
 **Para o UDP, perda é um buraco.** Nada é reenviado, então cada pacote perdido são vinte
-milissegundos de fala que nunca vão existir. Os codecs disfarçam um pouco disso adivinhando, e a um
+milissegundos de fala que nunca vão existir. Os codecs disfarçam um pouco disso adivinhando, e abaixo de meio
 por cento você quase não ouve nada; a cinco você ouve uma conversa feita de fragmentos.
 
 ## De onde ela vem, em ordem de probabilidade

@@ -7,7 +7,7 @@ IPv6 is the answer to IPv4 running out, and the answer is simply **more bits**: 
 of 32.
 
 That sounds like four times as many addresses. It is not. Each bit doubles the count, so 128 bits
-is 2⁹⁶ times as many — a number with thirty-nine digits, large enough that the question of running
+is 2⁹⁶ times as many — a total with thirty-nine digits, large enough that the question of running
 out does not come back.
 
 ## Reading one without panic
@@ -59,7 +59,7 @@ other changes are worth knowing because they turn up in practice.
 
 **A machine can address itself.** An IPv6 interface builds its own link-local address without
 asking anybody — no server, no negotiation, no failure mode. Two machines plugged together talk
-immediately. In IPv4 that case needs the `169.254` fallback you will meet two sections from now,
+immediately. In IPv4 that case needs the `169.254` fallback you will meet three sections from now,
 which exists precisely because the ordinary path failed.
 
 **Routers do not fragment.** The MTU problem from lesson two is handled only at the ends: a router

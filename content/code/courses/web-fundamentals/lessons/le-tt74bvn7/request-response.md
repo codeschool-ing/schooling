@@ -4,9 +4,9 @@ version: 1
 ---
 
 One side asks, the other answers. Now look closely at the asking and the answering, because they
-have a shape that repeats everywhere — in HTTP, which you meet in lesson 6, but also in database
-queries, in the calls your phone makes to check for mail, and in protocols that were designed
-before the web existed.
+have a shape that repeats everywhere. HTTP has it, and you meet HTTP in lesson 6. So do database
+queries, the calls your phone makes to check for mail, and protocols that were designed before
+the web existed.
 
 ## Four things a request carries
 
@@ -130,9 +130,9 @@ sometimes just a lot earlier than the arriving.
 One last property, and it is the one that makes people redesign things.
 
 An exchange cannot be faster than the time it takes to get there and back. If the machine you are
-asking is 9,000 km away, the answer cannot arrive in less than about 60 milliseconds no matter how
-fast either side is, because that is roughly how long light takes to make the trip through fibre —
-and real networks are slower than light.
+asking is 9,000 km away, the answer cannot arrive in less than about 60 milliseconds, no matter how
+fast either side is. That is roughly how long light takes to make the trip through fibre — and
+real networks are slower than light.
 
 So an operation built as ten exchanges in a row, each waiting for the last, has a floor of ten
 round trips. The same operation built as one exchange that asks for everything has a floor of one.

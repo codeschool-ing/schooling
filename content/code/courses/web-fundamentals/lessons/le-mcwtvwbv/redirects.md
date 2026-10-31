@@ -50,8 +50,8 @@ knows, and goes straight to the new place.
 Which is exactly what you wanted, until the redirect was wrong.
 
 Publish a `301` sending the whole site to an address that turns out to be broken, notice within
-five minutes, and fix it — and every visitor who loaded it in those five minutes is still being
-sent to the broken address, by their own browser, with no request reaching you to correct. There is
+five minutes, and fix it. Every visitor who loaded it in those five minutes is still being sent to
+the broken address, by their own browser, with no request reaching you to correct. There is
 nothing you can serve them, because they are not asking.
 
 The rule that follows costs nothing: **test a new redirect as a `302`, and change it to `301` once
@@ -80,8 +80,8 @@ the chain is a five-minute check most sites have never had done to them.
 
 ## Redirects you did not write
 
-A last thing worth knowing, because it is where the surprises live: several layers between the
-visitor and your code can issue one, and the code you are reading never mentions it.
+Several layers between the visitor and your code can issue a redirect, and the code you are reading
+never mentions it.
 
 The web server may be configured to force HTTPS. A framework may add or remove a trailing slash so
 that `/precos` and `/precos/` do not become two addresses. A CDN in front of everything may send

@@ -14,7 +14,7 @@ Set-Cookie: session=8f3c1a9e; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=L
 
 `Max-Age` is a number of seconds; `Expires` is a date. Set neither and you have a **session
 cookie**, which the browser keeps until the window closes — a poorly chosen name, because it has
-nothing to do with the sessions two readings from now.
+nothing to do with the sessions of the next reading.
 
 The choice is not only technical. A cookie that survives a closed browser is the difference between
 *stay signed in* and signing in again every morning, and on a shared machine those are meaningfully

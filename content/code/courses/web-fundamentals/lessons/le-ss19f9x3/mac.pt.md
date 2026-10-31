@@ -40,7 +40,7 @@ quadros carregariam pacotes de internet. Ela carrega qualquer coisa: já foi usa
 que não existem mais e será usada para outros ainda não escritos.
 
 **A camada de baixo não deve saber o que a de cima está carregando.** É a regra que a aula cinco
-generaliza, e o endereço MAC é o exemplo mais claro dela no curso inteiro: um esquema de
+generaliza. O endereço MAC é o exemplo mais claro dela no curso inteiro: um esquema de
 endereçamento completo pertencente ao fio, ignorante do esquema de endereçamento que viaja dentro.
 
 Há um ganho prático também. Como a placa conhece o próprio endereço e só aceita quadros que o
@@ -60,7 +60,7 @@ quando ainda não sabe a quem perguntar — que é a próxima seção, e a segui
 acha uma caixa de som para tocar, e como uma impressora se anuncia.
 
 A razão de conhecer os três é que tráfego de broadcast chega em toda máquina e custa um pouco de
-trabalho a cada uma, que é o argumento por redes menores que você viu uma seção atrás. Uma rede não
+trabalho a cada uma, que é o argumento por redes menores que você viu duas seções atrás. Uma rede não
 é lenta por ser grande; é lenta porque tudo nela é interrompido por tudo perguntando.
 
 ## Ele deveria ser único, e não é bem

@@ -26,9 +26,9 @@ Received 4 response(s)
 ```
 
 **Dois MACs diferentes responderam por um endereço.** `52:54:00:0A:77:21` respondeu uma vez, a
-impressora; `52:54:00:A8:0A:15`, o `desk`, respondeu a todas as sondagens. Seja uma impressora
-configurada às pressas, seja uma máquina mentindo sobre o gateway, a resposta de quem defende começa
-do mesmo jeito: achar os dois MACs na tabela de endereços do switch, ir até as portas e descobrir qual
+impressora; `52:54:00:A8:0A:15`, o `desk`, respondeu a todas as sondagens. Pode ser uma impressora
+configurada às pressas ou uma máquina mentindo sobre o gateway. Nos dois casos, a resposta de quem
+defende começa do mesmo jeito: achar os dois MACs na tabela de endereços do switch, ir até as portas e descobrir qual
 delas não deveria estar dizendo aquilo.
 
 ## Perguntar antes de assumir um endereço

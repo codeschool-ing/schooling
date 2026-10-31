@@ -5,9 +5,10 @@ version: 2
 
 Exatidão e formato têm respostas que alguém escreveu. Tom não tem, e o primeiro movimento de costume
 é desistir de medi-lo. O outro movimento é escrever as partes dele que **podem** ser ditas como
-regras. Cinco regras para uma resposta a um cliente da Folio, num arquivo que o programa lê: no
-máximo um ponto de exclamação, no máximo oitenta palavras, nenhuma das expressões que a loja nunca
-usa, nenhuma promessa de uma lista curta de padrões, e algum reconhecimento do cliente. Salve-as
+regras. Aqui estão cinco regras para uma resposta a um cliente da Folio, num arquivo que o programa
+lê. Uma resposta tem no máximo um ponto de exclamação e no máximo oitenta palavras, nenhuma das
+expressões que a loja nunca usa, nenhuma promessa de uma lista curta de padrões, e algum
+reconhecimento do cliente. Salve-as
 como `checks/tone.json`:
 
 ```json

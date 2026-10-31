@@ -45,7 +45,7 @@ Um **endpoint** é um lugar específico para onde você pode mandar uma requisi�
 uma resposta.
 
 Este é o mais estreito dos três, e a diferença importa: um host é uma máquina, mas uma máquina
-roda muitas coisas ao mesmo tempo. Um host só pode ser:
+roda muitas coisas ao mesmo tempo. Um mesmo host pode ser:
 
 - um servidor web, respondendo requisições de página;
 - um servidor de e-mail, aceitando mensagens;

@@ -21,8 +21,7 @@ about what everybody else is entitled to assume.
 
 Two of those are worth a sentence before the rest. `HEAD` gives the headers alone: it is how you
 ask *has this changed?* or *how big is it?* without moving the file. `OPTIONS` asks what a server
-will permit, and you will meet it again as the question a browser asks before it lets one site call
-another.
+will permit, and it is also the question a browser asks before it lets one site call another.
 
 ## Safe, and idempotent
 

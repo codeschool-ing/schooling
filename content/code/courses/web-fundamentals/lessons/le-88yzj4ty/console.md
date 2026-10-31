@@ -50,7 +50,7 @@ script. If your errors are unreadable, this is the thing that is missing.
 
 ## Typing into it
 
-The second half, and it is a genuinely good way to learn.
+The second half, and it is a good way to learn.
 
 Anything you type is evaluated against the current page. `document.title` prints the title.
 `document.querySelectorAll('img').length` counts the images. `document.cookie` shows the cookies a

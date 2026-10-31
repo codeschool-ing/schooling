@@ -27,7 +27,7 @@ up 31 minutes
 `ssh office` now means user `ana` at `192.168.10.10`. Anything that can go on the command line can go in
 a `Host` block: `Port`, `IdentityFile` for a particular key, `ProxyJump` for the hop in section 08.
 Every tool built on SSH reads the same file, so `scp office:…`, `sftp office` and `git` all understand
-the short name too; lesson 8 uses them.
+the short name too; lesson 8 uses the first two.
 
 The file is read from the top, and **for each setting the first value found wins**. Specific hosts go
 first and a `Host *` block with the defaults goes last, or the defaults win everywhere.

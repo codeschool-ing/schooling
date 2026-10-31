@@ -16,8 +16,8 @@ interfaces, and behind each one a segment that should be trusted differently.
 ```
 
 Each machine is a network namespace with its own interfaces, routes and firewall, so each behaves as
-a machine of its own. The addresses come from the ranges reserved for documentation, and nothing in
-the lab reaches the real internet.
+a machine of its own. The public addresses are the ones reserved for documentation, the inside
+segments use private ones, and nothing in the lab reaches the real internet.
 
 **When the lab comes up, `fw` routes everything and filters nothing.** Plenty of networks
 run like that, and it is worth seeing once. `remote` is a stranger on the internet

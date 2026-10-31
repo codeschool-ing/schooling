@@ -10,13 +10,13 @@ scanner, with `scanner-2026`; and `bruno`, a customer at `example.net`, with `Oa
 accounts of the whole Linux machine, which is one more reason to build the lab in a virtual
 machine of its own.
 
-- **SSH.** `sshd_conf` gives `server` and `www` an SSH server each, with its own host key. A
+- For SSH, `sshd_conf` gives `server` and `www` an SSH server each, with its own host key. A
   firewall rule on `www` accepts SSH only from the office's public address, and `server` has an
   admin page that listens only on the server itself, which lesson 7 reaches through a tunnel.
-- **File transfer.** `build_files` runs an FTP server on `www`, where the `example` account lands in
+- For file transfer, `build_files` runs an FTP server on `www`, where the `example` account lands in
   the website's own folder, and makes `scans` an account that may use SFTP on `server` and nothing
   else, the arrangement lesson 8 ends with.
-- **Mail.** `mail_host` builds one mail server per domain, `mail` for `example.com` and `netmail`
+- For mail, `mail_host` builds one mail server per domain, `mail` for `example.com` and `netmail`
   for `example.net`. Postfix takes mail in on port 25 and from the domain's own people on 587,
   Dovecot hands it to them over IMAP and POP3, OpenDKIM signs what leaves and checks what arrives,
   and OpenDMARC applies the sender's policy. Lesson 9 takes these apart one at a time.

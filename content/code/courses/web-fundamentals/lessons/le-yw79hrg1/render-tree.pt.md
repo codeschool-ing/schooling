@@ -27,7 +27,7 @@ Ele não ocupa espaço, porque para o layout ele não existe.
 
 E uma adição, que é a razão de esta ser uma árvore própria em vez de um documento filtrado: **coisas
 que o documento nunca teve.** Uma regra que gera conteúdo antes ou depois de um elemento põe uma
-caixa na árvore de renderização sem elemento correspondente no documento — e é por isso que um ícone
+caixa na árvore de renderização sem elemento correspondente no documento. É por isso que um ícone
 gerado está visível na tela e ausente quando um script o procura.
 
 ## Os dois jeitos de esconder, que não são o mesmo

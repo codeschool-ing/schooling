@@ -49,7 +49,7 @@ root@admin:~# wc -l /var/log/lab/remote/fw/*.json
   11 total
 ```
 
-As mesmas linhas agora estão em dois lugares. Agora suponha que alguém com root em `fw` queira começar
+As mesmas linhas agora estão em dois lugares. Suponha que alguém com root em `fw` queira começar
 do zero, e esvazie o log de descartes:
 
 ```

@@ -9,14 +9,14 @@ e as senhas estão impressas aqui** porque as aulas as digitam: `ana`, você, co
 com `scanner-2026`; e `bruno`, um cliente na `example.net`, com `Oak-leaf-51`. São contas da máquina
 Linux inteira, o que é mais um motivo para montar o laboratório numa máquina virtual só dele.
 
-- **SSH.** `sshd_conf` dá ao `server` e ao `www` um servidor SSH cada, com sua própria chave de host.
+- Para SSH, o `sshd_conf` dá ao `server` e ao `www` um servidor SSH cada, com sua própria chave de host.
   Uma regra de firewall no `www` só aceita SSH vindo do endereço público do escritório, e o `server`
   tem uma página de administração que só escuta no próprio servidor, à qual a aula 7 chega por um
   túnel.
-- **Transferência de arquivos.** `build_files` roda um servidor FTP no `www`, onde a conta `example`
+- Para transferência de arquivos, o `build_files` roda um servidor FTP no `www`, onde a conta `example`
   cai na própria pasta do site, e faz de `scans` uma conta que pode usar SFTP no `server` e mais nada,
   o arranjo com que a aula 8 termina.
-- **E-mail.** `mail_host` monta um servidor de e-mail por domínio, `mail` para `example.com` e
+- Para e-mail, o `mail_host` monta um servidor de e-mail por domínio, `mail` para `example.com` e
   `netmail` para `example.net`. O Postfix recebe e-mail na porta 25 e do pessoal do próprio domínio
   na 587, o Dovecot o entrega a eles por IMAP e POP3, o OpenDKIM assina o que sai e confere o que
   chega, e o OpenDMARC aplica a política do remetente. A aula 9 desmonta esses um de cada vez.

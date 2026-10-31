@@ -105,9 +105,9 @@ pode estar configurado por alguém que discorda de você. Uma CDN aplica as pró
 das suas. `max-age` é um teto de quanto tempo um cache pode usar uma cópia, e não uma promessa de que
 vai.
 
-Então um cache é algo em que você confia estatisticamente e nunca individualmente — e é por isso que
-a correção nunca pode depender de uma cópia ainda estar ali, e por que as perguntas de cache que
-valem são todas do tipo *o que acontece se isto não estiver lá?*
+Então um cache é algo em que você confia estatisticamente e nunca individualmente. A correção nunca
+pode depender de uma cópia ainda estar ali, e as perguntas de cache que valem são todas do tipo *o
+que acontece se isto não estiver lá?*
 
 ## Quanto vale
 

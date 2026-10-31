@@ -26,7 +26,7 @@ ana@laptop:~$ curl -sv -o /dev/null https://www.example.com/ 2>&1 | grep -E 'IPv
 | `< HTTP/2 200` | 7 | a resposta: OK |
 
 **A camada 5, a sessão, é a que o modelo descreve com menos clareza.** Ela foi pensada para manter uma
-conversa através de interrupções; hoje esse trabalho é feito pela retomada de sessão do TLS, por um
+conversa através de interrupções. Hoje esse trabalho é feito pela retomada de sessão do TLS, por um
 cookie de login ou pela própria aplicação, e nada no fio vem marcado como "camada 5". A camada 6, a
 apresentação, é como os dados são codificados, e a criptografia é a parte dela que mais importa hoje.
 

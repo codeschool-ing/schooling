@@ -39,8 +39,8 @@ manda a pergunta do suporte para um lugar diferente:
 | `500` | a aplicação quebrou | os desenvolvedores da aplicação |
 | `502`, `504` | o servidor web não alcançou a aplicação por trás dele | quem cuida dessa aplicação |
 
-**O log de erros diz qual.** As duas últimas linhas do log do nginx no `www` dão nome às duas falhas:
-o `403` é `directory index … is forbidden`, uma pasta sem página dentro; o **`502` é `connect()
+**O log de erros diz qual.** As duas últimas linhas do log do nginx no `www` dão nome às duas falhas.
+O `403` é `directory index … is forbidden`, uma pasta sem página dentro. O **`502` é `connect()
 failed (111: Connection refused) while connecting to upstream`, `127.0.0.1:9000`**. O nginx está
 saudável e repassou o pedido para a aplicação de reservas, que não estava rodando. É o `Connection
 refused` da aula 3, um nível mais para dentro. Reiniciar o nginx não mudaria nada.

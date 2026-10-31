@@ -84,7 +84,7 @@ cannot be wrong about meaning. After it runs, nothing in the message can close t
 whatever the message says. **That is a property you can state, not a rate you have to measure.**
 
 It protects the structure and nothing else. `a08` still came back `high` with its tag escaped, in
-lesson 4 and again in this lesson, and nothing about escaping would have stopped it had the model
+lesson 4 and again in this lesson. Nothing about escaping would have stopped it had the model
 chosen to follow the instruction inside the tags: a model can follow one from inside them as easily
 as from outside. Escaping is the right sanitising for the delimiter you chose; it says nothing about
 the words.

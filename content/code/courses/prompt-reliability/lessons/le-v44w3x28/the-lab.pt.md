@@ -57,8 +57,8 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 No macOS e no Windows, baixe o instalador em ollama.com e execute. **Esses dois não foram rodados
-para este curso.** No Windows, os comandos do curso são digitados num terminal Linux: instale o
-WSL com o Ubuntu 24.04 (`wsl --install -d Ubuntu-24.04` no PowerShell) e instale o Ollama dentro
+para este curso.** No Windows, os comandos do curso são digitados num terminal Linux. Instale o
+WSL com o Ubuntu 24.04 (`wsl --install -d Ubuntu-24.04` no PowerShell) e depois o Ollama dentro
 dele com a linha de Linux acima, para que o modelo e o harness morem no mesmo lugar.
 
 Depois baixe o modelo. É um comando só, e na primeira vez ele traz uns dois gigabytes:

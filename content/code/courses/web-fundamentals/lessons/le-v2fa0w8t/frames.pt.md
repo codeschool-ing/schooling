@@ -39,7 +39,7 @@ próximas quatro aulas parecerem arbitrárias.
 Os dois envelopes carregam dois tipos diferentes de endereço, porque respondem a duas perguntas
 diferentes.
 
-O endereço do pacote responde *onde no mundo*. O do quadro responde *qual tomada deste cabo*.
+O endereço do pacote responde *onde no mundo*. O do quadro responde *qual máquina deste cabo*.
 
 | | o endereço do pacote | o endereço do quadro |
 |---|---|---|

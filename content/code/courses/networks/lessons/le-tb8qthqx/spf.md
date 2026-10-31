@@ -20,6 +20,6 @@ rather than as a refusal.
 
 The receiving server checks the address the connection came from against the SPF record of **the
 envelope sender's domain**, `MAIL FROM`. That is the header line `spf=pass smtp.mailfrom=example.com`
-of section 05. Two limits, both important. SPF checks the envelope, not the `From:` a person reads. And
+of section 05. SPF has two limits. It checks the envelope, not the `From:` a person reads. And
 a message forwarded by another server arrives from that server's address and fails SPF, although nothing
 is wrong with it.

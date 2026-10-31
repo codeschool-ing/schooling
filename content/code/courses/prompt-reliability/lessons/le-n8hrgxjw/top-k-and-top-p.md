@@ -41,8 +41,9 @@ probability between them, and each one's share is now divided by that: `other` g
 **Top-p keeps the smallest set of top candidates whose probabilities add up to at least p.** The
 first three add up to 96.3%, which already reaches 90%, so top-p 0.9 keeps exactly the same three
 words here and the two tables are identical. Top-k is a count and top-p is a share, and the
-difference shows when the distribution changes shape: k keeps three words whether the top one has
-99% or 40%, while p keeps fewer words when one dominates and more when the probability is spread out.
+difference shows when the distribution changes shape. Top-k keeps three words whether the top one
+has 99% or 40%, while top-p keeps fewer words when one dominates and more when the probability is
+spread out.
 
 ## The order of the steps
 

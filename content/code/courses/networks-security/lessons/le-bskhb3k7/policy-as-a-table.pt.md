@@ -46,7 +46,7 @@ table inet host {
 }
 ```
 
-As mesmas regras que a aula 19 escreveu à mão para `db`, agora derivadas. Para `app`, só as linhas de
+As mesmas regras de entrada que a aula 19 escreveu à mão para `db`, agora derivadas. Para `app`, só as linhas de
 aceite:
 
 ```

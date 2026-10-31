@@ -27,7 +27,7 @@ ana@laptop:~$ curl -sv -o /dev/null https://www.example.com/ 2>&1 | grep -E 'IPv
 | `< HTTP/2 200` | 7 | the answer: OK |
 
 **Layer 5, the session, is the one the model describes least clearly.** It was meant for keeping a
-conversation going across interruptions; today that job is done by TLS session resumption, by a
+conversation going across interruptions. Today that job is done by TLS session resumption, by a
 login cookie, or by the application itself, and nothing on the wire is labelled "layer 5". Layer 6,
 presentation, is how the data is encoded, and encryption is the part of it that matters most now.
 

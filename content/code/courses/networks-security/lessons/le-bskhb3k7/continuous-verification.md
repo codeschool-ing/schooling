@@ -28,8 +28,8 @@ root@db:~# conntrack -L -p tcp --dport 5432 2>/dev/null | grep ESTABLISHED | sed
 tcp      6 431997 ESTABLISHED src=192.168.20.10 dst=192.168.20.30 sport=52666 dport=5432
 ```
 
-Then the policy changes: `app` is withdrawn from the database, and `db`'s rules are regenerated without
-its accept line:
+Then the policy changes: `app` is withdrawn from the database, and `db` loads its rules again without
+the accept line for `app`:
 
 ```
 root@db:~# sed -i 's/ip saddr { 192.168.20.10 } tcp dport 5432 accept.*/# app withdrawn from the database, ticket 6203/' segment.nft && nft -f segment.nft && nft list chain inet host input | grep -c 5432

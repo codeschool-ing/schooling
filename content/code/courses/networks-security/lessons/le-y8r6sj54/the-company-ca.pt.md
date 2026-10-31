@@ -3,7 +3,7 @@ title: A autoridade da própria empresa, campo a campo
 version: 1
 ---
 
-O laboratório tem uma CA desde a aula 2: uma **raiz** (*root*), que assina uma **CA emissora**
+O laboratório tem uma CA desde a aula 1: uma **raiz** (*root*), que assina uma **CA emissora**
 (*issuing CA*), que assina os servidores. O `nslab.sh` a monta em `/lab/ca` no seu próprio computador, com datas
 fixas, toda vez que o laboratório sobe. No seu laboratório esta aula começa com
 `sudo bash nslab.sh reset`, com a política da empresa carregada no `fw` por `nft -f baseline.nft`, e

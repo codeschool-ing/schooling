@@ -6,7 +6,7 @@ version: 1
 Everything in this course lives in one directory, `~/triage`, and you build it here. It holds
 three kinds of file:
 
-- **`pl.py`**, the harness: a Python program of about two hundred lines that runs a prompt over a
+- **`pl.py`**, the harness: a Python program of about two hundred and fifty lines that runs a prompt over a
   test set and counts the replies that pass;
 - **`cases/`**, the test sets: messages, one per line, each with the answer a person decided was
   right;
@@ -121,7 +121,7 @@ it is what `pl check` compares the reply with.
 | `pl check RUN` | holds every reply to five checks and counts the passes |
 | `pl show RUN ID` | prints one reply exactly as the model wrote it |
 
-The checks run in order, and a reply that fails one fails every check after it: `json` (does it
+The checks run in order, and a reply that fails one fails every check after it. They are `json` (does it
 parse), `fields` (does it have the fields and no others), `labels` (are the values from the
 lists), `category` and `urgency` (do they match the person's answer). `all` counts the replies
 that passed everything.

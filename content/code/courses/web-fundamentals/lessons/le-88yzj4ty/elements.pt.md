@@ -51,7 +51,7 @@ quantidade de leitura.
 
 Uma consequência que vale ter em mente de propósito, porque produz tardes confusas.
 
-Abrir o painel deixa a janela mais estreita. Num site responsivo isso muda qual layout está em uso,
+Abrir o painel deixa a janela mais estreita. Num site responsivo isso pode mudar qual layout está em uso,
 o que quer dizer que a coisa que você está inspecionando não é bem a coisa que um visitante vê. O
 painel pode ser movido para baixo ou para uma janela separada, e numa questão de layout isso vale a
 pena.
@@ -95,9 +95,9 @@ de rede: um remove o que está guardado, o outro se recusa a usar.
 Quando uma página não se comporta, a sequência é: inspecione a coisa, olhe o que de fato casou com
 ela, e leia o valor computado.
 
-Quase toda discussão sobre estilo termina ali. A regra que você esperava está presente e riscada
-porque algo mais específico venceu; ou está ausente porque o seletor não casa com o que o parser
-produziu; ou está se aplicando perfeitamente e o elemento que você está olhando não é o elemento que
+Quase toda discussão sobre estilo termina ali. A regra que você esperava está presente e riscada,
+porque algo mais específico venceu. Ou está ausente, porque o seletor não casa com o que o parser
+produziu. Ou está se aplicando perfeitamente, e o elemento que você está olhando não é o elemento que
 você pensa.
 
 Os três ficam visíveis em uns quatro segundos, e os três são invisíveis no arquivo.

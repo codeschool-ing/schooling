@@ -51,7 +51,7 @@ direto ao lugar novo.
 Que é exatamente o que você queria, até o redirecionamento estar errado.
 
 Publique um `301` mandando o site inteiro para um endereço que se revela quebrado, perceba em cinco
-minutos e corrija — e todo visitante que o carregou nesses cinco minutos continua sendo mandado ao
+minutos e corrija. Todo visitante que o carregou nesses cinco minutos continua sendo mandado ao
 endereço quebrado, pelo próprio navegador, sem que nenhuma requisição chegue a você para corrigir.
 Não há nada que você possa servir a eles, porque eles não estão perguntando.
 
@@ -81,8 +81,8 @@ uma checagem de cinco minutos que a maioria dos sites nunca teve feita.
 
 ## Redirecionamentos que você não escreveu
 
-Uma última coisa que vale conhecer, porque é onde moram as surpresas: várias camadas entre o
-visitante e o seu código podem emitir um, e o código que você está lendo nunca o menciona.
+Várias camadas entre o visitante e o seu código podem emitir um redirecionamento, e o código que
+você está lendo nunca o menciona.
 
 O servidor web pode estar configurado para forçar HTTPS. Um framework pode acrescentar ou remover
 uma barra final para que `/precos` e `/precos/` não virem dois endereços. Uma CDN na frente de tudo

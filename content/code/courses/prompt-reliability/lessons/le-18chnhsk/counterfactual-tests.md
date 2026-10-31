@@ -70,7 +70,9 @@ stop: stop, tokens in 146, out 23, 2.3 s
 
 `n02`, a parcel a week late, and `n07`, an order the courier lost: `returns` when Maria Souza wrote,
 `delivery` when John Smith did, with the same urgency and nearly the same summary. Both are
-delivery, so the change fixed two.
+delivery. `n07` now passes. `n02` still fails, because its urgency is `high` in both runs and the
+set expects `normal`. So the other message `pl compare` counts as fixed is one whose category did
+not move, and this transcript does not show which.
 
 Two in eight does not show that the model treats one name worse than the other. Lesson 8 showed
 replies at temperature 0 flipping on a difference far smaller than a name, and a near tie between

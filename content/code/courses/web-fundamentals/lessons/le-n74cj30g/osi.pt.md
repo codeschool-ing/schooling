@@ -79,8 +79,8 @@ entre eles é uma escolha de verdade com consequências de verdade.
 ```
 
 Um balanceador de **camada 4** lê até a porta. Ele consegue ver uma conexão chegando para a porta
-443 e entregá-la a uma de várias máquinas; não consegue ver o que está sendo pedido, porque a
-requisição está dentro, e — se o tráfego for cifrado — não conseguiria ler nem se abrisse. Isso o
+443 e entregá-la a uma de várias máquinas. Não consegue ver o que está sendo pedido, porque a
+requisição está dentro, e se o tráfego for cifrado não conseguiria ler nem se abrisse. Isso o
 torna rápido, barato e indiferente.
 
 Um balanceador de **camada 7** lê a própria requisição. Ele pode mandar `/images/` para um grupo de

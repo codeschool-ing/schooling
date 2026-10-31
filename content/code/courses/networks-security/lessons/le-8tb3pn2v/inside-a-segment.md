@@ -30,7 +30,7 @@ been, and it is exactly the path lesson 9 shows ransomware taking: from the firs
 infected, sideways, to every share it can open. A segment is only as trustworthy as its least careful
 member.
 
-There are three answers, and later lessons take each one:
+There are three answers, and the last column says where each is taken up:
 
 | answer | what it does | lesson |
 |---|---|---|

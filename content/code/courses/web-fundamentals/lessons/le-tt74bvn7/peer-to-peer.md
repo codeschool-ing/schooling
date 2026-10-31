@@ -38,7 +38,7 @@ exchange between two peers and one of them asked and the other answered — clie
 that exchange. What changes is that no machine holds either role permanently: a peer is a client
 for a piece it wants and a server for a piece it has, thousands of times a minute.
 
-Which is exactly the point of `roles`: the role is the position in an exchange. **P2P is the case
+Which is exactly the point of *The two roles*, earlier in this lesson: the role is the position in an exchange. **P2P is the case
 that proves it**, because it is where the role changes fastest. If the roles were properties of
 machines, peer-to-peer would be unintelligible. As positions in an exchange, it is ordinary.
 
@@ -61,9 +61,8 @@ Three answers are used, and none is as pure as the slogan:
 - **Local discovery** — shouting on the local network to see who is nearby. Works only for peers on
   the same network, which is rarely where the file is.
 
-So real peer-to-peer systems are **hybrids**, and it is worth saying plainly: the parts that
-discover, coordinate and authenticate tend to look like servers, and the parts that carry bulk data
-tend to look like peers. Very few working systems are one thing all the way down.
+So real peer-to-peer systems are **hybrids**. The parts that discover, coordinate and authenticate
+tend to look like servers, and the parts that carry bulk data tend to look like peers. Very few working systems are one thing all the way down.
 
 ## Why the web is not peer-to-peer
 

@@ -42,7 +42,7 @@ frames would be carrying internet packets at all. It carries anything: it has be
 protocols that no longer exist and will be used for ones not yet written.
 
 **The layer below must not know what the layer above is carrying.** That is the rule lesson five
-generalises, and the MAC address is the clearest example of it in the whole course: a complete
+generalises. The MAC address is the clearest example of it in the whole course: a complete
 addressing scheme belonging to the wire, ignorant of the addressing scheme riding inside it.
 
 There is a practical payoff too. Because the card knows its own address and accepts only frames
@@ -63,7 +63,7 @@ after that.
 television finds a speaker to play to, and how a printer announces itself.
 
 The reason to know the three is that broadcast traffic reaches every machine and costs every
-machine a little work, which is the argument for smaller networks you met a section ago. A network
+machine a little work, which is the argument for smaller networks you met two sections ago. A network
 is not slow because it is large; it is slow because everything on it is interrupted by everything
 else asking questions.
 

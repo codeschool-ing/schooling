@@ -55,7 +55,7 @@ escreve três vezes e meia mais, 106,2 tokens de resposta falante. A mediana del
 vezes a dos outros, e o p95 é 15,6.
 
 **Se você quer uma resposta mais cedo, olhe para o que o modelo escreve antes de olhar para o que
-você manda.** Foi o que a aula 3 achou quando o JSON levou as respostas do prompt seco de 107,5
-tokens para 30,6 e a chamada mediana de 12,7 segundos para 3,7, e é a mesma aritmética aqui. A aula
+você manda.** Foi o que a aula 3 achou: o JSON levou as respostas do prompt seco de 107,5
+tokens para 30,6, e a chamada mediana de 12,7 segundos para 3,7. A aritmética aqui é a mesma. A aula
 17 abre o tempo de uma chamada nas suas duas metades, ler e escrever, e mostra por que o prompt longo
 daqui saiu tão barato de ler.

@@ -51,7 +51,7 @@ AllowedIPs = 10.99.0.1/32, 192.168.10.0/24, 192.168.20.0/24
 PersistentKeepalive = 25
 ```
 
- The interface is brought up on each end, with a
+The interface is brought up on each end, with a
 route to the other side's network through it, and `fw` gets two rules, one letting the tunnel's UDP in
 and one letting the branch use the application:
 
@@ -101,7 +101,7 @@ IP 203.0.113.70.51820 > 203.0.113.2.51820: UDP, length 96
 Only UDP between the two routers on port 51820. The first two packets, **148 and 92 bytes, are the
 handshake**: the asymmetric half, where the two ends combine their key pairs into fresh symmetric keys.
 Everything after is the symmetric half, ChaCha20-Poly1305: the 32-byte packet is an empty keepalive, and
-the rest carry the branch's request and its answer. Somebody on the path learns that the two offices
+the three of 96 bytes carry the branch's side of the connection. Somebody on the path learns that the two offices
 talk, how often and how much, and nothing of what was said.
 
 ```schooling-figure

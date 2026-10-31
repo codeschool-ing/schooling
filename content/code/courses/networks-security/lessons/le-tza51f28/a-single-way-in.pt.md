@@ -69,6 +69,5 @@ exit 255
 um jeito comum de o acesso administrativo vazar, e esta não serve para nada fora do jump host.
 
 O próprio jump host passa então a ser o que mais precisa de proteção: autenticação multifator para as
-pessoas que fazem login nele, seus próprios logs enviados para outro lugar como a aula 16 pediu, nada
-mais instalado nele, e nenhum jeito de alcançá-lo a partir da LAN da equipe, o que a matriz da aula 4
-já garante.
+pessoas que fazem login nele, seus próprios logs enviados para outro lugar como a aula 16 pediu, e nada
+mais instalado nele. Nada na LAN da equipe consegue alcançá-lo, o que a matriz da aula 4 já garante.

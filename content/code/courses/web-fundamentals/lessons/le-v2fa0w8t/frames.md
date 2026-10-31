@@ -40,7 +40,7 @@ makes the next four lessons feel arbitrary.
 The two envelopes carry two different kinds of address, because they answer two different
 questions.
 
-The packet's address answers *where in the world*. The frame's address answers *which socket on
+The packet's address answers *where in the world*. The frame's address answers *which machine on
 this cable*.
 
 | | the packet's address | the frame's address |

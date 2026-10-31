@@ -26,7 +26,7 @@ nenhum para esse nome, e então ele seguiu para o DNS e imprimiu o registro `AAA
 arquivo hosts só vale para o tipo de endereço com que foi escrita.
 
 Essa discordância é o diagnóstico inteiro. Quando o `dig` dá a resposta certa e um programa ainda vai
-para o lugar errado, **olhe o arquivo hosts**, onde uma linha esquecida por um desenvolvedor testando
+para o lugar errado, **olhe o arquivo hosts**. Uma linha esquecida ali por um desenvolvedor testando
 um servidor novo, ou posta por um malware desviando o nome de um banco, vence todo servidor de DNS do
 mundo.
 

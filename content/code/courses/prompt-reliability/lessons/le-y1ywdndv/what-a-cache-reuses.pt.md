@@ -14,7 +14,7 @@ mensagem muda. Um cache é um jeito de não ler o guia de novo em toda chamada.
 
 ## O cache do Ollama
 
-O Ollama mantém um. Ele guarda os prompts que leu recentemente e, quando chega um pedido, procura
+O Ollama mantém um. Ele guarda os prompts que leu recentemente. Quando chega um pedido, procura
 entre eles o que tem o começo mais longo em comum com o prompt novo, token por token desde o início,
 e reaproveita o trabalho desse trecho. Nada precisa ser ligado, e nada numa resposta diz que isso
 aconteceu, a não ser o tempo. O Ollama relata esse tempo em toda resposta, dividido em dois: quanto

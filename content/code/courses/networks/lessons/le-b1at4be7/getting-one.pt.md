@@ -32,7 +32,7 @@ hoje, isso é feito pelo protocolo **ACME**, inventado pela Let's Encrypt, sem p
 
 **Nada disso foi rodado para esta aula**: o laboratório não tem uma autoridade certificadora pública, e
 a CA dele assinou os certificados do laboratório diretamente. A checagem `http-01` do desenho prova que
-quem pede controla o servidor web para onde o nome aponta; uma checagem `dns-01` prova que controla o
+quem pede controla o servidor web para onde o nome aponta. Uma checagem `dns-01` prova que controla o
 DNS do nome, publicando um registro `TXT` em `_acme-challenge.www.example.com`, e é a que funciona para
 servidores que a internet não alcança.
 

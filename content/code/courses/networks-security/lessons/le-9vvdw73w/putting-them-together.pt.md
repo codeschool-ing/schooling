@@ -13,9 +13,9 @@ mesma tarde ficam assim:
 | mudança de configuração | nada | AIDE: `sites-enabled/shop` alterado, de 602 bytes para 744 |
 | novo listener | nada, até alguém se conectar | porta 8081, do `socat` |
 
-**O host viu mais, e a rede viu de forma independente.** Se o `www` estivesse comprometido, o log de
-acesso e os relatórios do AIDE dele poderiam ser editados para esconder as quatro linhas; o registro
-do sensor de rede sobre a requisição 1 e sobre a conexão TLS não, porque o intruso nunca tocou no
+**O host viu mais, e a rede viu de forma independente.** Se o `www` estivesse comprometido, tudo o
+que ele registrou sobre si mesmo poderia ser editado para esconder as quatro linhas. O registro do
+sensor de rede sobre a requisição 1 e sobre a conexão TLS não, porque o intruso nunca tocou no
 `sensor`. Esse é o argumento para rodar os dois e para mandar os registros do host para fora do host.
 
 **Correlação** é o nome de juntar as linhas, e é dela que vem a maior parte do valor da detecção. Um

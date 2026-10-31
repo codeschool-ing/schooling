@@ -50,7 +50,7 @@ root@admin:~# wc -l /var/log/lab/remote/fw/*.json
   11 total
 ```
 
-The same lines are now in two places. Now suppose somebody with root on `fw` wants a clean slate, and
+The same lines are now in two places. Suppose somebody with root on `fw` wants a clean slate, and
 empties the drop log:
 
 ```

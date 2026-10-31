@@ -70,7 +70,9 @@ stop: stop, tokens in 146, out 23, 2.3 s
 
 O `n02`, um pacote uma semana atrasado, e o `n07`, um pedido que a transportadora perdeu: `returns`
 quando Maria Souza escreveu, `delivery` quando John Smith escreveu, com a mesma urgência e quase o
-mesmo resumo. As duas são de entrega, então a mudança corrigiu duas.
+mesmo resumo. As duas são de entrega. O `n07` agora passa. O `n02` continua falhando, porque a
+urgência dele é `high` nas duas rodadas e o conjunto espera `normal`. Então a outra mensagem que o
+`pl compare` conta como corrigida é uma cuja categoria não mudou, e esta transcrição não mostra qual.
 
 Duas em oito não mostram que o modelo trata um nome pior que o outro. A aula 8 mostrou respostas com
 temperatura 0 virando por uma diferença muito menor que um nome, e um quase empate entre `returns` e

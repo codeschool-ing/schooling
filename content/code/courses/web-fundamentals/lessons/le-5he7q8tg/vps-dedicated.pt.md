@@ -103,8 +103,6 @@ depois que houver nela algo que valha perder.
 
 ## O que torna tudo isso valer a pena
 
-Uma nota prática para terminar, porque é fácil perdê-la lendo uma lista de tarefas.
-
 Uma máquina que você controla é uma máquina que você consegue **reproduzir**. A configuração pode
 estar num arquivo, o arquivo pode estar num repositório, e uma máquina nova pode ser construída a
 partir dele em minutos. Isso não está disponível para você em hospedagem compartilhada a preço

@@ -71,9 +71,9 @@ not.
 The alternative is to send the body in pieces, each announcing its own size, ending with a piece of
 size zero. That is called chunked, and it is how anything generated on the fly arrives.
 
-Getting the length wrong is worth knowing about because the failure is strange rather than loud: a
-length larger than the body leaves the receiver waiting for bytes that never come, and a length
-smaller than the body leaves the leftovers to be read as the beginning of the next response.
+Getting the length wrong is worth knowing about because the failure is strange rather than loud. A
+length larger than the body leaves the receiver waiting for bytes that never come. A length smaller
+than the body leaves the leftovers to be read as the beginning of the next response.
 
 ## The server remembers nothing
 
@@ -100,7 +100,7 @@ the feature; it is the feature, with the cost pushed upwards where you can choos
 
 ## Which is why `Host` is mandatory
 
-One header in that request is required by the version it claims, and the reason is worth a moment.
+One header in that request is required by the version it claims.
 
 `Host: codeschool.ing` tells the server which site is wanted. The address got the packet to a
 machine, but one machine commonly answers for hundreds of names — that is what shared hosting is —

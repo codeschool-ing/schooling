@@ -50,7 +50,7 @@ assunto da camada que os produziu, e da camada correspondente do outro lado.
 
 A segunda regra é a que faz o trabalho. Se um roteador no caminho abrisse sua mensagem e se
 comportasse de forma diferente conforme o que ela dissesse, então a mensagem não poderia mudar sem
-que os roteadores mudassem junto — e há um bocado de roteadores, de um bocado de donos que nunca
+que os roteadores mudassem junto. E há um bocado de roteadores, de um bocado de donos que nunca
 ouviram falar de você. Como o roteador não abre, um protocolo desenhado esta tarde viaja hoje à
 noite por equipamento instalado há uma década, que nunca ouviu falar dele e não precisa ouvir.
 
@@ -110,6 +110,6 @@ organizado de outro jeito, encontra milhões de caixas construídas para esticar
 porta onde uma porta costumava estar. Elas não entendem, então descartam, e o protocolo novo falha
 em redes que não fazem ideia de que são a causa. Também não é hipotético: é por isso que o
 transporte mais novo em uso comum teve que se disfarçar de um mais antigo para passar, uma
-história a que este curso volta quando chegar ao HTTP/3.
+história que a aula 6 conta quando chegar ao HTTP/3.
 
 Uma violação de camada compra algo na hora e cobra por vinte anos.
