@@ -51,7 +51,7 @@ separador decimal, o de milhares e a ordem das datas. Ela vem de onde a conta es
 dados vieram.
 
 Então um CSV exportado de um sistema brasileiro, com `1.234,56` dentro, aberto numa planilha
-ajustada para os Estados Unidos, produz ou texto ou um número mil vezes maior — e uma coluna de
+ajustada para os Estados Unidos, produz ou texto ou um número mil vezes maior. Uma coluna de
 datas escrita `03/04` cai no mês errado sem aviso algum.
 
 **Ajuste a localidade antes de importar qualquer coisa**, e confira uma linha do resultado contra

@@ -43,7 +43,7 @@ Write *unexplained* instead. That word costs nothing now and is worth an hour ne
 Whether it is a support line, a shop or a person in the family who knows more, what you send
 decides how much of their time is spent re-doing yours:
 
-- **the symptom**, in the one-sentence form from the first section;
+- **the symptom**, in the one-sentence form from the section on saying the symptom;
 - **when it started**, and what changed around then;
 - **what you have already tested**, and what each test showed — especially the tests that passed;
 - **the exact message**, photographed;

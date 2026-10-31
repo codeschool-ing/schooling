@@ -114,8 +114,8 @@ text. It made no difference here.
 around a paragraph has been given a strong hint, not a wall. Whether it follows the hint depends
 on its training and on how persuasive the text inside is, and that text is written by somebody who
 can try again as many times as they like. Other models resist more often than this small one, and
-none is known to resist every time; nothing in a reply tells you which kind of run it was. The next section asks what still
-stands between an obeying model and harm.
+none is known to resist every time; nothing in a reply tells you which kind of run it was. The
+next section asks what still stands between an obeying model and harm.
 
 ## What an injection is after
 

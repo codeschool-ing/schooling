@@ -29,7 +29,7 @@ driver, the connection, the printer. The middle is the queue — print from a di
 or print a test page from the printer's own menu. One test, and half the chain is gone.
 
 **A page will not load.** The application, the name lookup, the network, the line, the site. The
-middle is *does another site load*, which is the previous lesson's first question and the same
+middle is *does another site load*, which is the previous lesson's second question and the same
 move.
 
 **A machine will not start.** Power at the socket, the lead, the supply, the board, the display.

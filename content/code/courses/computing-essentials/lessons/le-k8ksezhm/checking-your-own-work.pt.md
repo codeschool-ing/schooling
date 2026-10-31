@@ -28,7 +28,7 @@ uma sobre a qual você torce.
 | | pega |
 |---|---|
 | **`CONT.NÚM` ao lado de `CONT.VALORES`** | texto escondido numa coluna de números. Respostas diferentes significam que alguma célula não é número |
-| **um total contra uma figura conhecida** | um extrato, uma nota fiscal, o relatório do mês passado. A única conferência externa que existe |
+| **um total contra um valor conhecido** | um extrato, uma nota fiscal, o relatório do mês passado. A única conferência externa que existe |
 | **a contagem de linhas, antes e depois** | uma consulta ou um filtro que perdeu linhas |
 | **o maior e o menor valor** | uma vírgula no lugar errado, uma data em 1900, um negativo que não deveria existir |
 | **`=SOMA(a coluna inteira)` contra `=SUBTOTAL` das visíveis** | um filtro que você esqueceu que estava ligado |

@@ -37,10 +37,10 @@ Daí saem duas falhas distintas:
 - **`R$`** impresso e produzido, e uma `/` no teclado numérico, onde um teclado americano não tem
   nenhuma.
 
-O layout US-Internacional compõe os mesmos acentos a partir das teclas de apóstrofo e aspas, o
-que funciona e é mais lento, e tem um efeito colateral famoso: digitar um apóstrofo antes de uma
-vogal vira silenciosamente uma vogal acentuada, então `don't` precisa de um espaço depois do
-apóstrofo para sair certo.
+O layout US-Internacional compõe os mesmos acentos a partir das teclas de apóstrofo e aspas.
+Funciona, é mais lento, e tem um efeito colateral famoso: um apóstrofo digitado antes de uma
+vogal vira silenciosamente um acento nessa vogal, então um apóstrofo que deve ficar sozinho
+precisa de um espaço digitado depois dele.
 
 ## Membrana, mecânico, e o que de fato muda
 

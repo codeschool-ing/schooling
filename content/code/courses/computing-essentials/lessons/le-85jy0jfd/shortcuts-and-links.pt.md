@@ -29,7 +29,7 @@ sobrevive ao alvo ser movido ou renomeado, o que nenhum dos outros dois consegue
 - **Copiar um atalho para um pendrive copia o bilhete, não o arquivo.** O pendrive agora tem um
   arquivo de 4 kilobytes apontando para um caminho que não existe em máquina nenhuma. Essa é a
   versão mais comum de *eu trouxe a apresentação e ela não abre*.
-- **Um backup de uma pasta cheia de atalhos copia nada.** A mesma razão, com mais em jogo.
+- **Um backup de uma pasta cheia de atalhos não copia nada.** A mesma razão, com mais em jogo.
 - **Mover o alvo quebra o atalho**, e o erro nomeia o caminho antigo, o que é genuinamente útil —
   ele te diz onde o arquivo ficava.
 - **Um atalho pode ser renomeado à vontade.** O nome do atalho e o nome do arquivo não têm nada a

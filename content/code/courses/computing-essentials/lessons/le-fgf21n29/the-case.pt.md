@@ -19,7 +19,7 @@ maioria deles é vendida.
 | comprimento da placa de vídeo | em milímetros, e placas longas não entram em gabinete pequeno |
 | altura do cooler | um cooler de ar alto bate na tampa lateral de um gabinete estreito |
 
-## Formato, numa tabela
+## Formato, num parágrafo
 
 `ATX` é o padrão de tamanho cheio, `Micro-ATX` é mais curto e com menos slots, `Mini-ITX` é
 pequeno e leva um slot de expansão. Uma placa menor cabe num gabinete maior; o contrário nunca
@@ -31,6 +31,6 @@ Um gabinete não deixa máquina nenhuma mais rápida. O que ele pode fazer é de
 silenciosa — um gabinete maior com ventoinhas maiores e mais lentas move o mesmo ar com menos
 barulho, porque o ruído sobe muito com a rotação e pouco com o tamanho.
 
-Que é a última peça da corrente desta aula, e vale dizer numa linha: **a placa de vídeo decide os
-watts, os watts decidem o calor, o calor decide a refrigeração, e a refrigeração decide o
+Que é a última peça da corrente desta aula: **a placa de vídeo decide os watts, os watts
+decidem o calor, o calor decide a refrigeração, e a refrigeração decide o
 barulho.** Quatro componentes, uma decisão na frente deles.

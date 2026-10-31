@@ -5,7 +5,7 @@ version: 2
 
 A trace that ends in `done` looks like success, and the loop has no other word for it. **The loop
 can check the shape of every turn and the limits on every call; it cannot check that the reasoning
-is right.** Six runs, each broken in a different place, show which failures land on which side of
+is right.** Six runs, broken in five different places, show which failures land on which side of
 that line. One is live; the turns of the other five were written by the course and played back, so
 that each failure shows on its own. The tool replies and the loop's verdicts are what `agent`
 printed.
@@ -31,7 +31,7 @@ step 3
 done: an answer after 3 steps
 ```
 
-Both facts needed for the right answer are on the screen, two lines apart, and the answer says the
+Both facts needed for the right answer are on the screen, one step apart, and the answer says the
 opposite of the first one. The loop prints `done`, because a turn with an `Answer:` is all it looks
 for. This is the failure ReAct makes visible without preventing it: **the evidence is in the trace,
 so a person, or a second check, can catch it**. Look at the last Thought, too. "That is a normal
@@ -137,7 +137,7 @@ stopped: 2 steps and no answer
 The run was on its way to the right answer and was cut off anyway. That is the price of a limit,
 and it is worth paying. A model that keeps searching with slightly different words, or calls the
 same tool again because it did not trust the first reply, would otherwise loop until somebody
-noticed the bill (lesson 15). **A run stopped at the limit is reported as stopped, never as
+noticed the bill (lesson 15). **The loop reports a run stopped at the limit as stopped, never as
 answered**, so the caller can raise the limit, ask a person, or give up honestly.
 
 ## A tool that is refused

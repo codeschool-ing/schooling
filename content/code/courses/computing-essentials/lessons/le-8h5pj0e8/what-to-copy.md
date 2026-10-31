@@ -60,6 +60,6 @@ of monthly:
 them are on a phone rather than on the machine this lesson has been about.
 
 A phone that backs up to a cloud service is one copy in one place, and that is the arrangement
-row three of the grid was about. Something automatic, plus a copy pulled onto the computer once
+in the grid's first column, a sync service. Something automatic, plus a copy pulled onto the computer once
 a quarter, is the whole answer — and it is the one piece of housekeeping in this course that
 people regret not doing.

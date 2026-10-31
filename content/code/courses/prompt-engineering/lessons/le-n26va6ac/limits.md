@@ -23,7 +23,7 @@ tokens  words  chars  file
    203    147    651  chains/s7.txt
 ```
 
-Together they are 1,539 output tokens for one answer, as `tok` counts them, against a single chain's 167 to 288, and the
+Together they are 1,539 output tokens for one answer, as `tok` counts them, against a single chain's 167 to 288. The
 prompt is sent seven times as well (or once, if the API accepts a sample count and bills the input
 once; check its documentation). **Seven samples cost about seven times as much as one**, and a vote
 of twenty costs twenty. The samples can run in parallel, so the wait need not grow the same way,

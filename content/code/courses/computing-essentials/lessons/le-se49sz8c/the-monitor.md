@@ -31,10 +31,10 @@ decides whether text looks sharp.
 | 27-inch | `2560 × 1440` | 109 ppi — the sweet spot most people land on |
 | 27-inch | `3840 × 2160` | 163 ppi — sharp, and needs scaling to be usable |
 
-The third row of that table is the honest recommendation for a desk, and the fourth is the trap:
-at 163 ppi the operating system's menus are physically tiny, so you turn on scaling at 150%, and
-you are back to about the working area of the 1440p panel — having paid for 4K and asked four
-times as much of the graphics card to display it.
+The third row of that table is the honest recommendation for a desk, and the fourth is the trap.
+At 163 ppi the operating system's menus are physically tiny, so you turn on scaling at 150%. That
+puts you back at about the working area of the 1440p panel — having paid for 4K and asked more
+than twice as much of the graphics card to display it.
 
 **4K earns its keep on a television across a room and on a laptop held close.** On a 27-inch
 monitor at arm's length it is mostly a number.

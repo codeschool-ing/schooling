@@ -119,7 +119,7 @@ r5  wanted negative      got positive
 ```
 
 Sete de oito, e a que sobra é `r5`, **o sarcasmo, mesmo com o prompt forte citando o sarcasmo como
-caso de borda**. Esse é o resultado útil. A contagem diz que a forma, a língua e as perguntas foram
+caso-limite**. Esse é o resultado útil. A contagem diz que a forma, a língua e as perguntas foram
 resolvidas, e diz exatamente o que não foi.
 
 ## Quando o zero-shot basta, e quando seguir adiante

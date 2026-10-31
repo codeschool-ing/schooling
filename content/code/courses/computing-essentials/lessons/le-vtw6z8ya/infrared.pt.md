@@ -48,5 +48,5 @@ controle comanda qualquer televisão que fale os códigos dele, e é por isso qu
 universais existem e funcionam.
 
 É uma troca justa para um aparelho que precisa custar um dólar e rodar quatro anos com duas
-pilhas, e é o exemplo mais claro desta aula da regra da primeira seção: **uma coisa no canto
+pilhas. É também o exemplo mais claro desta aula da regra da primeira seção: **uma coisa no canto
 extremo do triângulo alcance-velocidade-energia abre mão de todo o resto para chegar lá.**

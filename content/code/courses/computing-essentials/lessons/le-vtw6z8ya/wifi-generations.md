@@ -3,8 +3,8 @@ title: The generations, and the only security setting that matters
 version: 1
 ---
 
-Wi-Fi had two sets of names for twenty years: the engineering one, `802.11` followed by letters,
-and nothing else. In 2018 somebody finally gave them numbers.
+Wi-Fi had one set of names for twenty years: the engineering one, `802.11` followed by letters.
+In 2018 somebody finally gave them numbers, and since then it has had two.
 
 | engineering name | sold as | band | roughly |
 |---|---|---|---|

@@ -41,8 +41,8 @@ Um notebook de oito anos com disco rígido, ao ganhar um SSD, liga em quinze seg
 noventa e abre programas na hora. O processador é o mesmo processador. Nada nele ficou mais
 rápido.
 
-Vale parar nessa frase, porque ela é o argumento inteiro da aula dentro de uma compra: **a
-máquina nunca esteve lenta. Ela estava esperando**, e a espera estava toda num lugar só.
+Esse é o argumento inteiro da aula dentro de uma compra: **a máquina nunca esteve lenta. Ela
+estava esperando**, e a espera estava toda num lugar só.
 
 ## SATA e NVMe, rapidamente
 
@@ -52,8 +52,8 @@ ele é feito:
 - **SATA** é a conexão mais antiga, dividida com os discos rígidos, e para por volta de 550 MB/s.
 - **NVMe** entra direto nas pistas rápidas da placa-mãe e chega a 3 000 ou 7 000 MB/s.
 
-Sendo honesto: sair de um disco rígido para qualquer SSD é transformador, e sair de um SSD SATA
-para um NVMe é um número que se mede e raramente se sente. O primeiro passo é o que importa.
+Sair de um disco rígido para qualquer SSD é transformador, e sair de um SSD SATA para um
+NVMe é um número que se mede e raramente se sente. O primeiro passo é o que importa.
 
 ## E uma palavra sobre capacidade, que não é velocidade
 

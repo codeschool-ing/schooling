@@ -110,7 +110,9 @@ ana@lab:~/pe$ ask - --temperature 0 < prompts/menu-rules.txt
 ```
 
 The sentence is gone and the quoting is right, and **the prices kept their decimal commas and their
-`R$`**, the one rule the prompt gave with an example. The decimal rule removes the commonest cause of the problem instead of quoting around it, which is worth asking for wherever you control the format, and it is still a request: the check is what tells you it was ignored.
+`R$`**, the one rule the prompt gave with an example. The decimal rule removes the commonest cause
+of the problem instead of quoting around it, and it is worth asking for wherever you control the
+format. It is still a request: the check is what tells you it was ignored.
 
 ## Checking a CSV reply
 
@@ -122,5 +124,5 @@ reading section treats a JSON reply that does not parse.
 
 When the data has nesting, optional fields or long free text, that check is a warning sign about
 the choice of format. JSON quotes every string by rule and refuses what it cannot read, so it is
-the safer thing to ask a model for, and a program can turn it into CSV afterwards with a library
-that never forgets a quote.
+the safer thing to ask a model for. A program can turn it into CSV afterwards with a library that
+never forgets a quote.

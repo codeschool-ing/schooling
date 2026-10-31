@@ -103,7 +103,7 @@ numbered list, sorting the eight examples as well as the message, and it put the
 under `other`. The short one, sent to a model nobody fine-tuned, was not sorted at all: two lines
 that end in `Category:` read to this model as a customer asking about oat milk, and it answered
 the customer. **The short prompt only works on a model trained to expect it**, which is the whole
-case for fine-tuning; and the long one does not work yet, which puts this job on the first rung of
+case for fine-tuning. And the long one does not work yet, which puts this job on the first rung of
 the ladder below, not the last.
 
 ## The costs that are not on the bill

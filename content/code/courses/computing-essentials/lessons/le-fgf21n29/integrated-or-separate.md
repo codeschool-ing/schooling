@@ -27,7 +27,7 @@ Not slowly — it is between five and thirty times behind, depending on the work
 ## The question, and the honest order to ask it in
 
 **Do you run something from the second list?** If you cannot name one, a separate card is money
-spent on a machine that will be no faster at anything you do, and it will cost you twice more:
+spent on a machine that will be no faster at anything you do, and it will cost you three times over:
 
 - the card costs money;
 - the card needs a larger power supply, which costs money;

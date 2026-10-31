@@ -20,13 +20,12 @@ an installer.
 
 ## The Desktop is a folder
 
-This surprises people and it is worth a paragraph. **The desktop is not a special surface. It is
-a folder** — `C:\Users\ana\Desktop` — and the background of your screen is a window showing its
+**The desktop is not a special surface. It is a folder** — `C:\Users\ana\Desktop` — and the background of your screen is a window showing its
 contents.
 
-Which means: files on the desktop are in the home folder and are backed up like anything else;
-a desktop with four hundred items is a folder with four hundred items and it loads slowly; and
-tidying the desktop is moving files between folders, nothing more.
+So files on the desktop are in the home folder and are backed up like anything else. A desktop
+with four hundred items is a folder with four hundred items, and it loads slowly. Tidying the
+desktop is moving files between folders, nothing more.
 
 ## Downloads, and the folder everybody uses as a filing cabinet
 

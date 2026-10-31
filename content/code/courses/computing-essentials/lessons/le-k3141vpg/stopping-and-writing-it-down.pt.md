@@ -43,7 +43,7 @@ Escreva *inexplicado*. Essa palavra não custa nada agora e vale uma hora da pr�
 Seja um suporte, uma loja ou alguém da família que entende mais, o que você manda decide quanto do
 tempo dessa pessoa vai em refazer o seu:
 
-- **o sintoma**, na forma de uma frase da primeira seção;
+- **o sintoma**, na forma de uma frase da seção sobre dizer o sintoma;
 - **quando começou**, e o que mudou por volta dali;
 - **o que você já testou**, e o que cada teste mostrou — em especial os testes que passaram;
 - **a mensagem exata**, fotografada;

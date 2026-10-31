@@ -145,7 +145,7 @@ depois raciocinar a partir desse resultado inventado. Por isso o programa define
 parada (lição 16): **a geração para no instante em que o modelo começa a escrever o que a ferramenta
 disse**, o laço executa a ferramenta e escreve a Observation ele mesmo.
 
-O `agent --live` faz exatamente isso: para cada turno em `Observation:`, executa a primeira Action
+O `agent --live` faz exatamente isso: interrompe cada turno em `Observation:`, executa a primeira Action
 que acha e devolve o que a ferramenta respondeu. Reproduzindo ou ao vivo, ele imprime sob `tool>` só
 o que uma ferramenta disse, nunca o que um turno afirma. De um jeito ou de outro, a regra é a que faz o
 método valer a pena: os fatos do registro vêm de fora do modelo.

@@ -21,7 +21,7 @@ Four items, and by now you can place all of them.
 ## What the spec does not tell you, and how to notice
 
 **A missing word is information.** If a listing says `1 TB HDD` where another says `512 GB SSD`,
-the first is offering four times the space and the four-month wait. Cheap machines are still
+the first is offering twice the space and the four-month wait. Cheap machines are still
 sold this way, and the capacity number is doing the persuading.
 
 **A big number in the wrong place is the commonest trap.** `32 GB RAM · 1 TB HDD` on a budget

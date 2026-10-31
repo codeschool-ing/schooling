@@ -3,7 +3,7 @@ title: When the setup fails
 version: 1
 ---
 
-Five failures account for most of it, and each one names itself in the first line it prints. All five were produced on purpose on the machine these lessons were recorded on, and the first had also happened there for real. A sixth, running out of memory, comes at the end.
+Five failures account for most of what goes wrong, and each one names itself in the first line it prints. All five were produced on purpose on the machine these lessons were recorded on, and the first had also happened there for real. A sixth, running out of memory, comes at the end.
 
 ## The installer stops before it starts
 

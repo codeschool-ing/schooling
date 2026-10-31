@@ -73,8 +73,8 @@ prompt already carries.
 
 ## Send what the question needs, not everything you have
 
-The café's staff handbook is six short files. Later lessons search it, quote it and pass it to the
-model, so make it now, by pasting this block into the terminal:
+The café's staff handbook is six short files. From lesson 5 on, lessons search it, quote it and pass it to
+the model, so make it now, by pasting this block into the terminal:
 
 ```sh
 mkdir -p ~/pe/handbook

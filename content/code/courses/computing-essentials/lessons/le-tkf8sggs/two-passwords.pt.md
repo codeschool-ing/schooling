@@ -31,8 +31,8 @@ rede é configurada.
 
 **Ela muito frequentemente ainda é `admin` / `admin`.**
 
-Isso importa de um jeito que a senha do Wi-Fi não importa, porque quem tem a página de configuração
-tem a própria rede: pode ler a senha do Wi-Fi em texto claro, mudar para onde vão as consultas de
+Isso importa de um jeito que a senha do Wi-Fi não importa. Quem tem a página de configuração tem a
+própria rede: pode ler a senha do Wi-Fi em texto claro, mudar para onde vão as consultas de
 nome, abrir um caminho de fora para um aparelho de dentro, e deixar tudo isso no lugar.
 
 Duas coisas seguem daí:

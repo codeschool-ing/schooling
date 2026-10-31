@@ -39,9 +39,8 @@ backing up, and files stop syncing — and the last one is silent on some device
 has quietly stopped syncing for three weeks is a machine whose recent work exists in one place.
 
 So the order is: free something today, then decide. Paying for more storage is cheap and is the
-right answer for most people; it is a poorer answer if the thing filling it is twelve years of
-photographs nobody has looked at, which is the case worth spending an evening on rather than a
-monthly fee.
+right answer for most people. It is a poorer answer if the thing filling it is twelve years of
+photographs nobody has looked at, and that case is worth an evening rather than a monthly fee.
 
 ## And the row that catches people out
 

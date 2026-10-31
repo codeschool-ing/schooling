@@ -16,7 +16,7 @@ jeito que fez nomes antigos valerem para coisas novas.
 | **Micro-B** | o trapézio pequeno. Celulares antes de uns 2018, e ainda em aparelhos baratos |
 | **USB-C** | o oval pequeno, e o único que entra dos dois lados |
 
-Cinco formatos, e um deles está sendo substituído por outro. **O USB-C está ganhando e é um
+Quatro formatos, e um deles está sendo substituído por outro. **O USB-C está ganhando e é um
 formato, não uma velocidade** — que é justamente a confusão que o resto desta seção existe para
 desfazer.
 

@@ -42,7 +42,7 @@ Um celular roubado com a conta de mensagens ainda logada é a conta, e dela o me
 todo mundo da lista de contatos, em nome do dono, às duas da manhã.
 
 As defesas são sem graça e funcionam: **uma tela de bloqueio**, o **PIN do próprio aplicativo para
-registrar o número de novo**, e o segundo fator no e-mail da seção anterior.
+registrar o número de novo**, e o segundo fator no e-mail, de uma seção anterior.
 
 ## E a frase desta seção
 

@@ -36,8 +36,7 @@ silenciosamente pulando uma linha.
 `SEP2` vira setembro. Uma medida escrita `2-3` vira três de fevereiro e não dá para desfazer,
 porque **os caracteres originais sumiram** — a célula agora guarda um número de dia.
 
-A segunda metade dessa frase é a parte que importa. Converter a coluna de volta para texto depois
-te dá `45016`, não `2-3`. **Não há como desfazer depois de o arquivo ser salvo**, e é por isso que
+Converter a coluna de volta para texto depois te dá o número do dia, não `2-3`. **Não há como desfazer depois de o arquivo ser salvo**, e é por isso que
 esta é uma aula sobre o que fazer antes.
 
 ## Fazendo antes

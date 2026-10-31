@@ -74,7 +74,7 @@ tokens  words  chars  file
 ```
 
 149 tokens, enviados com cada mensagem que um cliente digita. Três páginas de regras custariam
-muitas vezes isso, e seriam mais difíceis para o modelo seguir, não mais fáceis: uma instrução
+muitas vezes isso, e seriam mais difíceis para o modelo seguir, não mais fáceis. Uma instrução
 enterrada no meio de um prompt longo recebe menos atenção que uma perto do começo ou do fim, o
 efeito que a lição 4 descreve.
 

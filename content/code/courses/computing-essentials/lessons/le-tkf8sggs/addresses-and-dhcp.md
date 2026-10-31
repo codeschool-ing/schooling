@@ -33,10 +33,10 @@ while the outside cannot start one with a device inside.
 
 ## DHCP, which is the handing out
 
-Nobody types these numbers. **DHCP** is the service — running on the router — that answers a
-device saying *I am new here, what is my address?* with an address, a validity period, and the
-two other things a device needs: which address is the router itself, and which address answers
-name questions.
+Nobody types these numbers. **DHCP** is the service, running on the router, that answers a
+device saying *I am new here, what is my address?* It answers with an address, a validity
+period, and the two other things a device needs: which address is the router itself, and which
+address answers name questions.
 
 The validity period is called a **lease**, and it is why an address can change. A phone that has
 been away for a week comes back and may be given a different number, which is harmless for a

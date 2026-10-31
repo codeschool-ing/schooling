@@ -37,7 +37,7 @@ Duas coisas relacionadas que valem saber:
 ## Para que a extensão serve
 
 Para quase tudo, quase sempre. É uma convenção que funciona porque as pessoas em geral não
-mentem, e as alternativas são piores: macOS e Linux conseguem inspecionar os primeiros bytes de
+mentem. As alternativas são piores: macOS e Linux conseguem inspecionar os primeiros bytes de
 um arquivo para adivinhar o tipo real, o que é mais honesto e mais lento, e os dois ainda usam a
 extensão como primeira resposta.
 
