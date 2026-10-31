@@ -46,7 +46,7 @@ a `SyntaxError` about an unexpected `<`**, which sends people looking at their o
 
 The fourth row is the only one where `fetch` itself rejected. The browser's message is deliberately
 vague, `Failed to fetch`, whether the cause was a refused connection, no network, or a request the
-browser refused for security reasons; the console line above it, `ERR_CONNECTION_REFUSED`, is
+browser refused for security reasons. The console line above it, `ERR_CONNECTION_REFUSED`, is
 written for the developer and is not available to the script.
 
 ## The same in Node

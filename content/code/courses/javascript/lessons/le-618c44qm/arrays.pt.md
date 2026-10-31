@@ -44,7 +44,7 @@ devolveu `"Iracema"` e o array subiu. **`splice(início, quantidade)` remove ite
 tirou o do índice 1. `slice(início, fim)` é o gêmeo próximo que não muda nada: devolve um array
 novo, e `shelf.length` continuava 3 depois.
 
-O par `splice` e `slice` é a confusão mais comum com arrays, e a regra por baixo é a que vale
+O par `splice` e `slice` é a confusão mais comum com arrays. A regra por baixo dela é a que vale
 guardar: **alguns métodos mudam o array em que são chamados, e alguns devolvem um novo.** `push`,
 `pop`, `shift`, `unshift`, `splice`, `sort` e `reverse` mudam. Todo o resto desta aula devolve algo
 novo.

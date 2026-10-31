@@ -36,9 +36,9 @@ NaN        false
 
 ## The list to remember
 
-`false`, `0`, `-0`, `0n`, `""`, `null`, `undefined` and `NaN`. **That is all of them.** The six
-lines below show the values people expect to be falsy and are not: the strings `"0"` and
-`"false"`, a string holding a space, an empty array and an empty object are all truthy. `if (list)`
+`false`, `0`, `-0`, `0n`, `""`, `null`, `undefined` and `NaN`. **That is all of them.** The last six
+lines of the output are values people expect to be falsy and are not: the strings `"0"` and
+`"false"`, a string holding a space, an empty array, an empty object and `-1` are all truthy. `if (list)`
 is true for an empty list, so to ask whether an array has items, ask `list.length > 0`.
 
 ## `||` gives back a value

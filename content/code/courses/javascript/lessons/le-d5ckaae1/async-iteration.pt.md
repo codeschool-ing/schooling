@@ -43,5 +43,5 @@ Três sintaxes novas estão neste arquivo, e as aulas 13 e 14 são o lugar delas
 - o `for await…of`, no nível de cima de um ES module (aula 9), pede cada item e espera ele chegar.
 
 **O formato é o que levar desta aula**: a mesma conversa de puxar um por vez do `for…of`, com uma
-pausa entre o pedido e a resposta. A aula 16 usa isso num servidor, onde a pausa é uma requisição de
-verdade.
+pausa entre o pedido e a resposta. Na aula 16 essa pausa fica real: uma requisição a um
+servidor.

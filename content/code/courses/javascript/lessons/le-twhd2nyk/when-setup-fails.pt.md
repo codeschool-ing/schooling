@@ -50,7 +50,7 @@ nodejs:
 ```
 
 O Ubuntu 24.04 traz, sim, um pacote chamado `nodejs`, e **ele é a versão 18**, quatro versões
-principais atrás da que gravou este curso, e sem suporte do projeto Node. A maior parte do curso
+principais atrás da usada para gravar este curso, e sem suporte do projeto Node. A maior parte do curso
 rodaria nele, e então uma sintaxe mais nova falharia com um `SyntaxError` com cara de erro seu.
 `node --version` é a conferência: qualquer coisa abaixo de `v22` é o Node errado.
 

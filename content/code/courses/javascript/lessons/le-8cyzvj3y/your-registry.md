@@ -4,7 +4,7 @@ version: 1
 ---
 
 **This lesson installs packages, and then publishes one.** A version published to the public
-registry stays there for good, under your name, so the practice here happens somewhere nobody else
+registry stays there for good, under your name. So the practice here happens somewhere nobody else
 can see: a registry running on your own computer, holding a few packages written for the lesson. It
 is called **Verdaccio**, and it speaks the same language as `registry.npmjs.org`, so npm, pnpm and
 Yarn cannot tell the difference.
@@ -257,5 +257,6 @@ Logged in on http://127.0.0.1:4873/.
 ```
 
 npm asked three questions. The password is not shown as you type it. npm warns that the e-mail is
-public, which on the public registry it is; this registry shows it to nobody but you. The answer is a **token**, a long random string that npm wrote into `~/.npmrc`, and npm
-sends it with every request to this registry from now on. The last section of the lesson uses it.
+public, which on the public registry it is; this registry shows it to nobody but you. The answer
+is a **token**, a long random string that npm wrote into `~/.npmrc`, and npm sends it with every
+request to this registry from now on. Section 08, on publishing, uses it.

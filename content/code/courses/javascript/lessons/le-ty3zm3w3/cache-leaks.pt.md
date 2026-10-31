@@ -46,7 +46,7 @@ mais, e cai alguns dias depois, numa hora que ninguém escolheu.
   "file": "cache-bounded.js",
   "parts": [
     {
-      "code": "const mb = () => {\n  globalThis.gc();\n  return Math.round(process.memoryUsage().heapUsed / 1024 / 1024);\n};",
+      "code": "const mb = () => {\n  globalThis.gc();\n  return Math.round(process.memoryUsage().heapUsed / 1024 / 1024);\n};\n",
       "note": "A mesma medição."
     },
     {
@@ -58,7 +58,7 @@ mais, e cai alguns dias depois, numa hora que ninguém escolheu.
       "note": "Um acerto move a entrada para o fim, apagando e definindo de novo. Um `Map` guarda as chaves na ordem em que foram definidas (aula 5), então o fim do `Map` é sempre a entrada usada mais recentemente."
     },
     {
-      "code": "  const value = `<li>book ${bookId}</li>`.repeat(20);\n  cache.set(bookId, value);\n  if (cache.size > LIMIT) cache.delete(cache.keys().next().value);\n  return value;\n}",
+      "code": "  const value = `<li>book ${bookId}</li>`.repeat(20);\n  cache.set(bookId, value);\n  if (cache.size > LIMIT) cache.delete(cache.keys().next().value);\n  return value;\n}\n",
       "note": "Uma falta calcula o valor e o guarda. Se isso passar o cache do limite, a primeira chave do `Map`, a usada há mais tempo, é removida."
     },
     {

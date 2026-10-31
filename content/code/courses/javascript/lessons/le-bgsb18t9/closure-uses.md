@@ -3,8 +3,8 @@ title: What closures are for
 version: 1
 ---
 
-Closures are not a curiosity to know about; **they are how JavaScript keeps state that belongs to
-one function**, without a class and without a global. Three patterns cover most of what you will
+**Closures are how JavaScript keeps state that belongs to one function**, without a class and
+without a global. Three patterns cover most of what you will
 write and read.
 
 ## Run something once
@@ -27,7 +27,7 @@ write and read.
       "note": "The first call runs `fn` and remembers its result. Every later call skips straight to returning that result."
     },
     {
-      "code": "const connect = once(() => {\n  console.log(\"connecting...\");\n  return \"connection 1\";\n});\n\nconsole.log(connect());\nconsole.log(connect());\nconsole.log(connect());",
+      "code": "\nconst connect = once(() => {\n  console.log(\"connecting...\");\n  return \"connection 1\";\n});\n\nconsole.log(connect());\nconsole.log(connect());\nconsole.log(connect());",
       "note": "`connect` is the wrapped function. The message inside it printed once, though `connect` was called three times."
     }
   ],

@@ -49,8 +49,8 @@ apuros. Clientes de verdade costumam acrescentar um pouco de aleatoriedade à es
 
 **Tente de novo só requisições seguras de repetir.** Ler um livro, um `GET`, pode ser pedido duas
 vezes sem dano. Criar um empréstimo, um `POST`, pode ter dado certo no servidor antes de a resposta se
-perder, e tentar de novo criaria um segundo empréstimo. Esse é o caso em que a seção anterior
-terminou: o cliente não consegue distinguir "falhou" de "deu certo e eu nunca soube".
+perder, e tentar de novo criaria um segundo empréstimo. Esse é o caso que a seção sobre tempo limite
+levantou: o cliente não consegue distinguir "falhou" de "deu certo e eu nunca soube".
 
 Então um laço de novas tentativas precisa de três limites:
 

@@ -40,7 +40,7 @@ three widths set in one task; the screen only ever saw the last
   três vezes seguidas; a tela nunca foi desenhada entre elas, então ninguém viu 100 nem 200 pixels. É
   por isso que um script consegue reconstruir uma lista inteira (aula 11) sem a página piscar a cada
   passo;
-- **`requestAnimationFrame(fn)` roda `fn` logo antes do próximo quadro ser desenhado.** `grow` o pediu
+- **`requestAnimationFrame(fn)` roda `fn` logo antes do próximo quadro ser desenhado.** `grow` rodou
   cinco vezes, uma por quadro, e a barra cresceu dez pixels por quadro. Código de animação o usa para
   cada mudança cair em exatamente um quadro.
 

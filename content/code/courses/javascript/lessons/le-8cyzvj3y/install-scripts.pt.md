@@ -4,7 +4,7 @@ version: 2
 ---
 
 **Um pacote pode trazer um script que o gerenciador roda durante a instalação, com as permissões do
-seu usuário.** O campo `scripts` que guardou o `start` na seção 02 também aceita
+seu usuário.** O campo `scripts` que guardou o `start` na seção 03 também aceita
 `preinstall`, `install` e `postinstall`, e esses rodam quando alguém instala o pacote.
 
 Eles existem por bons motivos. Um pacote que embrulha uma biblioteca escrita em C a compila para a

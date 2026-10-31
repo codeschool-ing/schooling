@@ -49,7 +49,7 @@ failed together do not all come back together.
 
 **Retry only requests that are safe to repeat.** Reading a book, a `GET`, can be asked for twice with
 no harm. Creating a loan, a `POST`, might have succeeded on the server before the answer was lost, and
-retrying it would create a second loan. That is the case the last section ended on: the client cannot
+retrying it would create a second loan. That is the case the section on timeouts raised: the client cannot
 tell "it failed" from "it worked and I never heard".
 
 So a retry loop needs three limits:

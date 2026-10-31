@@ -54,8 +54,8 @@ true 5
 ## De onde vem o escopo do arquivo
 
 As duas últimas linhas respondem duas perguntas abertas desde a aula 3 e a aula 6. O Node roda todo
-arquivo CommonJS **dentro de uma função que ele embrulha em volta do código**, e ele mostra as duas metades que põe em
-volta do seu arquivo:
+arquivo CommonJS **dentro de uma função que ele embrulha em volta do código**, e ele mostra as duas
+metades que põe em volta do seu arquivo:
 
 ```
 ana@dev:~/js$ node -p 'require("node:module").wrapper'
@@ -65,8 +65,8 @@ ana@dev:~/js$ node -p 'require("node:module").wrapper'
 ]
 ```
 
-É por isso que `arguments.length` no topo de um arquivo imprimiu `5`, que `require`, `module`,
-`__filename` e `__dirname` existem sem serem declarados, e que **um `var` de nível de cima ficou no
-arquivo na aula 3: ele é uma variável local dessa função.** E o Node chama a função com o `this`
-valendo `module.exports`, e é por isso que o `this` deu `true` contra ele aqui, e o `{}` vazio que a
-arrow no topo de um arquivo imprimiu na aula 6.
+É por isso que `arguments.length` no topo de um arquivo imprimiu `5`, e que `require`, `module`,
+`__filename` e `__dirname` existem sem serem declarados. É também por isso que **um `var` de nível de
+cima ficou no arquivo na aula 3: ele é uma variável local dessa função.** E o Node chama a função com
+o `this` valendo `module.exports`. É por isso que `this === module.exports` deu `true` aqui, e que a
+arrow no topo de um arquivo imprimiu um `{}` vazio na aula 6.

@@ -69,7 +69,7 @@ shelf-count-1.0.0.tgz
 ```
 
 `npm whoami` answers with the account npm will publish as: `ana`, the one `npm adduser` created in
-the first section, whose token it reads from `~/.npmrc`.
+section 02, whose token it reads from `~/.npmrc`.
 
 `npm pack --dry-run` builds the package without sending it and lists what is inside. Two files,
 because `files` named one and npm always adds `package.json`; the test stayed home. npm starts that

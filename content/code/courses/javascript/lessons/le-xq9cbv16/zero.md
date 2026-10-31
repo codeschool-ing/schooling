@@ -48,7 +48,7 @@ stays the same between runs.
 - **zero is "soon", and "soon" depends on what else is queued.** Code that needs something to happen
   before the next frame uses `requestAnimationFrame`; code that needs it before any other task uses a
   microtask, `queueMicrotask` or `await`;
-- **a chain of zero-delay timers is slower than it looks**: a thousand of them take at least four
+- **a chain of zero-delay timers is slower than it looks**: a thousand of them take about four
   seconds in a browser. Lesson 13's slicing used them for the opposite reason, to give the page room
   between slices, and that is their honest use;
 - Node has its own minimum of one millisecond for timers and no 4 ms rule. **The language says

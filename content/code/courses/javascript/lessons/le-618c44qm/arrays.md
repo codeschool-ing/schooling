@@ -44,7 +44,7 @@ start. `shift` returned `"Iracema"` and the array moved up. **`splice(start, cou
 in place**, and here took out the one at index 1. `slice(start, end)` is the near twin that does
 not change anything: it returns a new array, and `shelf.length` was still 3 afterwards.
 
-The pair `splice` and `slice` is the commonest confusion with arrays, and the rule underneath it is
+The pair `splice` and `slice` is the commonest confusion with arrays. The rule underneath it is
 the one to keep: **some methods change the array they are called on, and some return a new one.**
 `push`, `pop`, `shift`, `unshift`, `splice`, `sort` and `reverse` change it. Everything else in
 this lesson returns something new.

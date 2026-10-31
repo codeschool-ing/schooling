@@ -45,5 +45,4 @@ Dom Casmurro 2
 ```
 
 O `map` transforma cada livro num par `[id, livro]`, e o `Map` se constrói a partir dos pares.
-Depois disso, `byId.get(12)` substitui um `find` que percorria o array inteiro. A aula 16 faz isso
-com livros buscados num servidor.
+Depois disso, `byId.get(12)` substitui um `find` que percorria o array inteiro.

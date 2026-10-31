@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Esta aula instala pacotes, e depois publica um.** Uma versão publicada no registro público fica
-lá para sempre, com o seu nome, então a prática aqui acontece onde ninguém mais vê: um registro
+lá para sempre, com o seu nome. Então a prática aqui acontece onde ninguém mais vê: um registro
 rodando no seu próprio computador, com alguns pacotes escritos para a aula. Ele se chama
 **Verdaccio**, e fala a mesma língua que o `registry.npmjs.org`, então npm, pnpm e Yarn não
 percebem a diferença.
@@ -260,4 +260,4 @@ Logged in on http://127.0.0.1:4873/.
 O npm fez três perguntas. A senha não aparece enquanto você digita. O npm avisa que o e-mail é
 público, o que no registro público ele é; este registro não o mostra a ninguém além de você. A
 resposta é um **token**, uma sequência longa e aleatória que o npm escreveu em `~/.npmrc`, e o npm o
-manda em toda requisição a este registro daqui em diante. A última seção da aula o usa.
+manda em toda requisição a este registro daqui em diante. A seção 08, sobre publicação, o usa.

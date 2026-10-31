@@ -69,7 +69,7 @@ shelf-count-1.0.0.tgz
 ```
 
 `npm whoami` responde com a conta com que o npm vai publicar. É a `ana`, a conta que o `npm adduser`
-criou na primeira seção, cujo token ele lê de `~/.npmrc`.
+criou na seção 02, cujo token ele lê de `~/.npmrc`.
 
 `npm pack --dry-run` monta o pacote sem enviá-lo e lista o que tem dentro. Dois arquivos, porque
 `files` nomeou um e o npm sempre acrescenta o `package.json`; o teste ficou em casa. O npm começa

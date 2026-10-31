@@ -70,4 +70,4 @@ aula 5 protegia.
 
 **Quando o último quadro retorna, a pilha fica vazia, e só então outra coisa pode rodar.** É o momento
 que o navegador espera: o handler de clique da seção anterior ficou numa fila até a ordenação retornar
-e a pilha ficar vazia. O event loop, duas seções adiante, é a regra do que roda em seguida.
+e a pilha ficar vazia. O event loop, na próxima seção, é a regra do que roda em seguida.

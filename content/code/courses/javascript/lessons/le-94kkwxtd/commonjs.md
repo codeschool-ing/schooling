@@ -53,8 +53,8 @@ true 5
 ## Where the file's scope comes from
 
 The last two lines answer two questions left open since lesson 3 and lesson 6. Node runs every
-CommonJS file **inside a function it wraps around the code**, and it will show you the two halves it puts
-around your file:
+CommonJS file **inside a function it wraps around the code**, and it will show you the two halves it
+puts around your file:
 
 ```
 ana@dev:~/js$ node -p 'require("node:module").wrapper'
@@ -64,8 +64,8 @@ ana@dev:~/js$ node -p 'require("node:module").wrapper'
 ]
 ```
 
-That is why `arguments.length` at the top of a file printed `5`, why `require`, `module`,
-`__filename` and `__dirname` exist without being declared, and why **a top-level `var` stayed in the
-file in lesson 3: it is a local variable of that function.** And Node calls the function with `this`
-set to `module.exports`, which is why `this` was `true` against it here, and the empty `{}` that the
-arrow at the top of a file printed in lesson 6.
+That is why `arguments.length` at the top of a file printed `5`, and why `require`, `module`,
+`__filename` and `__dirname` exist without being declared. It is also why **a top-level `var` stayed
+in the file in lesson 3: it is a local variable of that function.** And Node calls the function with
+`this` set to `module.exports`. That is why `this === module.exports` printed `true` here, and why the
+arrow at the top of a file printed an empty `{}` in lesson 6.

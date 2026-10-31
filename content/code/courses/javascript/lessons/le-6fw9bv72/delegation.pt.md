@@ -51,7 +51,7 @@ lend book 19
 A lista tem um listener e nenhum botão tem. Para cada clique:
 
 - `event.target.closest(".lend")` sobe do que foi clicado até o botão de empréstimo mais próximo, o
-  método que a aula 11 apresentou exatamente para isso. **Clicar no texto da linha, a última ação, não
+  método que a aula 11 apresentou exatamente para isso. **Clicar na própria linha, a última ação, não
   achou botão, e o listener voltou sem fazer nada**;
 - a partir do botão, `closest(".book")` achou a linha, e o `data-id` disse qual livro. O livro é
   conhecido pelo id, nunca pelo título nem pela posição na lista.

@@ -76,7 +76,7 @@ Node.js v22.22.0
 ```
 
 `JSON.parse` takes a second argument, a **reviver**, called for every key on the way out, which here
-turned the date string back into a `Date`. The second line shows how strict JSON is: **property
+turned the date string back into a `Date`. The second `parse` shows how strict JSON is: **property
 names need double quotes and strings cannot use single ones**, so text that is valid JavaScript can
 be invalid JSON, and `parse` throws a `SyntaxError` naming the position. Text from outside your
 program can always be malformed, so a `parse` of it belongs where its error can be handled.

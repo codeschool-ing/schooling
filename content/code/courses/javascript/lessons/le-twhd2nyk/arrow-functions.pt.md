@@ -17,23 +17,23 @@ qualquer código de verdade. A mais nova, a **arrow function**, é a mais curta:
       "note": "Uma declaração de função: a palavra-chave, um nome, os parâmetros e um corpo entre chaves. `return` devolve o resultado."
     },
     {
-      "code": "const triple = function (n) {\n  return n * 3;\n};",
+      "code": "\nconst triple = function (n) {\n  return n * 3;\n};",
       "note": "Uma expressão de função: a mesma coisa escrita como um valor e entregue a um nome. O nome vive onde o `const` o coloca."
     },
     {
-      "code": "const half = (n) => n / 2;",
+      "code": "\nconst half = (n) => n / 2;",
       "note": "Uma arrow function. `=>` fica entre os parâmetros e o corpo, e sem chaves o corpo é uma única expressão, cujo valor é devolvido sem escrever `return`."
     },
     {
-      "code": "const square = n => n * n;",
+      "code": "\nconst square = n => n * n;",
       "note": "Com exatamente um parâmetro, os parênteses são opcionais. O Prettier os recoloca por padrão, e a maioria das equipes os mantém."
     },
     {
-      "code": "const describe = (title, year = \"unknown\") => {\n  const age = typeof year === \"number\" ? 2026 - year : \"?\";\n  return title + \" (\" + year + \"), \" + age + \" years old\";\n};",
+      "code": "\nconst describe = (title, year = \"unknown\") => {\n  const age = typeof year === \"number\" ? 2026 - year : \"?\";\n  return title + \" (\" + year + \"), \" + age + \" years old\";\n};",
       "note": "Com chaves, o corpo é um bloco como outro qualquer, e aí o `return` volta a ser necessário. `year = \"unknown\"` é um valor padrão, usado quando quem chama não passa nada para esse parâmetro."
     },
     {
-      "code": "console.log(double(4), triple(4), half(4), square(4));\nconsole.log(describe(\"Dom Casmurro\", 1899));\nconsole.log(describe(\"Iracema\"));",
+      "code": "\nconsole.log(double(4), triple(4), half(4), square(4));\nconsole.log(describe(\"Dom Casmurro\", 1899));\nconsole.log(describe(\"Iracema\"));",
       "note": "As chamadas. `describe(\"Iracema\")` omite `year`, então o padrão o preenche."
     }
   ],
@@ -64,8 +64,9 @@ undefined
 ```
 
 **Depois de `=>`, uma chave sempre abre um bloco, nunca um objeto.** Em `wrong`, as chaves são o
-corpo da função, `title` com os dois-pontos é um rótulo (uma parte da linguagem que quase ninguém usa), e a função
-não devolve nada. Envolver o objeto em parênteses, como faz `right`, o torna uma expressão de novo.
+corpo da função, `title` com os dois-pontos é um rótulo (uma parte da linguagem que quase ninguém
+usa), e a função não devolve nada. Envolver o objeto em parênteses, como faz `right`, o torna uma
+expressão de novo.
 Todo mundo escreve o `wrong` uma vez.
 
 ## Uma arrow não pode ser construtora

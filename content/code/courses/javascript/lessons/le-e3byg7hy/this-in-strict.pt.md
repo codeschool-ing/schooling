@@ -28,8 +28,8 @@ estrito recebe `undefined`. Essa diferença decide como um método perdido falha
 - em código estrito, `this.prefix` em `undefined` lança erro na hora: `Cannot read properties of
   undefined`, a mensagem que a aula 6 ensinou você a ler como "este método perdeu o seu objeto";
 - em código não estrito, `this.prefix` lê uma propriedade do objeto global, que quase sempre é
-  `undefined`, e o método segue e produz `undefined: Iracema`, como fez o `withFunction` da aula 6.
-  **Pior, uma atribuição como `this.count = 0` cria um global**, então um método perdido pode mudar em
+  `undefined`, e o método segue com isso. O `withFunction` da aula 6 fez exatamente isso com
+  `this?.name`, e produziu `undefined: Iracema`. **Pior, uma atribuição como `this.count = 0` cria um global**, então um método perdido pode mudar em
   silêncio um estado que todo outro script compartilha.
 
 O modo estrito transforma um `this` perdido de resultado errado em erro na chamada. Classes são

@@ -76,7 +76,7 @@ Node.js v22.22.0
 ```
 
 O `JSON.parse` aceita um segundo argumento, um **reviver**, chamado para cada chave na saída, que aqui
-transformou a string da data de volta num `Date`. A segunda linha mostra o quanto o JSON é estrito:
+transformou a string da data de volta num `Date`. O segundo `parse` mostra o quanto o JSON é estrito:
 **nomes de propriedade precisam de aspas duplas e strings não podem usar simples**, então um texto que
 é JavaScript válido pode ser JSON inválido, e o `parse` lança um `SyntaxError` dizendo a posição. Texto
 de fora do seu programa sempre pode vir malformado, então um `parse` dele pertence a um lugar onde o

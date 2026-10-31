@@ -65,5 +65,5 @@ true
 Desde 2024 um `Set` tem as operações da matemática: **união** é tudo o que está em qualquer um,
 **interseção** é o que os dois têm em comum, **diferença** é o que o primeiro tem e o segundo não.
 O Node 22 as tem, assim como os navegadores atuais; este é um dos recursos a que a aula 1 se
-referia quando mandou instalar o 22 ou mais novo. Antes delas, o mesmo se escrevia com `filter` e
+referia quando mandou instalar o Node 22. Antes delas, o mesmo se escrevia com `filter` e
 `has`: `[...ana].filter((t) => bia.has(t))` é a interseção.

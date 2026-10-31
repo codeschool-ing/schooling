@@ -43,9 +43,9 @@ null
 ## Three things the output shows
 
 - **A selector that matches nothing gives `null`**, not an error. The next line that uses it, such as
-  `.textContent`, is where the error appears, and its message is lesson 4's `Cannot read properties
-  of null`. When you see that message in page code, the selector is the first suspect: a typo, or a
-  script that ran before the element existed;
+  `.textContent`, is where the error appears, as `Cannot read properties of null`: lesson 4's
+  message, with `null` in place of `undefined`. When you see that message in page code, the selector
+  is the first suspect: a typo, or a script that ran before the element existed;
 - `querySelectorAll` returns a **static** `NodeList`: a snapshot taken when it ran. After a third book
   was added, it still said 2;
 - `getElementsByClassName` returns a **live** `HTMLCollection`, which updates itself as the page

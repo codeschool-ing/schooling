@@ -70,4 +70,4 @@ against.
 
 **When the last frame returns, the stack is empty, and only then can anything else run.** That is the
 moment the browser waits for: the click handler in the last section sat in a queue until the sort had
-returned and the stack was empty. The event loop, two sections on, is the rule for what runs next.
+returned and the stack was empty. The event loop, in the next section, is the rule for what runs next.

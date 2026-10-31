@@ -59,7 +59,7 @@ tick 4 ended at about 1000 ms
 ```
 
 **With `setInterval`, four ticks ended by about 700 ms**: each time a tick finished, the next was
-already overdue, so they ran back to back and the page got no breathing room between them. **With
+already overdue, so they ran back to back and the program got no breathing room between them. **With
 the chained `setTimeout`, they ended by about 1000 ms**, and there were always 100 ms between the end
 of one tick and the start of the next.
 
