@@ -142,8 +142,8 @@ y
 yes exit: 141
 ```
 
-**`141` é como um sinal aparece num código de saída**: 128 mais o número do sinal, e o `SIGPIPE` é o
-13. O `yes` não parou porque tinha terminado — ele foi morto, pelo kernel, por escrever num pipe sem
+**`141` é como um sinal aparece num código de saída**: 128 mais o número do sinal, e o `SIGPIPE` é o 13.
+O `yes` não parou porque tinha terminado — ele foi morto, pelo kernel, por escrever num pipe sem
 ninguém do outro lado.
 
 **Esse é o comportamento projetado**, e é por isso que `| head` num comando enorme volta na hora em

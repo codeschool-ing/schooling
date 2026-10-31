@@ -224,8 +224,8 @@ No core libraries or services have been updated since the last system boot.
 Reboot is probably not necessary.
 ```
 
-Nothing to do here, which is the answer you want — and read the first line against lesson 6 section
-13. **"Processes using deleted files" is exactly the open-descriptor-on-a-deleted-file situation**,
+Nothing to do here, which is the answer you want — and read the first line against lesson 6 section 13.
+**"Processes using deleted files" is exactly the open-descriptor-on-a-deleted-file situation**,
 and this is what it looks like when a package manager uses it deliberately: a library replaced on
 disk while something still has the old one open is a service running code that no longer exists.
 

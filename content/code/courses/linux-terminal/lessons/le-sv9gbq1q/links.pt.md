@@ -61,8 +61,8 @@ ana@vm:~/hard$ cat hardlink.txt
 changed
 ```
 
-**O `rm` não apagou o arquivo.** Ele removeu um nome e decrementou a contagem, de 2 de volta para
-1. Os dados continuam lá, alcançáveis pelo outro nome — e vão continuar lá até o último nome que
+**O `rm` não apagou o arquivo.** Ele removeu um nome e decrementou a contagem, de 2 de volta para 1.
+Os dados continuam lá, alcançáveis pelo outro nome — e vão continuar lá até o último nome que
 aponta para eles sumir.
 
 É isso que o `rm` sempre fez. Num arquivo com um nome só, remover o nome e remover os dados parecem

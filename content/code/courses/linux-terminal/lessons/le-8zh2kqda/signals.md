@@ -143,8 +143,8 @@ y
 yes exit: 141
 ```
 
-**`141` is how a signal shows up in an exit status**: 128 plus the signal's number, and `SIGPIPE` is
-13. `yes` did not stop because it was finished — it was killed, by the kernel, for writing into a
+**`141` is how a signal shows up in an exit status**: 128 plus the signal's number, and `SIGPIPE` is 13.
+`yes` did not stop because it was finished — it was killed, by the kernel, for writing into a
 pipe with nobody at the other end.
 
 **That is the designed behaviour**, and it is why `| head` on an enormous command returns instantly
