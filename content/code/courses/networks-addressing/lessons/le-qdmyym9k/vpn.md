@@ -27,8 +27,8 @@ network can deliver**. The head office's router takes a packet addressed to the 
 a new packet addressed from its own public address to the branch router's public address, and sends
 that. The provider routes the outer packet, which it knows how to do. The branch router unwraps it
 and delivers the original packet on its LAN. In most VPNs the inner packet is also **encrypted**, so
-that the network carrying it can read neither its contents nor its private addresses — the last
-section of this lesson looks at what remains visible.
+that the network carrying it can read neither its contents nor its private addresses — the next
+section looks at what remains visible.
 
 ## Building one
 
@@ -46,9 +46,10 @@ root@rbr:~# ip addr add 10.255.255.2/30 dev wg0 && ip link set wg0 up && ip rout
 ```
 
 Read the head office's three lines. `wg0` is created; then `wg set` gives it a **listening port**,
-51820, a private key from a file, and one **peer**: the branch's public key (`+JFz…`), its
-**endpoint** `198.51.100.2:51820` — the branch router's public address — and its **allowed IPs**,
-`10.30.10.0/24,10.255.255.2/32`, the addresses that may arrive through this tunnel. The last line
+51820, a private key from a file, and one **peer**, the branch. The peer is named by its public key
+(`+JFz…`) and found at its **endpoint**, `198.51.100.2:51820`, the branch router's public address.
+Its **allowed IPs**, `10.30.10.0/24,10.255.255.2/32`, are the addresses that may arrive through this
+tunnel. The last line
 gives `wg0` an address, brings it up, and adds the route that sends the branch's LAN into the tunnel.
 The branch's lines are the mirror image.
 
@@ -88,7 +89,7 @@ peer: +JFzEjDfzTBIMYnsaG9+qGoe12VEnNzYlLvJ6Ftnojo=
 
 The ping that failed now works. Three details say it went through the tunnel:
 
-- **`ttl=62`.** pc2 sent its reply with a TTL of 64, and two routers each took one: `rbr` and `rhq`.
+- **The reply arrived with `ttl=62`.** pc2 sent its reply with a TTL of 64, and two routers each took one: `rbr` and `rhq`.
   The provider's router forwarded the *outer* packet, whose TTL is a different number, and never
   touched the inner one.
 - **The traceroute has three hops, and none of them is the provider.** Hop 2 is `10.255.255.2`, the

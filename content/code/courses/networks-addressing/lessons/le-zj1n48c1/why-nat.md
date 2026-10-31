@@ -6,12 +6,12 @@ version: 2
 IPv4 has 2 to the power of 32 addresses, about 4.3 billion, and there are more devices than that.
 **NAT, network address translation, lets a whole network use private addresses inside and share one
 public address outside.** The private ranges are set aside by RFC 1918 — `10.0.0.0/8`,
-`172.16.0.0/12` and `192.168.0.0/16` — and lesson 8 covers them: anybody may use them, so the same
+`172.16.0.0/12` and `192.168.0.0/16` — and lesson 8 covers them. Anybody may use them, so the same
 address exists in thousands of offices at once, and no router on the internet carries a route to any
 of them.
 
-Lesson 1's office is built that way, and this lesson runs on it: `sudo bash ~/netlab/netlab.sh up office`.
-pc1 has a private address:
+Lesson 1's office is built that way, and this lesson runs on it:
+`sudo bash ~/netlab/netlab.sh up office`. pc1 has a private address:
 
 ```
 ana@pc1:~$ ip -br addr show eth0

@@ -29,7 +29,7 @@ várias direções de uma vez, com as mesmas consequências.
 ## Onde você encontra um hoje
 
 Quase ninguém instala numa rede Ethernet uma caixa chamada repetidor, porque um switch faz o
-trabalho melhor: ele também regenera o sinal, já que recebe cada quadro e o envia de novo, e não
+trabalho melhor. Ele também regenera o sinal, já que recebe cada quadro e o envia de novo, e não
 repassa o que o outro lado não precisa. A ideia sobrevive em três lugares:
 
 - **Conversores de mídia e enlaces de fibra.** Quando 100 metros não bastam, a resposta é um

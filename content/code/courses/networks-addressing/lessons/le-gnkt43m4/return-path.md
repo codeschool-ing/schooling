@@ -64,7 +64,7 @@ how you tell, on a router you did not configure, which lines a person is respons
 
 The two PC networks needed four routes: r1 and r2 towards `10.20.3.0/24`, r3 and r2 towards
 `10.20.1.0/24`. **Every router on the path needs a route for every network it is not connected to and
-has to forward to.** Add a third network behind r2 and r1 and r3 each need one more line, and anything
+has to forward to.** Add a third network behind r2, and r1 and r3 each need one more line, and anything
 that should reach it from the other networks needs its way back too.
 
 Two habits follow:

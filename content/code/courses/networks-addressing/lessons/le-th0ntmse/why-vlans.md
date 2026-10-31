@@ -14,7 +14,7 @@ The lab for this lesson is two switches, sw1 and sw2, joined by one cable betwee
 p24, and five PCs. pc1 and pc3 belong to one department and have addresses in 10.20.10.0/24; pc2
 and pc4 belong to another, in 10.20.20.0/24. pc5 is the odd one: its address is in the first
 department's range, and its port will be put in the second department's VLAN, which is the
-experiment of the last section. The switches are the Linux kernel's bridge with VLAN filtering
+experiment of the section on the native VLAN, at the end of this lesson. The switches are the Linux kernel's bridge with VLAN filtering
 switched on, configured with the `bridge vlan` command. A commercial switch says the same things in
 its own words, and the lesson names those words where they differ.
 
@@ -86,8 +86,8 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 The ARP request went to `ff:ff:ff:ff:ff:ff`, and pc2 received it although nothing on pc2 has
 anything to do with 10.20.10.23. On five PCs that is one line of output. On a floor of a few
 hundred machines, every ARP question, every DHCP request and every printer announcing itself
-reaches all of them, and every network card has to take the frame in and every operating system
-has to look at it before throwing it away. Everybody can also see who is asking for whom, which a
+reaches all of them. Every network card has to take the frame in, and every operating system has
+to look at it before throwing it away. Everybody can also see who is asking for whom, which a
 department in a different position of trust has no business seeing.
 
 That gives three reasons to split a network, and each is a different kind of reason. The first is
@@ -101,5 +101,5 @@ What a VLAN does not do is just as important. It encrypts nothing, and it does n
 may plug in — that is port security and 802.1X, from lesson 18. **The convention this lab follows
 is one VLAN per IP subnet**: 10.20.10.0/24 lives in VLAN 10 and 10.20.20.0/24 in VLAN 20, so the
 broadcast domain and the subnet are the same set of machines. pc5 breaks that convention on
-purpose, and the last section shows what happens when the address says one thing and the port
+purpose, and the section on the native VLAN shows what happens when the address says one thing and the port
 says another.

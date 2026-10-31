@@ -45,15 +45,15 @@ second. Read the MAC addresses and the VLAN of each:
 ```
 
 The IP addresses do not change at any point, `10.20.10.21 > 10.20.20.22` going and the reverse
-coming back. What changes is the frame around the packet: **at each hop through the router, the MAC
-addresses and the VLAN tag are rewritten, and the IP addresses inside stay as they were** (the
-router also lowers the TTL by one, which this capture does not print). That is what routing does
+coming back. What changes is the frame around the packet. **At each hop through the router, the MAC
+addresses and the VLAN tag are rewritten, and the IP addresses inside stay as they were.** The
+router also lowers the TTL by one, which this capture does not print. That is what routing does
 to every packet, seen here on one cable. Every frame is 102 bytes, the tagged size
 lesson 19 measured.
 
 The cost follows from the count. **A trunk to a router on a stick carries every routed packet twice**,
 once up and once down. The cable is full duplex, so the trip up and the trip down use the two
-directions of it and do not compete with each other; but every conversation between every pair of
+directions of it and do not compete with each other. But every conversation between every pair of
 VLANs shares those two directions, along with anything addressed to the router itself. If the stick
 is a 1 Gb/s link, then 1 Gb/s each way is the most that can cross between all the VLANs together,
 however fast the switch is inside. Traffic that stays within one VLAN never touches the stick: pc1

@@ -61,7 +61,7 @@ ageing_time 30000
 ```
 
 **`ageing_time 30000` is in hundredths of a second: 300 seconds, five minutes.** An entry that no
-frame has refreshed for that long is forgotten, so a machine unplugged from p1 and plugged into p3
+frame has refreshed for that long is forgotten. So a machine unplugged from p1 and plugged into p3
 is found in its new place as soon as it sends one frame, and an address that has gone away stops
 taking a line in the table. Lesson 1 set this to 0 to make the switch forget everything at once,
 which is how it imitated a hub.

@@ -26,11 +26,11 @@ Work it by hand before reading the answer off ipcalc. `/26` is 26 ones, so the m
 `11000000`, 192, and the last octet holds 2 network bits and 6 host bits. The address's last octet is
 140, which is `10001100`.
 
-- **Network**: keep the 2 network bits, clear the 6 host bits. `10001100` becomes `10000000`, 128,
+- Network: keep the 2 network bits, clear the 6 host bits. `10001100` becomes `10000000`, 128,
   so the network is `10.20.32.128`.
-- **Broadcast**: keep the 2 network bits, set the 6 host bits. `10111111`, 191, so the broadcast is
+- Broadcast: keep the 2 network bits, set the 6 host bits. `10111111`, 191, so the broadcast is
   `10.20.32.191`.
-- **Hosts**: everything between, `10.20.32.129` to `10.20.32.190`.
+- Hosts: everything between, `10.20.32.129` to `10.20.32.190`.
 
 ipcalc agrees on all three, and its `Hosts/Net: 62` is the count of that last range. In the lab, r1's
 `eth2` holds `10.20.32.129`, the first host address, and eng1 holds `.140`. **Giving the gateway the

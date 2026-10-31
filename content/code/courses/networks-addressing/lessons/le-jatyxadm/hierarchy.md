@@ -11,12 +11,12 @@ change and every failure touches everybody at once.
 
 The classic design has three tiers:
 
-- **Access** — where the machines plug in. One switch per floor or per room, many ports, cheap. Its
+- Access — where the machines plug in. One switch per floor or per room, many ports, cheap. Its
   job is to connect people, and nothing else.
-- **Distribution** — the gateway of each access switch's LAN, and the place where rules are applied:
+- Distribution — the gateway of each access switch's LAN, and the place where rules are applied:
   which LANs may talk, which routes are summarised before they go further up (this lesson's
   scalability section). Each distribution device serves a block of the building.
-- **Core** — the middle, which moves traffic between the distribution blocks as fast as it can. **The
+- Core — the middle, which moves traffic between the distribution blocks as fast as it can. **The
   core carries everybody's traffic, so it does no filtering and no clever work**; anything that could
   slow it down or break it belongs a tier lower.
 

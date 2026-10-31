@@ -3,7 +3,7 @@ title: "The default gateway: one router's address"
 version: 1
 ---
 
-"Gateway" sounds like a device. In a host's configuration it is an **address**: **the default
+"Gateway" sounds like a device. In a host's configuration it is an address: **the default
 gateway is the address of the router a host sends every packet to when the destination is not on
 its own network.** pc1's routing table says so in two lines:
 
@@ -57,8 +57,8 @@ instead, which is why the neighbour table now has a second line, `10.20.10.1 ...
 ```
 
 **Two pairs of addresses, with two different reaches.** The IP addresses name the two ends of the
-journey and stay in the packet all the way; the MAC addresses name this link's sender and receiver
-and are thrown away at r1, which wraps the same packet in a new frame for the provider's link. The
+journey and stay in the packet all the way. The MAC addresses name this link's sender and receiver,
+and they are thrown away at r1, which wraps the same packet in a new frame for the provider's link. The
 reply came back with `ttl=62`, the two routers of lesson 1, and through the same gateway: its frame
 is from `02:1f:23:e7:e9:d5` to pc1.
 

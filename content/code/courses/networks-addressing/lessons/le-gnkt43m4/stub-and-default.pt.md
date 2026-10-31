@@ -70,6 +70,6 @@ respostas de r3 a um roteador que só conseguiria responder `!N`. **Escolher par
 aponta é a única decisão de roteamento que uma rede stub toma**, e ela tem de ser tomada sabendo o que
 há atrás do próximo salto.
 
-O padrão com que esta aula termina é o que sobrevive na prática: redes stub nas bordas com uma única rota
-padrão, uma rota específica de volta para elas a partir do núcleo, e um protocolo de roteamento no meio
-onde houver mais de um caminho. A aula 16 começa pelo meio.
+O padrão com que esta aula termina é o que sobrevive na prática. As redes stub nas bordas guardam uma
+única rota padrão, o núcleo guarda uma rota específica de volta para elas, e um protocolo de roteamento
+roda no meio onde houver mais de um caminho. A aula 16 começa pelo meio.

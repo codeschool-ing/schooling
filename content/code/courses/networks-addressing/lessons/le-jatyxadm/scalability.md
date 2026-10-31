@@ -58,8 +58,8 @@ links there — and no route ever summarises, because the blocks do not line up 
 plan is cheap on the first day and impossible to change on the thousandth**, since every device, every
 firewall rule and every document carries the addresses.
 
-The arithmetic of masks and how many hosts a block holds is lesson 12; cutting one block into
-differently sized pieces, as the campus does with its `/30`s and `/24`s, is lesson 13; and making OSPF
+The arithmetic of masks and how many hosts a block holds is lesson 12. Cutting one block into
+differently sized pieces, as the campus does with its `/30`s and `/24`s, is lesson 13, and making OSPF
 announce one summary in place of many routes belongs to lesson 16. This section only asks you to look
 at a table and count.
 
@@ -68,4 +68,4 @@ at a table and count.
 Scalability also means that the people can keep up. A design with one kind of access switch, one kind
 of distribution pair and one way of numbering things can be extended by somebody who did not build it.
 A design where every building is a special case cannot, however fast its routers are. That is the bridge
-to the last section of this lesson: what is not written down does not scale.
+to the section on documentation, at the end of this lesson: what is not written down does not scale.

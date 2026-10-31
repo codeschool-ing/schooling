@@ -7,11 +7,11 @@ Aprender redes só pelo livro falha sempre no mesmo lugar: o momento em que algo
 nunca viu como é "não funcionar". **Uma rede de prática existe para você quebrar coisas de propósito e
 ver o que acontece.** Três motivos fazem valer a pena montar uma:
 
-- **equipamento**: um switch, dois roteadores e um firewall custam dinheiro e uma prateleira, enquanto
+- equipamento: um switch, dois roteadores e um firewall custam dinheiro e uma prateleira, enquanto
   um laboratório de vinte dispositivos custa parte da memória de um notebook;
-- **segurança**: uma rota errada numa rede de prática não derruba nada, e no roteador do escritório
+- segurança: uma rota errada numa rede de prática não derruba nada, e no roteador do escritório
   derruba o escritório;
-- **ensaio**: uma mudança que você vai fazer em produção — uma VLAN nova, uma rota, uma regra de
+- ensaio: uma mudança que você vai fazer em produção — uma VLAN nova, uma rota, uma regra de
   firewall — pode ser testada antes numa cópia da rede, e a cópia sai barato jogar fora.
 
 As ferramentas que montam essas redes são todas chamadas de "simuladores" na conversa, e a palavra

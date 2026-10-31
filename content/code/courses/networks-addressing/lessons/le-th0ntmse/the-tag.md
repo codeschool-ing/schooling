@@ -89,5 +89,5 @@ bits. Neither runs in this lab.
 Two consequences of adding bytes to a frame are worth knowing. Ethernet's largest frame grew from
 1518 to 1522 bytes to make room for the tag, so a device on a trunk has to accept frames four bytes
 longer than an access port ever delivers. And the frame's checksum at the end covers every byte,
-so the switch recomputes it each time it adds or removes a tag; tcpdump on Linux does not show the
+so the switch recomputes it each time it adds or removes a tag. On Linux, tcpdump does not show the
 checksum, which is why the lengths above are 98 and 102 and not four bytes more.

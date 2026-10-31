@@ -3,14 +3,14 @@ title: Protegendo a árvore do que é conectado nela
 version: 1
 ---
 
-O spanning tree acredita em todo BPDU que recebe. É isso que o faz funcionar sem configuração, e é
+O spanning tree acredita em todo BPDU que recebe. É isso que o faz funcionar sem configuração. É
 também o seu lado fraco: **qualquer dispositivo que manda BPDUs participa da eleição**, seja o switch
 de núcleo, seja um switch barato que alguém trouxe de casa e ligou embaixo da mesa.
 
 Duas coisas podem dar errado. Se o dispositivo novo tiver um ID de ponte menor, ele **vira a raiz**,
 e a rede inteira se reorganiza em torno dele: o tráfego entre dois andares pode passar a atravessar
 um switch de mesa, por um cabo que ninguém planejou. E uma pessoa que liga duas tomadas de rede ao
-mesmo switch pequeno, ou conecta as duas pontas de um cabo nele, monta o laço da primeira seção
+mesmo switch pequeno, ou conecta as duas pontas de um cabo nele, monta o laço com que esta aula começou
 desta lição num lugar que ninguém está olhando. As defesas abaixo são todas configurações nas portas
 onde esses dispositivos aparecem: a borda.
 
@@ -53,8 +53,8 @@ fica onde foi posta.
 O **BPDU filter** faz uma porta parar de mandar BPDUs e ignorar os que recebe. Ele às vezes é usado
 em portas que dão para a rede de outra organização, onde as duas árvores não podem se fundir. Numa
 porta de acesso comum ele é o contrário de proteção: **uma porta que ignora BPDUs não consegue
-descobrir que faz parte de um laço**, então um cabo entre duas portas filtradas é a tempestade da
-primeira seção com o spanning tree ligado em todo o resto. Se uma porta deve dar só para
+descobrir que faz parte de um laço**. Um cabo entre duas portas filtradas é a tempestade com
+que esta aula começou, com o spanning tree ligado em todo o resto. Se uma porta deve dar só para
 computadores, o BPDU guard é a configuração que diz isso e age de acordo.
 
 ## A última linha: storm control

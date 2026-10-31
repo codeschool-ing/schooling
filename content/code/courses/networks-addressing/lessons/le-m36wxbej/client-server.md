@@ -58,4 +58,4 @@ accepts becomes a socket of its own, told apart from the others by who is at the
 That is what makes client-server simple to run. The server's address and port are published once —
 in a DNS record, a configuration file, a URL — and every client finds it the same way. It is also the
 model's weakness: when `srv` stops, all three conversations stop with it, and no client can do
-anything about that. The last section of this lesson weighs the two sides.
+anything about that. The section on choosing, at the end of this lesson, weighs the two sides.

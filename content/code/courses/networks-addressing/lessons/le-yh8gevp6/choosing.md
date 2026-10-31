@@ -31,6 +31,7 @@ Four questions show how the choice falls:
   channel — need the physical thing.
 
 This course uses the namespace lab for a reason that is about honesty as much as cost: every
-transcript in it is something a real kernel printed, and anyone with a Linux machine can build
-the same networks from the files these lessons show and get the same lines, timings apart. Where a lesson needs a device the lab cannot be — a modem, an access
-point, a vendor's command line — it says so and shows nothing.
+transcript in it is something a real kernel printed. Anyone with a Linux machine can build the same
+networks from the files these lessons show and get the same lines, timings apart. Where a lesson needs
+a device the lab cannot be — a modem, an access point, a vendor's command line — it says so and shows
+nothing.

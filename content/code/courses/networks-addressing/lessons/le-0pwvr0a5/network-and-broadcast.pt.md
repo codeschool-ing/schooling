@@ -26,11 +26,11 @@ Faça à mão antes de ler a resposta no ipcalc. `/26` são 26 uns, então o úl
 `11000000`, 192, e o último octeto tem 2 bits de rede e 6 de host. O último octeto do endereço é 140,
 que é `10001100`.
 
-- **Rede**: mantenha os 2 bits de rede e zere os 6 de host. `10001100` vira `10000000`, 128, então a
+- Rede: mantenha os 2 bits de rede e zere os 6 de host. `10001100` vira `10000000`, 128, então a
   rede é `10.20.32.128`.
-- **Broadcast**: mantenha os 2 bits de rede e ponha os 6 de host em 1. `10111111`, 191, então o
+- Broadcast: mantenha os 2 bits de rede e ponha os 6 de host em 1. `10111111`, 191, então o
   broadcast é `10.20.32.191`.
-- **Hosts**: tudo o que fica entre eles, de `10.20.32.129` a `10.20.32.190`.
+- Hosts: tudo o que fica entre eles, de `10.20.32.129` a `10.20.32.190`.
 
 O ipcalc concorda nos três, e o seu `Hosts/Net: 62` é a contagem dessa última faixa. No laboratório, a
 `eth2` do r1 tem `10.20.32.129`, o primeiro endereço de host, e o eng1 tem `.140`. **Dar ao gateway o

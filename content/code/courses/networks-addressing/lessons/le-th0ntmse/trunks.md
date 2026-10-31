@@ -50,7 +50,7 @@ nothing.
 
 **A trunk carries only the VLANs it is a member of.** On the Linux bridge that list is explicit,
 and VLAN 30 would not cross p24 until somebody added it at both ends. Some commercial switches
-start the other way round, allowing every VLAN on a trunk until told otherwise; writing the list
+start the other way round, allowing every VLAN on a trunk until told otherwise. Writing the list
 out by hand means a VLAN exists only where it was meant to exist, and a broadcast storm in one VLAN
 stays off the cables that have no business carrying it.
 

@@ -75,8 +75,8 @@ The difference is the whole point of a link-local address: **every interface has
 `fe80::/64`, so the address alone does not say which link to send the packet on**. A machine with
 two cards has two links that both contain `fe80::1f:23ff:fee7:e9d5` as far as its routing is
 concerned. `%eth0` is the **zone**, the interface the address belongs to, and the warning ping
-printed says exactly that, `use: address%<ifname|scope-id>`. Global addresses never need a zone;
-link-local ones do, whenever a program has to be told one.
+printed says exactly that, `use: address%<ifname|scope-id>`. Global addresses never need a zone.
+A link-local address needs one whenever it is handed to a program.
 
 r1's own link-local address, `fe80::1f:23ff:fee7:e9d5`, came from its MAC `02:1f:23:e7:e9:d5` by the
 same three steps. Remember it: in the next section it turns up as the default gateway of every PC in

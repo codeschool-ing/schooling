@@ -80,4 +80,4 @@ Mais dois fatos sobre a tabela, que a aula 19 e a seção de segurança de porta
   caso é o assunto da seção de segurança de porta.
 - **Entradas também podem ser estáticas.** `dynamic` nestes comandos filtra as entradas aprendidas;
   uma entrada digitada por um administrador não envelhece e não é trocada pelo que o switch vê. A
-  última seção desta aula depende exatamente disso.
+  seção sobre segurança de porta, no fim desta aula, depende exatamente disso.

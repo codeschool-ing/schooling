@@ -52,12 +52,12 @@ fora, e nenhum consegue receber uma. Os programas que precisam de ponto a ponto 
 combinam três técnicas publicadas, e vale reconhecer os nomes, porque eles aparecem em logs de
 firewall e em telas de configuração:
 
-- **um relay**: os dois pares conectam para fora num servidor que repassa os dados entre eles.
-  Funciona sempre que os dois alcançam o servidor, e transforma a conversa em cliente-servidor de
-  novo (o padrão é o TURN);
-- **perguntar a um servidor o que se vê de fora**: um par descobre, por um servidor, o endereço e a
-  porta públicos que o roteador lhe deu (STUN), e assim tem o que informar ao outro par;
-- **conectar dos dois lados ao mesmo tempo**, para que cada roteador já tenha uma entrada para a
+- **Um relay** é um servidor em que os dois pares conectam para fora e que repassa os dados entre
+  eles. Funciona sempre que os dois alcançam o servidor, e transforma a conversa em cliente-servidor
+  de novo (o padrão é o TURN);
+- **Perguntar a um servidor o que se vê de fora** dá a um par o endereço e a porta públicos que o
+  roteador lhe atribuiu (STUN), e assim ele tem o que informar ao outro par;
+- **Conectar dos dois lados ao mesmo tempo** faz com que cada roteador já tenha uma entrada para a
   conversa quando o pacote do outro par chegar. Isso passa por muitos NATs e não por todos, e é por
   isso que o ICE, o procedimento que coordena os três, deixa o relay como último recurso.
 

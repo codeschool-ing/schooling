@@ -46,7 +46,7 @@ ip -n rb route add 10.20.0.0/16 via 10.20.2.1
 echo "hostname r1" | frr r1
 ```
 
-O ra e o rb ganham cada um uma rota de volta para o escritório no arquivo; o r1 não ganha nenhuma, e a
+O ra e o rb ganham cada um uma rota de volta para o escritório no arquivo; o r1 não ganha nenhuma. A
 última linha sobe o FRR nele sem nada configurado, para que a visão dele da tabela possa ser lida ao
 lado da do kernel na seção sobre distância administrativa.
 

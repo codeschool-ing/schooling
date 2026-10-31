@@ -13,13 +13,13 @@ leva o seu tempo para alcançá-lo.
 
 Depois que a raiz é eleita, as outras portas recebem os papéis em duas passadas.
 
-- **Porta raiz.** Cada switch, menos a raiz, escolhe a porta com o menor custo total até a raiz. É
-  por ela que esse switch alcança o resto da árvore.
-- **Porta designada.** Em cada cabo, as duas pontas comparam o que oferecem, e a ponta com o menor
-  custo até a raiz vira a porta designada: a que encaminha tráfego para aquele cabo, no sentido
+- Cada switch, menos a raiz, escolhe a porta com o menor custo total até a raiz, a sua **porta
+  raiz**. É por ela que esse switch alcança o resto da árvore.
+- Em cada cabo, as duas pontas comparam o que oferecem, e a ponta com o menor custo até a raiz vira
+  a **porta designada**: a que encaminha tráfego para aquele cabo, no sentido
   contrário ao da raiz. **Toda porta da própria raiz é designada**, porque nada está mais perto da
   raiz do que a raiz.
-- **Porta bloqueada.** Uma porta que não é nenhuma das duas fica bloqueada. Ela continua ouvindo
+- Uma porta que não é nenhuma das duas fica **bloqueada**. Ela continua ouvindo
   BPDUs, que é como vai perceber quando for necessária, e não encaminha mais nada.
 
 O kernel mostra cada porta do `sw3` com a ponta designada do cabo dela:
@@ -77,5 +77,5 @@ que a `p3` do `sw1` estava em `listening` logo depois de o cabo entrar, e por is
 esperou 40 segundos antes de ler o resultado.
 
 `disabled` não é uma decisão do protocolo. É uma porta sem sinal, ou uma que um administrador
-desligou. A `p3` desconectada da primeira seção estava em `state disabled` ao lado de `NO-CARRIER`, e
-a última seção desta lição mostra uma porta posta ali de propósito.
+desligou. A `p3` desconectada da seção do laço estava em `state disabled` ao lado de `NO-CARRIER`, e
+a seção sobre proteger a árvore, no fim desta aula, mostra uma porta posta ali de propósito.

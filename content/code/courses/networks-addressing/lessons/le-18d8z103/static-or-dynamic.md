@@ -86,7 +86,7 @@ What gets a static address is anything other machines must find by its number, a
 has to keep working when the DHCP server does not. In this lab that is r1 at 10.20.10.1, the gateway
 every PC is told about, and srv at 10.20.10.10, the DHCP server itself — a server cannot lease an
 address to itself before it is running. Name servers belong in the same group. Each of those
-addresses is written in `dhcp.sh`, below, by an `addr` line.
+addresses is written in `dhcp.sh`, above, by an `addr` line.
 
 Everything that comes and goes is dynamic: laptops, phones, desktops, a visitor's tablet. Typing
 their addresses by hand costs more than the minutes it takes. Somebody mistypes and two machines

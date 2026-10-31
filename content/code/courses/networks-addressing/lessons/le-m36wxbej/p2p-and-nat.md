@@ -49,12 +49,12 @@ Now put both peers behind routers like r1. Each can start a conversation out, an
 one. Programs that need peer to peer through NAT combine three published techniques, and the names
 are worth recognising because they turn up in firewall logs and in configuration screens:
 
-- **a relay**: both peers connect out to a server that passes data between them. It works whenever
-  both can reach the server, and it makes the conversation client-server again (TURN is the standard
-  one);
-- **asking a server what the outside sees**: a peer learns from a server the public address and port
-  its router gave it (STUN), so it has something to tell the other peer;
-- **connecting from both sides at once**, so that each router already has an entry for the
+- **A relay** is a server that both peers connect out to and that passes data between them. It works
+  whenever both can reach the server, and it makes the conversation client-server again (TURN is the
+  standard one);
+- **Asking a server what the outside sees** gives a peer the public address and port its router
+  assigned it (STUN), so it has something to tell the other peer;
+- **Connecting from both sides at once** means each router already has an entry for the
   conversation when the other peer's packet arrives. It gets through many NATs and not through all of
   them, which is why ICE, the procedure that coordinates the three, keeps the relay as the last
   resort.

@@ -22,12 +22,12 @@ The obvious worry is that a switch pushing power down every cable would damage a
 into the wrong port. **A standard PSE puts no power on a cable until it has found a PD at the other
 end.** It goes through three steps:
 
-1. **Detection.** The PSE applies a small, harmless voltage and looks for a *signature resistance*
+1. Detection: the PSE applies a small, harmless voltage and looks for a *signature resistance*
    of 25 kΩ that a PD presents across its input. A laptop's network card does not present it, so
    it never receives power.
-2. **Classification.** The PD announces a **class**, which tells the PSE how much power it may
+2. Classification: the PD announces a **class**, which tells the PSE how much power it may
    draw. Devices of the later standards can also refine the figure afterwards over LLDP.
-3. **Power-up**, and from then on the PSE watches the current. If the PD is unplugged, the PSE
+3. Power-up, and from then on the PSE watches the current. If the PD is unplugged, the PSE
    notices and removes power from the port.
 
 That protection belongs to the standard. Some cheap equipment sells *passive PoE*, which puts a
@@ -51,7 +51,7 @@ of the power into heat. The standards size that gap for 100 metres of cable.
 is how it reaches 60 and 90 W, and why it is the standard for devices such as cameras with heaters,
 large access points and small displays.
 
-Within Type 1 the classes say how much less than the maximum a device needs: **class 1 reserves
+Within Type 1 the classes say how much less than the maximum a device needs. **Class 1 reserves
 4 W at the port, class 2 reserves 7 W, and class 3 the full 15.4 W.** Class 4 is Type 2's 30 W, and
 802.3bt adds classes 5 to 8, up to 90 W. A device that announces nothing is class 0 and gets the
 Type 1 maximum. Those reservations are what the next section adds up, because a switch does not have

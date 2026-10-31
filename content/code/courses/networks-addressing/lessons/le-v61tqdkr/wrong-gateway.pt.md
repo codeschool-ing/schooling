@@ -45,8 +45,8 @@ Dois detalhes da falha contam o que aconteceu.
 **O erro vem do endereço do próprio pc2**: `From 10.20.10.22 ... Destination Host Unreachable`.
 Nenhum roteador disse isso. Foi o kernel do pc2, sobre um host que ele tentava alcançar no próprio
 enlace, e esse host não era 192.0.2.80. Era o gateway. Para mandar qualquer pacote a 192.0.2.80, o
-pc2 primeiro precisa do endereço MAC de 10.20.10.254, perguntou com ARP, não teve resposta, e
-desistiu. (`+2 errors` conta esses dois avisos, e `pipe 2` é o ping registrando que as duas sondas
+pc2 primeiro precisava do endereço MAC de 10.20.10.254. Perguntou por ele com ARP, não teve
+resposta e desistiu. (`+2 errors` conta esses dois avisos, e `pipe 2` é o ping registrando que as duas sondas
 estavam pendentes ao mesmo tempo.)
 
 **A tabela de vizinhos confirma**: `10.20.10.254 dev eth0 FAILED`. FAILED é o estado de um

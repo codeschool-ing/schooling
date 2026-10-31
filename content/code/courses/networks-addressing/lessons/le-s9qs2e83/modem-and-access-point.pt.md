@@ -54,7 +54,7 @@ mundo chama de "o roteador" em casa são quatro equipamentos**, e é por isso qu
 todo mundo reinicia: quatro trabalhos, uma tomada.
 
 Uma rede de empresa desmonta a caixa de propósito. O equipamento do provedor termina no modem ou
-terminal dele; o roteador e o firewall da empresa vêm depois; os switches ficam num rack; e os
+terminal dele; o roteador e o firewall da empresa vêm depois; os switches ficam num rack. Os
 pontos de acesso se espalham pelos tetos, cada um alimentado por um único cabo que também leva a
 energia, o que é a aula 21. Equipamentos separados podem ser trocados, dimensionados e colocados
 onde funcionam melhor, um de cada vez, e quando um falha os outros três continuam funcionando.

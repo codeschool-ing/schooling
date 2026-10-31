@@ -67,13 +67,13 @@ slow to find**.
 
 Three ways a design looks redundant on paper and is not:
 
-- **Shared fate.** Two cables in the same duct are cut by the same digger. Two routers on the same
+- Shared fate. Two cables in the same duct are cut by the same digger. Two routers on the same
   power strip go dark together. Redundancy is only as independent as the least obvious thing the two
   halves share.
-- **A path nobody uses.** A backup link that carries no traffic for a year may be broken, misconfigured
+- A path nobody uses. A backup link that carries no traffic for a year may be broken, misconfigured
   or unplugged on the day it is needed, and nothing says so. Equal-cost paths avoid this by keeping
   both halves busy; a standby link should at least be tested on a schedule.
-- **Half the capacity.** With both cores in use, each carries half the load. If one fails, the other
+- Half the capacity. With both cores in use, each carries half the load. If one fails, the other
   carries everything. A design where each core runs at 70% is redundant in the drawing and overloaded
   in the failure.
 

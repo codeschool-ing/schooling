@@ -5,8 +5,8 @@ version: 1
 
 A **broadcast** address delivers one packet to every machine on a network at once. IPv4 has two
 kinds. The **directed broadcast** of a network is its last address, the one with every host bit set
-to 1: for `10.20.10.0/24` that is `10.20.10.255`, the `Broadcast` line ipcalc printed in this
-lesson's first section. The **limited broadcast**, `255.255.255.255`, means every machine on this
+to 1: for `10.20.10.0/24` that is `10.20.10.255`, the `Broadcast` line ipcalc printed for pc1
+at the start of this lesson. The **limited broadcast**, `255.255.255.255`, means every machine on this
 link, whatever the network is, and it is what a machine with no address yet uses to ask for one;
 lesson 10 watches a DHCP client do it.
 
@@ -77,7 +77,7 @@ and r1's `eth0`, and went no further: **the set of machines one broadcast reache
 domain**, and in this office it is everything plugged into sw1. Lesson 18 measures one, and lesson
 19 splits a switch into several with VLANs.
 
-Broadcasts are not a curiosity. ARP asks its question by broadcast, as the networks course showed
+Broadcasts are part of ordinary traffic. ARP asks its question by broadcast, as the networks course showed
 on the wire, and DHCP starts with one. Every machine in the domain receives every one of them and
 spends a little effort deciding to ignore it, which is one reason a network of thousands of
 machines is cut into smaller ones rather than built as one flat LAN.

@@ -89,4 +89,4 @@ para aquela casa.
 
 Duas coisas para guardar desta saída. Uma calculadora conhece as faixas que o autor lhe ensinou, e
 esta parou na RFC 1918. **Se um endereço é privado, de documentação ou compartilhado é um fato que
-você mesmo confere na tabela**, e a última seção desta aula tem a tabela completa.
+você mesmo confere na tabela**, e a seção sobre as faixas especiais, no fim desta aula, tem a tabela completa.

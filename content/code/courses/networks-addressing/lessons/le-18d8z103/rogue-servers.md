@@ -12,8 +12,8 @@ server. Either way, the clients that listen to it are cut off or sent somewhere 
 In the lab, the PC called rogue was turned into a second server that lends 10.20.10.200 upwards and
 names itself, 10.20.10.66, as the gateway. How it was started is not part of this lesson; what it
 does to the network is. Your `dhcp.sh` has no second server, so this section is one to read rather
-than type: the output is the point. pc2 asks for an address, with a `tcpdump` running on pc2 in a second
-terminal that prints after it:
+than type: the output is the point. pc2 asks for an address, with a `tcpdump` running on pc2 in a
+second terminal that prints after it:
 
 ```
 ana@pc2:~$ sudo dhclient -v eth0 2>&1 | grep -E "DHCPOFFER|DHCPACK|bound"

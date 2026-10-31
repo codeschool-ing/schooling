@@ -88,4 +88,4 @@ the provider, and nobody on the internet can open a connection to that home dire
 
 Two things to keep from this output. A calculator knows the ranges its author taught it, and this
 one stopped at RFC 1918. **Whether an address is private, documentation or shared is a fact you can
-check against the table yourself**, and this lesson's last section has the full table.
+check against the table yourself**, and the section on special ranges, at the end of this lesson, has the full table.

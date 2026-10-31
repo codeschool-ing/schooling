@@ -81,8 +81,8 @@ And in this lab the leaked route for ispa's customers, `64500 64501`, would have
 `64501` on length. **On the real internet it would not have to**: a provider giving its customers' routes a
 higher local preference, as the previous section described, prefers a leaked route from a customer over
 the correct one from a peer, whatever the lengths. That is how a leak through a small network draws the
-traffic of large ones through a link that cannot carry it, and it has happened, more than once, with
-services that millions of people use becoming slow or unreachable for hours.
+traffic of large ones through a link that cannot carry it. It has happened more than once, and services
+that millions of people use became slow or unreachable for hours.
 
 **So there are two filters, one on each side of every customer link**, and neither is enough alone:
 

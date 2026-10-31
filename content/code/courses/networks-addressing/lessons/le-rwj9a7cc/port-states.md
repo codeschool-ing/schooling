@@ -13,13 +13,13 @@ time to catch up.
 
 Once the root is elected, the other ports get their roles in two passes.
 
-- **Root port.** Every switch except the root picks the one port with the lowest total cost to the
-  root. It is how that switch reaches the rest of the tree.
-- **Designated port.** On every cable, the two ends compare what they offer, and the end with the
-  lower cost to the root becomes the designated port: the one that forwards traffic onto that cable
-  and away from the root. **Every port on the root itself is designated**, because nothing is
+- Every switch except the root picks the one port with the lowest total cost to the root, its
+  **root port**. It is how that switch reaches the rest of the tree.
+- On every cable, the two ends compare what they offer, and the end with the lower cost to the root
+  becomes the **designated port**: the one that forwards traffic onto that cable and away from the
+  root. **Every port on the root itself is designated**, because nothing is
   closer to the root than the root.
-- **Blocked port.** A port that is neither stays blocked. It still listens to BPDUs, which is how it
+- A port that is neither stays **blocked**. It still listens to BPDUs, which is how it
   will notice when it is needed, and forwards nothing else.
 
 The kernel shows each of `sw3`'s ports with the designated end of its cable:
@@ -77,5 +77,5 @@ port. So a port that has to come into use waits about 30 seconds, which is why `
 result.
 
 `disabled` is not a decision of the protocol. It is a port with no signal or one an administrator
-switched off. The unplugged `p3` in the first section was `state disabled` beside `NO-CARRIER`, and
-the last section of this lesson shows a port put there on purpose.
+switched off. The unplugged `p3` in the section on the loop was `state disabled` beside `NO-CARRIER`, and
+the section on protecting the tree, at the end of this lesson, shows a port put there on purpose.

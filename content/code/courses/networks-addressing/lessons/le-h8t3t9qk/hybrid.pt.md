@@ -29,9 +29,9 @@ Leia essa tabela das mesas para dentro e a rede típica de uma empresa se desenh
 ## O laboratório já é híbrido
 
 O cenário `office` deste curso parece uma estrela, e o switch sw1 é uma. Mas siga o desenho no alto do
-`office.sh`, da aula 1, para fora do escritório: o sw1 está pendurado no r1, o r1 está ligado à operadora `isp`, a
-`isp` a um balanceador de carga `lb`, e o `lb` é o centro de uma segunda estrela, pequena, com os dois
-servidores web `web1` e `web2`.
+`office.sh`, da aula 1, para fora do escritório. O switch sw1 está pendurado no r1, o r1 está ligado
+à operadora `isp`, e a `isp` a um balanceador de carga `lb`. E o `lb` é o centro de uma segunda
+estrela, pequena, com os dois servidores web `web1` e `web2`.
 
 ```
 pc1 pc2 pc3 srv --- sw1 --- r1 === isp --- lb --- web1, web2

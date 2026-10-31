@@ -42,8 +42,8 @@ lease 10.20.10.101 {
 Um bloco por endereço emprestado. O empréstimo do 10.20.10.100 ao pc1 `starts 2 2026/09/29
 11:20:32` e `ends 2 2026/09/29 11:30:32`: dez minutos, o `default-lease-time 600` da configuração. O
 `2` é o dia da semana, terça-feira. **Os horários deste arquivo estão em UTC**, enquanto o `tcpdump`
-da seção sobre o DORA imprimiu o horário local do laboratório, `08:20` em São Paulo: o mesmo momento,
-três horas de diferença na página, o que vale saber antes de comparar um empréstimo com um log.
+da seção sobre o DORA imprimiu o horário local do laboratório, `08:20` em São Paulo. É o mesmo momento,
+com três horas de diferença na página, e vale saber disso antes de comparar um empréstimo com um log.
 `binding state active` é um empréstimo em uso, `next binding state free` é o que ele vira no fim, e
 `client-hostname "pc1"` é o nome que o cliente mandou, o jeito mais rápido de descobrir de quem é um
 empréstimo.
@@ -80,7 +80,8 @@ As linhas `option` são o que o ACK trouxe; `dhcp-message-type 5` é o número d
 reinicia o relógio. Esse momento é o `renewal in 291 seconds` que o `dhclient` imprimiu quando
 assumiu o endereço. Se aquele servidor não respondeu até o **rebind**, o cliente manda o pedido por
 broadcast a qualquer servidor que escute. Se ninguém respondeu até o **expire**, o cliente para de
-usar o endereço. Metade e sete oitavos são os padrões do protocolo, da RFC 2131. Este cliente antecipa o primeiro por um valor aleatório, e é por isso que cada `renewal in` desta aula é um número
+usar o endereço. Metade e sete oitavos são os padrões do protocolo, da RFC 2131. Este cliente
+antecipa o primeiro por um valor aleatório, e é por isso que cada `renewal in` desta aula é um número
 diferente abaixo de 300 — 291 para o pc1, 283 para a impressora.
 
 Um cliente que terminou de usar um endereço pode devolvê-lo antes:

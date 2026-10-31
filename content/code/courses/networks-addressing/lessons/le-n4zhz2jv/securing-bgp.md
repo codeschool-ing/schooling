@@ -5,7 +5,7 @@ version: 1
 
 **BGP believes what it is told.** Nothing in the protocol itself checks that the AS announcing a prefix
 has any right to it. A mistake, or a deliberate false announcement of somebody else's block, travels as far
-as the neighbours that do not filter it, and longest-prefix matching from lesson 14 makes a more specific
+as the neighbours that do not filter it. Longest-prefix matching from lesson 14 then makes a more specific
 false announcement win over the true one wherever it is accepted. The defences are layers, each added by
 the networks that care, and this section describes them as a network operator applies and checks them.
 **None of it was run in the lab**: there is no validator in it, and documentation addresses have no real
@@ -33,8 +33,8 @@ receive. That is **route origin validation**, and it gives each route one of thr
 | **invalid** | a ROA covers the prefix, but the origin AS or the length does not match |
 | **not found** | no ROA covers the prefix at all |
 
-The policy most networks that validate apply is simple: **drop invalid, accept the rest**. Every `show ip
-bgp` in this lesson printed `RPKI validation codes: V valid, I invalid, N Not found` in its legend and no
+The policy most networks that validate apply is simple: **drop invalid, accept the rest**. Every BGP table
+listed in this lesson printed `RPKI validation codes: V valid, I invalid, N Not found` in its legend and no
 code beside any route, because FRR knows the states and this lab gives it no validator to ask.
 
 Two limits are worth knowing. Origin validation checks only the **last AS in the path**, so an announcement
