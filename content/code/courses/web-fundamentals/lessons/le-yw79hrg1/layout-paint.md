@@ -18,9 +18,9 @@ window at this width.
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"The same markup laid out at two window widths, producing different positions, different line breaks and a different height. Nothing in the markup gave a coordinate.\"> <text x=\"180\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">at 1200 pixels wide</text> <rect x=\"20\" y=\"36\" width=\"320\" height=\"120\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <rect x=\"36\" y=\"52\" width=\"140\" height=\"26\" rx=\"2\" fill=\"var(--phosphor)\" fill-opacity=\".22\" stroke=\"var(--phosphor)\"></rect> <text x=\"106\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">heading</text> <rect x=\"184\" y=\"52\" width=\"140\" height=\"26\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"254\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">an image</text> <rect x=\"36\" y=\"90\" width=\"288\" height=\"50\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"180\" y=\"115\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">two lines of text</text> <text x=\"540\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">at 400 pixels wide</text> <rect x=\"380\" y=\"36\" width=\"320\" height=\"170\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <rect x=\"396\" y=\"52\" width=\"288\" height=\"26\" rx=\"2\" fill=\"var(--phosphor)\" fill-opacity=\".22\" stroke=\"var(--phosphor)\"></rect> <text x=\"540\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">heading</text> <rect x=\"396\" y=\"86\" width=\"288\" height=\"26\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"540\" y=\"99\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">an image, now below</text> <rect x=\"396\" y=\"120\" width=\"288\" height=\"70\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"540\" y=\"155\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">four lines of text</text> <text x=\"360\" y=\"236\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">a calculation rather than a lookup — which is why turning a phone sideways is a full one</text> </svg>", "caption": "Every position on the finished page was computed, for this window, at this width, a moment ago."}
 ```
 
-That last clause is the important one. Almost nothing on a page has a fixed size: a width is a
-percentage of a parent whose width is a consequence of the window, a height is whatever the content
-turned out to need, a line of text breaks wherever it happens to reach the edge.
+That last clause is the important one. Almost nothing on a page has a fixed size. A width is a
+percentage of a parent whose width is a consequence of the window; a height is whatever the content
+turned out to need; a line of text breaks wherever it happens to reach the edge.
 
 So layout is a calculation, not a lookup, and it depends on things that change. Turning a phone
 sideways is a complete layout. Changing a font is a layout. Adding a sentence to a paragraph is a
@@ -52,8 +52,6 @@ This is the single most actionable fact in the lesson. **Animate transform and o
 because they are fashionable, but because of where they sit in this pipeline.
 
 ## What triggers what
-
-A short table, and it is worth knowing rather than looking up.
 
 | a change to | costs |
 |---|---|

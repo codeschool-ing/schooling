@@ -42,9 +42,9 @@ after that point is encrypted with it.
 The part worth remembering is the shape rather than the cryptography: **this costs round trips**,
 and a round trip costs the latency of lesson three. On a link with 100 ms of latency, one extra
 exchange is 100 ms during which nothing of yours has moved. The newest version of the protocol was
-designed to do it in one exchange rather than two, and has a mode that sends the first request with
-no exchange at all when the two have spoken before — which tells you how much that time was worth
-to somebody.
+designed to do it in one exchange rather than two. It also has a mode that sends the first request
+with no exchange at all when the two have spoken before, which tells you how much that time was
+worth to somebody.
 
 Two things follow for the rest of this course. Connections are worth reusing, because the expensive
 part happens once per connection. And a page assembled from six different hosts pays this cost six
@@ -113,7 +113,6 @@ disappeared. And browsers began marking plain HTTP as *not secure* in the addres
 an invisible technical choice into something visitors could see.
 
 Today a site on plain HTTP is treated as a defect by browsers, by search engines and by anybody
-looking at the address bar, and the work of fixing it is mostly a configuration file. There is one
-more piece of it worth knowing: a site that has moved usually also sends a header asking the
-browser to refuse plain HTTP to that name in future, so that even the first redirect stops being an
-opportunity for somebody in the middle.
+looking at the address bar, and the work of fixing it is mostly a configuration file. A site that has
+moved usually also sends a header asking the browser to refuse plain HTTP to that name in future.
+After that, even the redirect from plain HTTP stops being an opportunity for somebody in the middle.

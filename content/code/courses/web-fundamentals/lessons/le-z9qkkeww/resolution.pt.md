@@ -91,7 +91,7 @@ fazendo naquela camada, que em algumas redes é uma filtragem que você queria e
 ## A pergunta em si costuma estar às claras
 
 Historicamente essa troca inteira roda sobre UDP, na porta 53, em texto puro: uma perguntinha, uma
-respostinha, sem conexão, exatamente como a aula seis previu que seria.
+respostinha, sem conexão, exatamente como a aula dois previu que seria.
 
 Texto puro quer dizer que qualquer um no caminho vê cada nome que você pede — o que, depois da
 leitura sobre HTTPS, é a lacuna no quadro. A conexão é cifrada; a pergunta sobre onde se conectar não

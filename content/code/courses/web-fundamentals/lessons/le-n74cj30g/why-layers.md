@@ -49,7 +49,7 @@ whichever layer produced them, and of the matching layer at the far end.
 
 The second rule is the one doing the work. If a router along the way opened your message and
 behaved differently depending on what it said, then the message could not change unless the
-routers changed too — and there are a great many routers, owned by a great many people who have
+routers changed too. And there are a great many routers, owned by a great many people who have
 never heard of you. Because the router does not open it, a protocol designed this afternoon
 travels tonight across equipment installed a decade ago, which has never heard of it and does not
 need to.
@@ -107,7 +107,7 @@ The consequence arrives later, and lands on somebody else. A new transport proto
 differently, meets millions of boxes that were built to reach up and find a port where a port used
 to be. They do not understand it, so they drop it, and the new protocol fails on networks that
 have no idea they are the reason. It is not a hypothetical, either: it is why the newest transport
-in common use had to disguise itself as an older one to get through, a story this course returns
-to when it reaches HTTP/3.
+in common use had to disguise itself as an older one to get through, a story lesson 6 tells
+when it reaches HTTP/3.
 
 A layer violation buys something immediately and charges for it for twenty years.

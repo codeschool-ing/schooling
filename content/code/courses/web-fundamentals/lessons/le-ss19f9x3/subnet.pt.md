@@ -54,7 +54,7 @@ rede e o último é broadcast — os dois que você viu na seção anterior.
 Há um segundo jeito de ler uma máscara, e é o que torna os tamanhos óbvios sem decorar nada.
 
 Uma `/24` deixa 8 bits para o host, e 8 bits contam 256 valores. Uma `/25` deixa 7, que contam 128.
-Uma `/26` deixa 6, que contam 64. **Os bits de host são o expoente**, e a tabela da seção anterior é
+Uma `/26` deixa 6, que contam 64. **Os bits de host são o expoente**, e a tabela acima é
 dois elevado a ele.
 
 O que significa que você consegue responder às duas perguntas que aparecem na prática sem consultar
@@ -74,7 +74,7 @@ Dividir uma faixa grande em várias menores se chama sub-rede, e é feito por tr
 têm a ver com acabar endereços.
 
 **Broadcast.** Parte do tráfego vai para tudo que está no fio — inclusive o ARP que você vai
-encontrar daqui a duas seções. Numa rede de 65.000 máquinas isso é um barulho enorme chegando em
+encontrar daqui a três seções. Numa rede de 65.000 máquinas isso é um barulho enorme chegando em
 todas elas. Redes menores significam menos disso.
 
 **Separação.** Tráfego entre duas sub-redes tem que passar por um roteador, e um roteador é um
@@ -102,5 +102,5 @@ quando as partes de rede coincidem. `/24` quer dizer 24 bits de rede e 256 ender
 utilizáveis, e cada bit a mais corta a faixa pela metade.
 
 Essa decisão — local ou não — é tomada sobre o endereço. Mas um quadro não viaja por endereço, como
-a aula dois fez questão de dizer. Ele viaja pelo número gravado numa placa de rede, e as próximas
-duas seções são o que é esse número e como uma máquina descobre o do vizinho.
+a aula dois fez questão de dizer. Ele viaja pelo número gravado numa placa de rede, e as duas
+seções depois do IPv6 são o que é esse número e como uma máquina descobre o do vizinho.

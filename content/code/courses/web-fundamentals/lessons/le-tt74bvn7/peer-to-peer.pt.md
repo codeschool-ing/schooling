@@ -38,7 +38,7 @@ entre dois peers e um deles pediu e o outro respondeu — cliente e servidor, na
 muda é que nenhuma máquina guarda um papel permanentemente: um peer é cliente para um pedaço que
 quer e servidor para um pedaço que tem, milhares de vezes por minuto.
 
-Que é exatamente o ponto de `roles`: o papel é a posição em uma troca. **O P2P é o caso que prova
+Que é exatamente o ponto de *Os dois papéis*, no começo desta aula: o papel é a posição em uma troca. **O P2P é o caso que prova
 isso**, porque é onde o papel muda mais rápido. Se os papéis fossem propriedades das máquinas,
 peer-to-peer seria ininteligível. Como posições em uma troca, é banal.
 
@@ -62,9 +62,9 @@ Três respostas são usadas, e nenhuma é tão pura quanto o slogan:
 - **Descoberta local** — gritar na rede local para ver quem está por perto. Funciona só para peers
   na mesma rede, que raramente é onde o arquivo está.
 
-Então sistemas peer-to-peer reais são **híbridos**, e vale dizer isso com todas as letras: as
-partes que descobrem, coordenam e autenticam tendem a parecer servidores, e as partes que carregam
-o volume de dados tendem a parecer peers. Pouquíssimos sistemas em funcionamento são uma coisa só
+Então sistemas peer-to-peer reais são **híbridos**. As partes que descobrem, coordenam e
+autenticam tendem a parecer servidores, e as partes que carregam o volume de dados tendem a
+parecer peers. Pouquíssimos sistemas em funcionamento são uma coisa só
 até o fim.
 
 ## Por que a web não é peer-to-peer

@@ -4,9 +4,9 @@ version: 1
 ---
 
 Um lado pede, o outro responde. Agora olhe de perto para o pedir e o responder, porque eles têm um
-formato que se repete em todo lugar — no HTTP, que você conhece na aula 6, mas também em consultas
-a banco de dados, nas chamadas que seu celular faz para conferir e-mail, e em protocolos
-desenhados antes de a web existir.
+formato que se repete em todo lugar. O HTTP tem esse formato, e você conhece o HTTP na aula 6. Têm
+também as consultas a banco de dados, as chamadas que seu celular faz para conferir e-mail e
+protocolos desenhados antes de a web existir.
 
 ## Quatro coisas que uma requisição carrega
 
@@ -31,8 +31,8 @@ quando clicou.
 
 ### Ler e mudar não são o mesmo tipo de pergunta
 
-O item três merece mais atenção do que sua única linha sugere, porque é a distinção da qual quase
-toda decisão de projeto construída em cima dela depende.
+O item três merece mais atenção do que sua única linha sugere, porque quase toda decisão de
+projeto construída em cima dele depende dessa distinção.
 
 Algumas requisições **só leem**. Elas podem ser repetidas sem consequência, podem ser guardadas em
 cache, um navegador pode refazê-las quando você aperta voltar, e uma máquina em dúvida sobre se
@@ -135,9 +135,9 @@ vezes é só bem mais cedo que a chegada.
 Uma última propriedade, e é a que faz as pessoas redesenharem coisas.
 
 Uma troca não pode ser mais rápida que o tempo de ir e voltar. Se a máquina a quem você pergunta
-está a 9.000 km, a resposta não pode chegar em menos de uns 60 milissegundos por mais rápidos que
-sejam os dois lados, porque é aproximadamente o tempo que a luz leva para fazer o trajeto por
-fibra — e redes reais são mais lentas que a luz.
+está a 9.000 km, a resposta não pode chegar em menos de uns 60 milissegundos, por mais rápidos que
+sejam os dois lados. É aproximadamente o tempo que a luz leva para fazer o trajeto por fibra — e
+redes reais são mais lentas que a luz.
 
 Então uma operação construída como dez trocas em fila, cada uma esperando a anterior, tem um piso
 de dez idas e voltas. A mesma operação construída como uma troca que pede tudo tem um piso de uma.

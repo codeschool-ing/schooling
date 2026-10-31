@@ -59,9 +59,9 @@ It is genuinely good at work that is **occasional and bursty**: a form that subm
 an image resized on upload, a scheduled job. Nothing runs between calls, so nothing is paid for
 between calls, and ten thousand at once is the provider's problem rather than yours.
 
-It is a poor fit for work that is **constant**, where a small server is cheaper and simpler; for
-anything needing to keep state between calls, since there is no reliable place to put it; and for
-anything with a long-lived connection, which the model does not have a shape for.
+It is a poor fit for work that is **constant**, where a small server is cheaper and simpler. It fits
+anything needing to keep state between calls just as badly, since there is no reliable place to put
+it, and anything with a long-lived connection, which the model does not have a shape for.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Work that is occasional and bursty suits functions, because nothing is paid for between calls. Work that is constant, stateful or long-lived does not, because a small server is cheaper and the model has no shape for it.\"> <text x=\"180\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">a good fit</text> <rect x=\"20\" y=\"36\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"55\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">a form that submits twice an hour</text> <rect x=\"20\" y=\"82\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"101\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">an image resized on upload</text> <rect x=\"20\" y=\"128\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"147\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">ten thousand at once, occasionally</text> <text x=\"540\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--amber)\">a poor fit</text> <rect x=\"380\" y=\"36\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"55\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">constant load, where a server is cheaper</text> <rect x=\"380\" y=\"82\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"101\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">anything that keeps state between calls</text> <rect x=\"380\" y=\"128\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"147\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">a long-lived connection</text> <text x=\"360\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">and the cold start, which lands on whoever arrives first</text> <text x=\"360\" y=\"232\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">on a quiet service, that is every visitor</text> </svg>", "caption": "Nothing runs between calls. That is the whole advantage and the whole limitation."}
@@ -79,8 +79,8 @@ used to have inside it can be rented separately: a database, object storage, a q
 mail sender.
 
 A managed database is the clearest case. Somebody else takes the backups, applies the updates, and
-keeps a second copy ready. It costs several times what the same database costs on your own machine,
-and the honest way to compare is against the hours you would spend on those three things — and
+keeps a second copy ready. It costs several times what the same database costs on your own machine.
+The honest way to compare is against the hours you would spend on those three things — and
 against the cost of discovering, during an incident, that you had done none of them.
 
 ## Lock-in, told straight

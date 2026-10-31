@@ -96,10 +96,10 @@ Beginners read the file. The habit worth building now is to read the tree.
 
 ## Two names for the same thing, nearly
 
-One clarification, because the words are used loosely and the distinction becomes important later.
+One clarification, because the words are used loosely and the distinction matters two readings from
+now.
 
-The **document** is the tree. The **render tree** of two readings from now is a different thing
-built from it, containing only what will be drawn. An element removed from the document is gone; an
+The **document** is the tree. The **render tree** is a different thing built from it, containing only what will be drawn. An element removed from the document is gone; an
 element hidden by a style is still in the document and absent from the render tree.
 
 Keeping those apart explains a great deal of behaviour that otherwise looks arbitrary — including,

@@ -91,7 +91,7 @@ you did not.
 ## The question itself is usually in the open
 
 Historically this whole exchange runs over UDP, on port 53, in plain text: one small question, one
-small answer, no connection, exactly as lesson six predicted it would.
+small answer, no connection, exactly as lesson two predicted it would.
 
 Plain text means anybody on the path sees every name you ask for — which, after the HTTPS reading,
 is the gap in the picture. The connection is encrypted; the question about where to connect was

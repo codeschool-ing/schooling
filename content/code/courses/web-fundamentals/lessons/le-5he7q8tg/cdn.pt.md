@@ -63,7 +63,7 @@ cache, agora distribuída por cem países.
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Arquivos públicos e páginas idênticas para todo mundo pertencem à borda, guardados por bastante tempo. Qualquer coisa pessoal precisa ser marcada como privada, porque um cache compartilhado entregando a página de um visitante ao próximo agora está distribuído pelo mundo.\"> <text x=\"180\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">guarde na borda</text> <rect x=\"20\" y=\"36\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"55\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">arquivos com impressão digital no nome</text> <rect x=\"20\" y=\"82\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"101\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">imagens, fontes, folhas de estilo</text> <rect x=\"20\" y=\"128\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"147\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">páginas idênticas para todo mundo</text> <text x=\"540\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--amber)\">marque como private</text> <rect x=\"380\" y=\"36\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"55\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">qualquer coisa atrás de um login</text> <rect x=\"380\" y=\"82\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"101\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">um carrinho, um pedido, um saldo</text> <rect x=\"380\" y=\"128\" width=\"320\" height=\"38\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".2\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"147\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">qualquer coisa com um nome nela</text> <text x=\"360\" y=\"204\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">a falha da aula sete, agora distribuída por cem países</text> <text x=\"360\" y=\"232\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">decida por rota, quando a rota é escrita, e não durante um incidente</text> </svg>", "caption": "Um cabeçalho decide em qual coluna uma resposta está, e uma das duas colunas é um vazamento."}
 ```
 
-O cabeçalho que os separa é o daquela leitura, e o hábito prático é decidir por rota em vez de
+O cabeçalho que os separa é o daquela leitura. O hábito prático é decidir por rota em vez de
 globalmente: arquivos e páginas públicas guardados na borda, qualquer coisa atrás de um login marcada
 como `private`, e a decisão tomada quando a rota é escrita em vez de durante um incidente.
 
@@ -97,7 +97,7 @@ num passo do seu build.
 
 A palavra com que se deve ter cuidado é **origem**. Ela quer dizer o seu próprio servidor, a coisa atrás
 das bordas, e aparece nas configurações de todo provedor e em toda explicação de por que algo está velho.
-Ficar confortável com ela agora poupa ler três parágrafos duas vezes mais tarde.
+Ficar confortável com ela agora poupa ler três parágrafos duas vezes no dia em que algo estiver velho.
 
 ## Com o que ela não ajuda em nada
 
@@ -119,6 +119,6 @@ Os dois são comuns e os dois são reconhecíveis.
 **Guardar algo pessoal**, discutido acima, que é o grave.
 
 **Não conseguir enxergar além dela.** Quando uma página está errada, a pergunta *meu servidor está
-errado ou a borda está com algo velho?* é a mesma pergunta do DNS da aula passada, e tem a mesma
+errado ou a borda está com algo velho?* é a mesma pergunta do DNS da aula passada. Tem a mesma
 resposta: pergunte direto à origem, contornando a borda. Todo provedor oferece um jeito; descubra qual é
 no dia em que configurar, e não no dia em que precisar.

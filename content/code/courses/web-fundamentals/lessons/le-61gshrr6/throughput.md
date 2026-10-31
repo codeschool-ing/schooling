@@ -81,8 +81,8 @@ The arithmetic everybody does first: 1 GB is 8,000 megabits, at 300 megabits per
 | a shared segment in the evening, and a couple of retransmissions | 6 s |
 
 The largest single line is **the other end**, and it is the one your plan has no influence over at
-all. This is the ordinary case rather than a bad day: a transfer that reaches 70% of the
-advertised figure is a healthy transfer.
+all. This is the ordinary case rather than a bad day: 8,000 megabits in 48 seconds is about 167 Mbps,
+a little over half the advertised figure, and nothing here is broken.
 
 Which is also the answer to *why is this download slower than the speed test*. The speed test
 measured your line to a nearby server with every trick applied. This measured a real conversation
@@ -106,8 +106,8 @@ becoming unusable for everything else at the same moment.
 ## Where this leaves you
 
 Throughput is the rate real data actually moved. It is bounded by the narrowest link, reduced by
-the headers every layer adds, capped by whatever the other end is willing to send, and — on long
-paths — limited by how much a single conversation can keep in flight while it waits for
+the headers every layer adds and capped by whatever the other end is willing to send. On long
+paths it is also limited by how much a single conversation can keep in flight while it waits for
 permission.
 
 That last one means distance costs you capacity and not just time. And the measuring habit at the

@@ -49,7 +49,7 @@ erros estão ilegíveis, é isso que está faltando.
 
 ## Digitando nele
 
-A segunda metade, e é um jeito genuinamente bom de aprender.
+A segunda metade, e é um bom jeito de aprender.
 
 Qualquer coisa que você digitar é avaliada contra a página atual. `document.title` imprime o título.
 `document.querySelectorAll('img').length` conta as imagens. `document.cookie` mostra os cookies que um

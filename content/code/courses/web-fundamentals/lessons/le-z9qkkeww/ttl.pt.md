@@ -75,7 +75,7 @@ sobre mudanças que levam cinco minutos.
 Este surpreende as pessoas, e tem um formato memorável.
 
 Quando um resolvedor é informado de que um nome não existe, ele cacheia isso também — é o **cache
-negativo**, e a duração vem de um campo do registro `SOA` do domínio em vez de qualquer TTL que você
+negativo**. A duração vem de um campo do registro `SOA` do domínio, e não de qualquer TTL que você
 tenha posto no registro que está criando, porque o registro não existia para carregar um.
 
 Então: consulte um nome antes de criá-lo, e você pode esperar mais tempo para ele aparecer do que se

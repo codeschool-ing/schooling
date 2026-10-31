@@ -95,11 +95,10 @@ Iniciantes leem o arquivo. O hábito que vale construir agora é ler a árvore.
 
 ## Dois nomes para quase a mesma coisa
 
-Um esclarecimento, porque as palavras são usadas de forma solta e a distinção fica importante mais
-adiante.
+Um esclarecimento, porque as palavras são usadas de forma solta e a distinção pesa daqui a duas
+leituras.
 
-O **documento** é a árvore. A **árvore de renderização** de daqui a duas leituras é outra coisa,
-construída a partir dele, contendo apenas o que será desenhado. Um elemento removido do documento
+O **documento** é a árvore. A **árvore de renderização** é outra coisa, construída a partir dele, contendo apenas o que será desenhado. Um elemento removido do documento
 sumiu; um elemento escondido por um estilo continua no documento e está ausente da árvore de
 renderização.
 

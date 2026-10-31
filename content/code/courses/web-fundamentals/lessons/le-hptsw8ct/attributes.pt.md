@@ -14,7 +14,7 @@ Set-Cookie: session=8f3c1a9e; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=L
 
 `Max-Age` é um número de segundos; `Expires` é uma data. Não defina nenhum dos dois e você tem um
 **cookie de sessão**, que o navegador guarda até a janela fechar — um nome mal escolhido, porque não
-tem nada a ver com as sessões de duas leituras adiante.
+tem nada a ver com as sessões da próxima leitura.
 
 A escolha não é só técnica. Um cookie que sobrevive ao navegador fechado é a diferença entre
 *continuar conectado* e entrar de novo toda manhã, e numa máquina compartilhada essas são promessas

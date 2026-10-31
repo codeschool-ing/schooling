@@ -20,7 +20,8 @@ Accept-Encoding: gzip, br
 
 Os números são a ordenação. Um item sem `q` vale 1, o mais desejado; `q=0.9` vale um pouco menos;
 `q=0.8` menos ainda. Então aquela segunda linha se lê: *português brasileiro se você tiver, senão
-português de qualquer tipo, senão inglês, e se nada disso, me surpreenda.*
+português de qualquer tipo, senão inglês.* O `*/*;q=0.8` no fim da primeira linha diz o mesmo sobre
+formatos, com um último recurso: *e se nada disso, me surpreenda.*
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 280\" role=\"img\" aria-label=\"O navegador manda uma lista ordenada: português brasileiro primeiro, depois português, depois inglês. O servidor tem português, inglês e espanhol. A primeira linha da lista que ele consegue atender é português, e é isso que ele manda.\"> <text x=\"20\" y=\"24\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">o que o navegador pediu, em ordem</text> <rect x=\"20\" y=\"34\" width=\"300\" height=\"38\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"170\" y=\"53\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pt-BR — sem q, o mais desejado</text> <rect x=\"20\" y=\"80\" width=\"300\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"170\" y=\"99\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pt — q=0.9</text> <rect x=\"20\" y=\"126\" width=\"300\" height=\"38\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"170\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">en — q=0.8</text> <text x=\"400\" y=\"24\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">o que o servidor tem</text> <rect x=\"400\" y=\"34\" width=\"300\" height=\"38\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-dasharray=\"4 3\"></rect> <text x=\"550\" y=\"53\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">sem variante brasileira</text> <rect x=\"400\" y=\"80\" width=\"300\" height=\"38\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"550\" y=\"99\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">português — tem</text> <rect x=\"400\" y=\"126\" width=\"300\" height=\"38\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"550\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">inglês — tem, e não precisa aqui</text> <rect x=\"20\" y=\"192\" width=\"680\" height=\"42\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".16\" stroke=\"var(--phosphor)\"></rect> <text x=\"360\" y=\"213\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">Content-Language: pt — a primeira linha da lista que dava para atender</text> <text x=\"360\" y=\"262\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">uma preferência que não dá para atender não é erro; o servidor serve a próxima da lista</text> </svg>", "caption": "A lista é ordenada, não obrigatória. O servidor desce por ela e para na primeira coisa que tem."}
@@ -52,7 +53,7 @@ entregar a página em português para a próxima pessoa, seja ela quem for.
 
 `Vary: Accept-Language` é a instrução que conserta: *esta resposta dependeu daquele cabeçalho, então
 arquive sob os dois.* Deixe de fora e o site funciona perfeitamente para quem visita primeiro e está
-errado para todo mundo depois — e é por isso que este defeito quase sempre é relatado como *o site
+errado para todo mundo depois. É por isso que este defeito quase sempre é relatado como *o site
 está no idioma errado para algumas pessoas*, e quase nunca se reproduz para quem o construiu.
 
 O mesmo vale para qualquer cabeçalho em que uma decisão foi baseada. Se a resposta muda com o
@@ -60,7 +61,7 @@ O mesmo vale para qualquer cabeçalho em que uma decisão foi baseada. Se a resp
 
 ## Por que os sites fazem de outro jeito
 
-Agora a parte honesta, porque a maioria dos sites que você usa não escolhe idioma assim.
+A maioria dos sites que você usa não escolhe idioma assim.
 
 Um idioma escolhido a partir de um cabeçalho é invisível e não dá para compartilhar. Você não pode
 mandar a alguém um link para a página como você a viu, porque o link não carrega idioma e o
@@ -93,7 +94,7 @@ Esse é o argumento a favor da negociação numa frase: ela funciona para coisas
 resposta certa sobre a qual o visitante não tem opinião**, e degrada em silêncio quando um navegador
 é velho demais para aceitar a melhor.
 
-Compressão é a mesma história da página anterior. A escolha entre um codec de vídeo moderno e um
+A compressão, da metade que pede lá em cima, é a mesma história. A escolha entre um codec de vídeo moderno e um
 antigo também. Em cada caso chega uma lista de preferências, o servidor escolhe o melhor que
 consegue servir, e ninguém é questionado sobre algo que não saberia responder.
 
@@ -116,7 +117,7 @@ Um endereço para um pedido pode responder `text/html` a um navegador e `applica
 programa, com o mesmo código decidindo o que é verdade e só o último passo decidindo como escrever.
 A alternativa são dois endereços que se afastam com o tempo, e eles se afastam.
 
-Vale conhecer o argumento contrário: um único endereço com duas formas é mais difícil de cachear,
-mais difícil de depurar — o mesmo link dá coisas diferentes para ferramentas diferentes — e fácil de
+Há um argumento contrário. Um único endereço com duas formas é mais difícil de cachear e mais
+difícil de depurar — o mesmo link dá coisas diferentes para ferramentas diferentes — e é fácil de
 errar de jeitos que só aparecem para um tipo de chamador. Os dois arranjos são defensáveis. O que
 não é é escolher um por acidente, que é o que acontece quando ninguém sabe que o mecanismo existe.

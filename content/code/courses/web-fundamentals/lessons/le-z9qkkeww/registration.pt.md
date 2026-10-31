@@ -54,9 +54,9 @@ Dois mecanismos existem para impedir que um nome seja movido sem você, e vale r
 painel.
 
 Uma **trava de transferência** é uma marca no registro que recusa transferências de saída. Vem
-ligada por padrão na maioria dos nomes, e desligá-la é o primeiro passo de uma mudança legítima — e
-de uma hostil, e é por isso que desligar deveria ser algo que uma pessoa faz deliberadamente em vez
-de uma configuração que alguém deixa desligada.
+ligada por padrão na maioria dos nomes. Desligá-la é o primeiro passo de uma mudança legítima — e
+de uma hostil. Por isso desligar deveria ser algo que uma pessoa faz deliberadamente, nunca uma
+configuração que alguém deixa desligada.
 
 Um **código de autorização** é um segredo por domínio que o registrador de destino precisa
 apresentar. Trate como credencial, porque é uma.

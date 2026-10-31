@@ -41,8 +41,8 @@ Which explains a whole class of confusion:
 - a machine that has been off for a week coming back as somebody else's neighbour.
 
 The answer, where it matters, is a **reservation**: the server is told to always give this MAC
-address that IP. Which is the practical reason the previous section's number turns up in a router's
-settings screen.
+address that IP. Which is the practical reason the card's number from two sections back turns up in a
+router's settings screen.
 
 ## Four things arrive, not one
 

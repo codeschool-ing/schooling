@@ -28,9 +28,9 @@ holds up everything behind it even if those are ready.
 
 Browsers worked around this by opening six connections to each host, which is six handshakes and
 six of everything. And developers worked around it too, in ways that shaped how sites were built
-for a decade: dozens of small images combined into one big one to be cut up with stylesheets, every
-script concatenated into a single file, assets spread over `static1`, `static2`, `static3` so the
-six-connection limit applied three times.
+for a decade. Dozens of small images were combined into one big one to be cut up with stylesheets,
+every script was concatenated into a single file, and assets were spread over `static1`, `static2`,
+`static3` so the six-connection limit applied three times.
 
 All of that was work done to defeat a limitation of the protocol, and all of it made the sites
 harder to change.
@@ -47,7 +47,7 @@ order, and the slow one delays only itself.
 Headers are compressed too, and with a table of what was already sent: the twenty headers a browser
 repeats on every request stop being sent twenty times.
 
-Two consequences worth carrying. Every workaround from the previous section became
+Two consequences worth carrying. Every HTTP/1.1 workaround above became
 counterproductive — one enormous concatenated file is now worse than the small ones it replaced,
 and spreading assets over three hostnames costs three connections for nothing. And a page assembled
 from many hosts loses most of the benefit, because the multiplexing is per connection and each host
@@ -74,25 +74,24 @@ appearing in the place you would least expect it.
 Fixing that means changing the transport, and changing the transport means the boxes in the middle.
 HTTP/3 is built on a new protocol carried over UDP, in which each stream has its own ordering, so a
 lost packet stalls only the exchange it belonged to. It also folds the encryption agreement into the
-connection setup, so a secure connection costs one round trip rather than two, and it identifies a
-connection by something other than the four numbers of address and port — which means moving from
+connection setup, so a secure connection costs one round trip rather than two. And it identifies a
+connection by something other than the four numbers of address and port, which means moving from
 Wi-Fi to mobile does not drop it.
 
 And it had to be carried over UDP for a reason you already know. A genuinely new protocol beside
 TCP would meet the middleboxes of lesson five — the ones reaching up into headers whose shape they
 assumed — and be dropped by networks that have no idea they are the cause. UDP already passes. The
-newest transport on the internet is wearing a disguise, and the layer violation from two lessons
-ago is why.
+newest transport on the internet is wearing a disguise, and the layer violation from lesson five
+is why.
 
 ## What you actually do about it
 
 Very little, which is the point.
 
 You do not choose a version in your code. Browser and server agree on the best they both speak,
-and the agreement is part of the connection setup you saw in the previous section. Your handlers,
+and the agreement is part of the connection setup you saw in *What the S adds*. Your handlers,
 your methods and your status codes are identical either way.
 
 What changes is what is worth optimising. The rule is short: **on HTTP/1.1, fewer requests; on 2
 and 3, fewer connections.** Which of those you are on is something the browser's developer tools
-will tell you in a column that is hidden by default, and that this course turns on in its last
-lesson.
+will tell you, in a column that is hidden by default. Those tools are the subject of lesson 11.

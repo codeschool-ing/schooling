@@ -3,7 +3,7 @@ title: Desfazendo um cache que você pediu
 version: 1
 ---
 
-Você mandou todo navegador do mundo guardar a folha de estilo por um ano. Fazem seis horas e a folha
+Você mandou todo navegador do mundo guardar a folha de estilo por um ano. Faz seis horas e a folha
 de estilo está errada.
 
 Não existe instrução que alcance o navegador de alguém e remova um arquivo. A cópia está no disco

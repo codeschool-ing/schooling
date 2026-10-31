@@ -42,11 +42,11 @@ O tamanho do corpo em bytes, que é como a outra ponta sabe onde uma resposta ac
 
 É contado em **bytes, não em caracteres**, e num idioma com letras acentuadas esses não são o mesmo
 número. Uma string de doze caracteres visíveis pode ter quatorze bytes, e um tamanho calculado
-contando caracteres é uma resposta cujo fim quem recebe vai esperar para sempre.
+contando caracteres diz doze: quem recebe para dois bytes antes de o corpo acabar.
 
-A outra falha é mais sutil: um tamanho maior que a realidade deixa uma conexão pendurada, e um
-tamanho menor que a realidade deixa bytes sobrando para serem lidos como o começo do que vier a
-seguir. Os dois são o tipo de defeito que se comporta de forma diferente conforme haja um proxy no
+Essa é uma das duas falhas. Um tamanho menor que a realidade deixa bytes sobrando para serem lidos
+como o começo do que vier a seguir, e um tamanho maior que a realidade deixa uma conexão pendurada.
+Os dois são o tipo de defeito que se comporta de forma diferente conforme haja um proxy no
 caminho, o que os torna memoráveis de depurar.
 
 ## `Host`, que transformou uma máquina em muitas

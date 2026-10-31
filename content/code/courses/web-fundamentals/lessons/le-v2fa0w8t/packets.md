@@ -109,7 +109,7 @@ tell you if I fail.
 Everything that feels more reliable than that — a file that downloads correctly, a page that
 renders whole, a message that arrives once and in one piece — is built **on top of** this promise
 by the two machines at the ends. The middle does not participate. You will meet the machinery for
-it in *Ordered and acknowledged, or fast and unacknowledged*, at the end of this lesson.
+it in *Two ways to use the same packets*, at the end of this lesson.
 
 ## Store and forward, and where latency comes from
 
@@ -123,7 +123,7 @@ intact until you have all of it.
 So every hop adds a small delay of its own — the time to take the packet in, plus the time it
 spends waiting behind whatever else is queued for the same outgoing link.
 
-A dozen hops, each adding its little pause, is a significant part of what you will later measure
+A dozen hops, each adding its little pause, is a significant part of what lesson 3 measures
 as **latency**. It is not friction in a wire. It is a queue of decisions, taken one machine at a
 time.
 
@@ -143,7 +143,7 @@ A packet has no **guarantee**. Nobody signed for it and nobody will tell you if 
 
 And a packet has no **route**. It does not carry a plan of where to go. It carries a destination,
 and every machine it meets makes its own independent decision about where to send it next. That
-decision is the subject of *How a packet crosses a network it does not belong to*, two sections
+decision is the subject of *Crossing a network you do not belong to*, two sections
 from here.
 
 ## Where this leaves you

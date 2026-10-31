@@ -20,8 +20,8 @@ address at all, the way a date of the 32nd is not a date.
 ```
 
 Thirty-two bits gives about **four and a quarter billion** possible addresses. That sounded
-limitless when the number was chosen, and it is the reason two of the later sections in this
-lesson exist.
+limitless when the number was chosen, and it is the reason this lesson has a section on IPv6 and a
+video on NAT.
 
 ## Yours is probably not yours
 
@@ -81,7 +81,7 @@ Four billion addresses and about eight billion people, most of them carrying sev
 devices. The arithmetic stopped working in the 1990s, and the last large blocks were handed out
 around 2011.
 
-Three things happened in response, and each is a section of this lesson or the next:
+Three things happened in response, and the first two are sections of this lesson:
 
 - **private addresses and NAT**, so a household needs one public address rather than twenty;
 - **IPv6**, which is a bigger number and the actual answer;

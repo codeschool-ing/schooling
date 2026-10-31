@@ -27,7 +27,7 @@ It occupies no space, because as far as layout is concerned it does not exist.
 
 And one addition, which is the reason this is a tree of its own rather than a filtered document:
 **things the document never contained.** A rule that generates content before or after an element
-puts a box in the render tree with no corresponding element in the document — which is why a
+puts a box in the render tree with no corresponding element in the document. That is why a
 generated icon is visible on screen and absent when a script looks for it.
 
 ## The two ways of hiding, which are not the same

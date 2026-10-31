@@ -95,9 +95,9 @@ one removes what is stored, the other refuses to use it.
 When a page is not behaving, the sequence is: inspect the thing, look at what actually matched it,
 and read the computed value.
 
-Almost every styling argument ends there. The rule you expected is present and struck through
-because something more specific won; or it is absent because the selector does not match what the
-parser produced; or it is applying perfectly and the element you are looking at is not the element
+Almost every styling argument ends there. The rule you expected is present and struck through,
+because something more specific won. Or it is absent, because the selector does not match what the
+parser produced. Or it is applying perfectly, and the element you are looking at is not the element
 you think it is.
 
 All three are visible in about four seconds, and all three are invisible in the file.

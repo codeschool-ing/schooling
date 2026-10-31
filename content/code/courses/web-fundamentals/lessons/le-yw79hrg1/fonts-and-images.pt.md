@@ -59,7 +59,7 @@ tudo abaixo dele vai se mexer.
 
 ## Imagens, e os dois números que importam
 
-Já que estamos aqui, porque é a maior coisa que a maioria das páginas baixa.
+Imagens são a maior coisa que a maioria das páginas baixa, e dois números decidem quanto custam.
 
 **Dimensões.** Mandar uma imagem de 4000 pixels para exibi-la a 400 são quatro megabytes para desenhar
 cem mil pixels. Navegadores a redimensionam de bom grado e o download continuou sendo quatro megabytes.

@@ -65,8 +65,6 @@ A diferença entre essas duas respostas separa as duas perguntas que as pessoas 
 certa e a do resolvedor está velha, você está esperando um TTL e não há o que consertar. Se a
 resposta autoritativa está errada, esperar não vai ajudar.
 
-Esse comando resolveu mais discussões que qualquer outro desta aula.
-
 ## As três falhas que respondem pela maior parte
 
 **Uma mudança feita no provedor errado.** Depois de os `NS` terem sido apontados para outro lugar, o

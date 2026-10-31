@@ -29,9 +29,9 @@ lenta segura tudo atrás dela mesmo que essas já estejam prontas.
 
 Os navegadores contornaram isso abrindo seis conexões para cada host, o que são seis apertos de mão
 e seis de tudo. E os desenvolvedores contornaram também, de jeitos que moldaram como sites foram
-construídos por uma década: dezenas de imagenzinhas combinadas numa imagem grande para ser recortada
-com folhas de estilo, todo script concatenado num arquivo só, arquivos espalhados por `static1`,
-`static2`, `static3` para o limite de seis conexões valer três vezes.
+construídos por uma década. Dezenas de imagenzinhas eram combinadas numa imagem grande para ser
+recortada com folhas de estilo, todo script era concatenado num arquivo só, e arquivos eram
+espalhados por `static1`, `static2`, `static3` para o limite de seis conexões valer três vezes.
 
 Tudo isso era trabalho feito para derrotar uma limitação do protocolo, e tudo isso deixou os sites
 mais difíceis de mudar.
@@ -48,7 +48,7 @@ qualquer ordem, e o lento atrasa só a si mesmo.
 Cabeçalhos também são comprimidos, e com uma tabela do que já foi enviado: os vinte cabeçalhos que
 um navegador repete em cada requisição param de ser enviados vinte vezes.
 
-Duas consequências para carregar. Cada contorno da seção anterior virou contraproducente — um arquivo
+Duas consequências para carregar. Cada contorno do HTTP/1.1, lá em cima, virou contraproducente — um arquivo
 concatenado enorme hoje é pior que os pequenos que ele substituiu, e espalhar arquivos por três
 hostnames custa três conexões à toa. E uma página montada a partir de muitos hosts perde quase todo
 o benefício, porque a multiplexação é por conexão e cada host é uma diferente.
@@ -75,23 +75,23 @@ Consertar isso quer dizer mudar o transporte, e mudar o transporte quer dizer as
 HTTP/3 é construído sobre um protocolo novo carregado por UDP, no qual cada fluxo tem a própria
 ordenação, então um pacote perdido segura só a troca à qual ele pertencia. Ele também dobra o acordo
 de criptografia para dentro da abertura da conexão, então uma conexão segura custa uma ida e volta
-em vez de duas, e identifica uma conexão por algo que não sejam os quatro números de endereço e
-porta — o que quer dizer que sair do Wi-Fi para a rede móvel não a derruba.
+em vez de duas. E identifica uma conexão por algo que não sejam os quatro números de endereço e
+porta, o que quer dizer que sair do Wi-Fi para a rede móvel não a derruba.
 
 E ele teve que ser carregado por UDP por um motivo que você já conhece. Um protocolo genuinamente
 novo ao lado do TCP encontraria as caixas do meio da aula cinco — aquelas esticando o braço para
 dentro de cabeçalhos cujo formato presumiram — e seria descartado por redes que não fazem ideia de
 que são a causa. O UDP já passa. O transporte mais novo da internet está usando um disfarce, e a
-violação de camada de duas aulas atrás é o motivo.
+violação de camada da aula cinco é o motivo.
 
 ## O que você de fato faz a respeito
 
 Muito pouco, que é o ponto.
 
 Você não escolhe uma versão no seu código. Navegador e servidor combinam a melhor que os dois falam,
-e o acordo faz parte da abertura de conexão que você viu na seção anterior. Seus manipuladores, seus
+e o acordo faz parte da abertura de conexão que você viu em *O que o S acrescenta*. Seus manipuladores, seus
 métodos e seus códigos de status são idênticos dos dois jeitos.
 
 O que muda é o que vale a pena otimizar. A regra é curta: **no HTTP/1.1, menos requisições; no 2 e no
 3, menos conexões.** Em qual deles você está é algo que as ferramentas de desenvolvedor do navegador
-dizem numa coluna escondida por padrão, e que este curso liga na última aula.
+dizem, numa coluna escondida por padrão. Essas ferramentas são o assunto da aula 11.

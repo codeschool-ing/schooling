@@ -71,8 +71,8 @@ não sabe.
 A alternativa é enviar o corpo em pedaços, cada um anunciando o próprio tamanho, terminando com um
 pedaço de tamanho zero. Isso se chama chunked, e é como chega qualquer coisa gerada na hora.
 
-Errar o tamanho vale a pena conhecer porque a falha é estranha em vez de barulhenta: um tamanho
-maior que o corpo deixa quem recebe esperando bytes que nunca vêm, e um tamanho menor que o corpo
+Errar o tamanho vale a pena conhecer porque a falha é estranha em vez de barulhenta. Um tamanho
+maior que o corpo deixa quem recebe esperando bytes que nunca vêm. Um tamanho menor que o corpo
 deixa a sobra para ser lida como o começo da próxima resposta.
 
 ## O servidor não lembra de nada
@@ -100,7 +100,7 @@ recurso; é o recurso, com o custo empurrado para cima, onde você escolhe como 
 
 ## E é por isso que o `Host` é obrigatório
 
-Um cabeçalho daquela requisição é exigido pela versão que ela declara, e o motivo merece um momento.
+Um cabeçalho daquela requisição é exigido pela versão que ela declara.
 
 `Host: codeschool.ing` diz ao servidor qual site é o desejado. O endereço levou o pacote até uma
 máquina, mas uma máquina costuma responder por centenas de nomes — é isso que hospedagem

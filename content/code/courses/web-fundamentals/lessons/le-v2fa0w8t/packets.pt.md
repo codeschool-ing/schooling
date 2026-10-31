@@ -119,8 +119,8 @@ um pacote está íntegro antes de ter tudo.
 Então cada salto acrescenta um pequeno atraso próprio — o tempo de receber o pacote, mais o tempo
 que ele passa esperando atrás do que mais estiver na fila para o mesmo enlace de saída.
 
-Uma dúzia de saltos, cada um com a sua pausinha, é uma parte significativa do que você vai medir
-depois como **latência**. Não é atrito num fio. É uma fila de decisões, tomadas uma máquina por
+Uma dúzia de saltos, cada um com a sua pausinha, é uma parte significativa do que a aula 3 mede
+como **latência**. Não é atrito num fio. É uma fila de decisões, tomadas uma máquina por
 vez.
 
 ## O que um pacote não tem

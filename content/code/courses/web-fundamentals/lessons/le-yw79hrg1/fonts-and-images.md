@@ -59,7 +59,7 @@ that everything below it will move.
 
 ## Images, and the two numbers that matter
 
-While we are here, because it is the largest thing most pages download.
+Images are the largest thing most pages download, and two numbers decide what they cost.
 
 **Dimensions.** Sending a 4000-pixel image to display it at 400 is four megabytes to draw a hundred
 thousand pixels. Browsers scale it happily and the download was still four megabytes.

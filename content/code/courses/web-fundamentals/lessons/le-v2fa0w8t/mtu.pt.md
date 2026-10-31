@@ -107,15 +107,15 @@ Dos 1500 bytes de um enlace Ethernet, cerca de 20 são o cabeçalho do próprio 
 mais ou menos **1480 bytes dos seus dados** num pacote — e, se houver TCP, outros 20 vão para o
 cabeçalho dele, sobrando por volta de **1460**.
 
-É por isso que uma mensagem de 4000 bytes são três pacotes e não dois, e por que o terceiro está
-quase vazio. Cortar qualquer coisa em tamanhos fixos deixa um resto, e o resto custa um pacote
+É por isso que uma mensagem de 4000 bytes são três pacotes e não dois, e por que o terceiro não vai
+cheio. Cortar qualquer coisa em tamanhos fixos deixa um resto, e o resto custa um pacote
 inteiro de rótulo.
 
 ## Onde isto te deixa
 
-Há um teto para quanto viaja de uma vez, ele é de 1500 bytes na Ethernet comum, e um pacote que não
+Há um teto para quanto viaja de uma vez, e na Ethernet comum ele é de 1500 bytes. Um pacote que não
 cabe ou é cortado — o que multiplica o risco — ou é recusado com uma mensagem de volta ao remetente,
-que funciona a menos que alguém esteja descartando essas mensagens.
+o que funciona a menos que alguém esteja descartando essas mensagens.
 
 O pacote agora tem tamanho, rota e um envelope para cada salto. O que ele ainda não tem como dizer é
 **para qual programa da máquina de destino ele é** — e essa é a próxima seção.
