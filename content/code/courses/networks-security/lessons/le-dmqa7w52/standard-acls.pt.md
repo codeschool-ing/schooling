@@ -60,7 +60,7 @@ root@branch:~# nft -f acl-standard.nft
 
 Dois detalhes que uma ACL de roteador esconde e o Linux deixa à vista. **`policy drop` é o deny
 implícito.** E a linha de `arp` existe porque um filtro tão cedo vê todo quadro, e negar ARP impediria
-as máquinas do segmento de sequer encontrar o roteador; a ACL IP de um roteador nunca vê ARP, então
+as máquinas do segmento de sequer encontrar o roteador. A ACL IP de um roteador nunca vê ARP, então
 nunca precisa da linha. Depois, os dois computadores de novo:
 
 ```

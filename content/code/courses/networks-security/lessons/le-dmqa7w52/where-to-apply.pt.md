@@ -18,7 +18,7 @@ A regra prática clássica de posicionamento decorre do que cada tipo consegue v
 | **estendida** | perto da **origem** | ela conhece o destino e a porta, então pode descartar o tráfego indesejado cedo sem afetar mais nada |
 
 O laboratório mostrou o motivo da primeira linha. Se o objetivo fosse manter o `guest` longe de um
-servidor na matriz, a ACL padrão em `branch` teria sido a ferramenta errada no lugar errado: ela cortou
+servidor na matriz, a ACL padrão em `branch` teria sido a ferramenta errada no lugar errado. Ela cortou
 o `guest` da **internet inteira**, porque uma ACL padrão não sabe dizer "só em direção àquele servidor".
 
 ```schooling-figure
@@ -27,5 +27,5 @@ o `guest` da **internet inteira**, porque uma ACL padrão não sabe dizer "só e
 
 Mais um hábito, aprendido do jeito difícil em todo roteador remoto: **só aplique uma ACL à interface
 pela qual você está conectado com um caminho de volta pronto.** O rollback agendado da aula 5 é a versão
-Linux desse hábito; no IOS é `reload in 5` antes da mudança, cancelado com `reload cancel` depois que a
+Linux desse hábito. No IOS é `reload in 5` antes da mudança, cancelado com `reload cancel` depois que a
 mudança foi testada.
