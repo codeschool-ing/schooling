@@ -28,8 +28,8 @@ ou a outra, nunca as duas ao mesmo tempo.** Pegue dois balanceadores que rodam c
 máquina aguenta. Num dia normal o site tem 140% da capacidade de uma máquina. No dia em que um deles
 falha, o sobrevivente recebe um pedido de 140% e cai, levando junto a metade que ainda funcionava. O ativo-ativo só
 é redundante enquanto os dois juntos não levam mais do que um deles levaria sozinho, e com essa carga ele
-compra exatamente a capacidade que o ativo-passivo tem, com mais maquinário. A última seção desta aula põe
-números nisso.
+compra exatamente a capacidade que o ativo-passivo tem, com mais maquinário. A seção sobre ativo-ativo, no fim desta
+aula, põe números nisso.
 
 O que o ativo-ativo compra é um reserva aquecido que se sabe que funciona. Uma máquina passiva pode ficar
 meses quebrada, com um certificado vencido ou uma configuração que ninguém copiou para ela, e o failover é

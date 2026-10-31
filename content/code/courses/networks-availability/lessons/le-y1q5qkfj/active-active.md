@@ -17,7 +17,7 @@ swapped:
 {"language": "conf", "file": "keepalived.conf", "parts": [{"code": "vrrp_instance www_b {\n    state BACKUP\n    interface eth0\n    virtual_router_id 81\n    priority 100\n    advert_int 1", "note": "A second instance, with its own VRID, 81. On `lb1` it gets the lower priority, 100; on `lb2` the two are swapped, `www_a` at 100 and `www_b` at 150."}, {"code": "    virtual_ipaddress {\n        192.0.2.81/24\n    }", "note": "The second public address, which HAProxy already listens on."}, {"code": "    track_script {\n        haproxy_alive\n    }\n}", "note": "The same check as `www_a`: if HAProxy dies, this balancer gives up both of its addresses."}]}
 ```
 
-Start keepalived on both with the command of the first section, and a few seconds later:
+Start keepalived on both with the command of the active-passive section, and a few seconds later:
 
 ```
 ana@lb1:~$ ip -br addr show eth0

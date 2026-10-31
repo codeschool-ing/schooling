@@ -49,7 +49,7 @@ ana@lb2:~$ ip -br addr show eth0
 eth0@if1316      UP             192.0.2.12/24 192.0.2.80/24 
 ```
 
-A última resposta antes da falha saiu às **18:11:46.916**, e a primeira depois dela às **18:11:49.610**.
+A última resposta antes da falha saiu às 18:11:46.916, e a primeira depois dela às 18:11:49.610.
 **O site ficou sem responder por 2,694 segundos**, sete requisições seguidas. Os carimbos de tempo dizem
 mais do que a contagem, porque mostram dois tipos diferentes de falha.
 
@@ -82,5 +82,5 @@ carregada é idêntico a um que falhou porque ela está morta.
 
 Nada do que um usuário tinha em andamento em `lb1` sobreviveu. Um download pela metade, uma requisição
 mandada um milissegundo antes do kill: essas conexões pertenciam a um processo que não existe mais, e
-`lb2` nunca ouviu falar delas. **O endereço muda de lugar; as conexões por ele, não.** A última seção desta
-aula volta a isso.
+`lb2` nunca ouviu falar delas. **O endereço muda de lugar; as conexões por ele, não.** A seção sobre ativo-ativo, no
+fim desta aula, volta a isso.

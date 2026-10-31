@@ -8,7 +8,7 @@ morto, e faz isso do mesmo jeito, com um check que roda haja ou não algo errado
 configuração termina em `check inter 1s fall 2 rise 2`, e `option httpchk GET /` faz do check uma
 requisição HTTP de verdade pela página inicial, e não um teste de que a porta está aberta.
 
-Com o HAProxy de `lb1` iniciado de novo, com o mesmo comando da primeira seção, o nginx de `web2` foi
+Com o HAProxy de `lb1` iniciado de novo, com o mesmo comando da seção do ativo-passivo, o nginx de `web2` foi
 parado: `sudo bash netlab.sh kill web2 nginx` na máquina virtual. Cada
 balanceador verifica os servidores por conta própria; esta é a visão de `lb2`:
 

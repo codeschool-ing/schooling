@@ -28,8 +28,8 @@ does one or the other, never both at once.** Take two balancers that each run at
 handle. On a normal day the site has 140% of one machine's capacity. On the day one of them fails, the
 survivor is asked for 140% and falls over, taking the half that was still working with it. Active-active
 is only redundant while the two together carry no more than one of them could alone, and at that load it
-buys exactly the capacity active-passive has, with more machinery. The last section of this lesson puts
-numbers on it.
+buys exactly the capacity active-passive has, with more machinery. The section on active-active, at the end of
+this lesson, puts numbers on it.
 
 What active-active does buy is a warm spare that is known to work. A passive machine can sit broken for
 months, with an expired certificate or a configuration nobody copied to it, and the failover is the

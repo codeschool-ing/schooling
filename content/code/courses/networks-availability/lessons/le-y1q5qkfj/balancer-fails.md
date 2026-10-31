@@ -49,8 +49,8 @@ ana@lb2:~$ ip -br addr show eth0
 eth0@if1316      UP             192.0.2.12/24 192.0.2.80/24 
 ```
 
-The last answer before the failure left at **18:11:46.916**, and the first one after it at
-**18:11:49.610**. **The site gave no answer for 2.694 seconds**, seven requests in a row. The timestamps
+The last answer before the failure left at 18:11:46.916, and the first one after it at
+18:11:49.610. **The site gave no answer for 2.694 seconds**, seven requests in a row. The timestamps
 say more than the count does, because they show two different kinds of failure.
 
 The first six failures are 0.21 seconds apart, the loop's own `sleep 0.2` and almost nothing else: each
@@ -82,5 +82,5 @@ loaded looks exactly like one that failed because it is dead.
 
 Nothing a user had in progress on `lb1` survived. A download half finished, a request sent a millisecond
 before the kill: those connections belonged to a process that no longer exists, and `lb2` has never heard
-of them. **The address moves; the connections through it do not.** The last section of this lesson
-comes back to that.
+of them. **The address moves; the connections through it do not.** The section on active-active, at the end
+of this lesson, comes back to that.
