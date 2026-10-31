@@ -31,7 +31,7 @@ sabendo.
 **O servidor web, menos ainda.** O log dele registra cada visitante, e a última linha é o laptop
 buscando a página um momento antes: vindo de `203.0.113.2`. Toda máquina do escritório aparece lá fora
 como esse único endereço. É por isso que o "bloquear este IP" de um site pode deixar um escritório
-inteiro de fora pelo erro de uma pessoa, e por isso que ninguém de fora consegue conectar *para
+inteiro de fora pelo erro de uma pessoa. É também por isso que ninguém de fora consegue conectar *para
 dentro*, no laptop, a menos que o roteador seja instruído a encaminhar uma porta para ele, o que a aula
 7 faz para o SSH.
 

@@ -3,8 +3,9 @@ title: Four ways a certificate fails
 version: 1
 ---
 
-The same web server also answers for four more names, each with a broken certificate. Each failure has
-its own message, and each points somewhere different.
+Four failures follow. Three are names the same web server answers for, each with a broken
+certificate; the fourth is a name it was never set up for. Each failure has its own message, and each
+points somewhere different.
 
 **Expired.** The dates are in the past:
 

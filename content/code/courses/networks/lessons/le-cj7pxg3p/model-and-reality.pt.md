@@ -14,7 +14,7 @@ O modelo OSI é um mapa, e os protocolos de verdade nem sempre ficam dentro das 
   dentro de um pacote IP como se fosse camada 4.
 
 Nada disso torna o modelo errado. Ele é um vocabulário, e quem trabalha com redes usa esse
-vocabulário todo dia: um *switch de camada 2* encaminha pelo endereço MAC, um *switch de camada 3*
+vocabulário todo dia. Um *switch de camada 2* encaminha pelo endereço MAC, um *switch de camada 3*
 também roteia, um *balanceador de camada 4* distribui conexões por porta, um *firewall de camada 7* lê
 o HTTP dentro delas. **Quando alguém diz "é um problema de camada 2", quer dizer o enlace, o MAC ou o
 ARP, e nada acima.**

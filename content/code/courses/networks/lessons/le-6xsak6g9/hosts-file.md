@@ -26,7 +26,7 @@ this name, and so it went on to DNS and printed the `AAAA` record. A line in the
 only the kind of address it is written with.
 
 That disagreement is the whole diagnostic. When `dig` gives the right answer and a program still goes
-to the wrong place, **look in the hosts file**, where a line left behind by a developer testing a new
+to the wrong place, **look in the hosts file**. A line left behind by a developer testing a new
 server, or by malware redirecting a bank's name, beats every DNS server in the world.
 
 `dig` and `nslookup` ask DNS and ignore the file; `getent hosts` and `ping` go through the system's

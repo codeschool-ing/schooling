@@ -19,7 +19,7 @@ lista de um provedor (`include:`), e `~all` pede uma falha "leve" (*softfail*), 
 como suspeita e não como recusa.
 
 O servidor que recebe confere o endereço de onde veio a conexão com o registro SPF **do domínio do
-remetente do envelope**, o `MAIL FROM`. É a linha `spf=pass smtp.mailfrom=example.com` da seção 05. Dois
-limites, os dois importantes. O SPF confere o envelope, não o `From:` que uma pessoa lê. E uma mensagem
+remetente do envelope**, o `MAIL FROM`. É a linha `spf=pass smtp.mailfrom=example.com` da seção 05. O SPF
+tem dois limites. Ele confere o envelope, não o `From:` que uma pessoa lê. E uma mensagem
 encaminhada por outro servidor chega do endereço desse servidor e falha no SPF, embora não haja nada de
 errado com ela.

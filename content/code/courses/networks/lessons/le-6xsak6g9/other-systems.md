@@ -44,7 +44,7 @@ C:\Windows\System32\drivers\etc\hosts                # Windows: the hosts file
 ```
 
 **None of these were run for this lesson.** `ipconfig /flushdns` on Windows, and the two commands
-together on a Mac, empty the local cache after a change, which is the step people forget: flushing
+together on a Mac, empty the local cache after a change. That is the step people forget: flushing
 the resolver does nothing for a PC that is still holding its own copy for the rest of the TTL.
 `Resolve-DnsName` is the PowerShell tool closest to `dig`, and it shows the TTL and the section each
 record came from.

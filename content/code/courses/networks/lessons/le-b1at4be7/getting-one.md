@@ -32,8 +32,8 @@ today that is done by the **ACME** protocol, invented by Let's Encrypt, with no 
 
 **None of that was run for this lesson**: the lab has no public certificate authority, and its own CA
 signed the lab's certificates directly. The `http-01` check in the drawing proves the requester
-controls the web server the name points at; a `dns-01` check proves it controls the name's DNS, by
-publishing a `TXT` record at `_acme-challenge.www.example.com`, which is the one that works for
+controls the web server the name points at. A `dns-01` check proves it controls the name's DNS, by
+publishing a `TXT` record at `_acme-challenge.www.example.com`, and it is the one that works for
 servers not reachable from the internet.
 
 Automation is what makes short certificates bearable. Let's Encrypt issues for 90 days, like the

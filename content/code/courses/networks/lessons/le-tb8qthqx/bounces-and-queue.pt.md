@@ -44,7 +44,7 @@ que começa com 5 é permanente, e o servidor desiste na hora.
 Um código que começa com 4, ou nenhuma resposta, é temporário, e a mensagem espera na **fila**. Aqui o servidor
 do Bruno está parado. No seu laboratório, a primeira linha abaixo o para, da sua máquina virtual,
 e a segunda o inicia de novo, o que precisa acontecer antes de o `postqueue -f` conseguir entregar
-alguma coisa; a mensagem corrigida é criada no laptop com o `sed` depois delas:
+alguma coisa. A mensagem corrigida é criada no laptop com o `sed` depois delas:
 
 ```sh
 sudo bash ~/netlab/netlab exec netmail root 'postfix stop'
@@ -82,5 +82,6 @@ to=<bruno@example.net>, relay=mail.example.net[192.0.2.26]:25, delay=5.7, delays
 O `postqueue -p`, também chamado de `mailq`, lista o que está esperando e por quê: `Connection refused`.
 O Postfix tenta de novo sozinho por vários dias antes de devolver; o `postqueue -f` pede que ele tente
 agora, e quando o servidor do Bruno voltou a fila esvaziou. O log diz o mesmo com uma palavra por
-mensagem: `sent`, `bounced`, `deferred`, e depois `sent`. **Uma mensagem sumida está num de três
+tentativa: `sent` para o pedido, `bounced` para o endereço errado, `deferred` e depois `sent` para a
+mensagem corrigida. **Uma mensagem sumida está num de três
 lugares: entregue, numa devolução, ou numa fila**, e o log diz qual.

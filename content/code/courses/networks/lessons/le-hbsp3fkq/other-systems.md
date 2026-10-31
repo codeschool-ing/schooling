@@ -5,13 +5,14 @@ version: 1
 
 The client in this lesson is OpenSSH, and Windows and macOS ship it too:
 
-```sh
-ssh ana@192.168.10.10                              # Windows 10 and 11, PowerShell: the same OpenSSH client
-ssh-keygen -t ed25519                              # Windows: keys go to C:\Users\<you>\.ssh
-Get-Service ssh-agent | Set-Service -StartupType Automatic   # Windows, as administrator: the agent is off by default
-Start-Service ssh-agent                            # Windows, as administrator
-type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh ana@192.168.10.10 "cat >> ~/.ssh/authorized_keys"   # Windows has no ssh-copy-id
-ssh-add --apple-use-keychain ~/.ssh/id_ed25519      # macOS: keep the passphrase in the keychain
+```schooling-example
+{"language": "sh", "parts": [
+ {"code": "ssh ana@192.168.10.10", "note": "Windows 10 and 11, in PowerShell: the same OpenSSH client."},
+ {"code": "ssh-keygen -t ed25519", "note": "Windows: the keys go to `C:\\Users\\<you>\\.ssh`."},
+ {"code": "Get-Service ssh-agent | Set-Service -StartupType Automatic\nStart-Service ssh-agent", "note": "Windows, both lines as administrator: the agent is off by default."},
+ {"code": "type $env:USERPROFILE\\.ssh\\id_ed25519.pub | ssh ana@192.168.10.10 \"cat >> ~/.ssh/authorized_keys\"", "note": "Windows has no `ssh-copy-id`."},
+ {"code": "ssh-add --apple-use-keychain ~/.ssh/id_ed25519", "note": "macOS: keep the passphrase in the keychain."}
+]}
 ```
 
 **None of these were run for this lesson.** Windows 10 and 11 ship the same OpenSSH client, so `ssh`,

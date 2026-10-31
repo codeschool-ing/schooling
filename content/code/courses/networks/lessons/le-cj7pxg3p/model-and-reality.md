@@ -14,7 +14,7 @@ The OSI model is a map, and real protocols do not always stay inside its lines:
   travels inside an IP packet as if it were layer 4.
 
 None of that makes the model wrong. It is a vocabulary, and people who work on networks use it every
-day: a *layer 2 switch* forwards by MAC address, a *layer 3 switch* also routes, a *layer 4 load
+day. A *layer 2 switch* forwards by MAC address, a *layer 3 switch* also routes, a *layer 4 load
 balancer* spreads connections by port, a *layer 7 firewall* reads the HTTP inside them. **When
 somebody says "it is a layer 2 problem", they mean the link, the MAC or ARP, and nothing above.**
 

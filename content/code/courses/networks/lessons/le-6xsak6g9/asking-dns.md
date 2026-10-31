@@ -46,7 +46,7 @@ www.example.com.        300     IN      A       192.0.2.80
 
 Read it top to bottom:
 
-- **`status: NOERROR`**: the question was answered. Section 07 is the other values.
+- `status: NOERROR`: the question was answered. Section 07 is the other values.
 - `flags: qr rd ra`: this is a response (`qr`), recursion was desired (`rd`), and the server offers it
   (`ra`). Section 05 is about the flag that is missing.
 - `QUESTION`: what was asked. `A` is the record type, an IPv4 address.

@@ -40,8 +40,8 @@ sends the support question to a different place:
 | `500` | the application crashed | the application's developers |
 | `502`, `504` | the web server could not reach the application behind it | whoever runs that application |
 
-**The error log says which.** The last two lines of nginx's log on `www` name both failures: the
-`403` is `directory index … is forbidden`, a folder with no page in it; the **`502` is `connect()
+**The error log says which.** The last two lines of nginx's log on `www` name both failures. The
+`403` is `directory index … is forbidden`, a folder with no page in it. The **`502` is `connect()
 failed (111: Connection refused) while connecting to upstream`, `127.0.0.1:9000`**. nginx is
 healthy and passed the request on to the booking application, which was not running. That is lesson
 3's `Connection refused`, one level further in. Restarting nginx would change nothing.

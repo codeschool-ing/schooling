@@ -44,7 +44,7 @@ starting with 5 is permanent, and the server gives up at once.
 A code starting with 4, or no answer at all, is temporary, and the message waits in the **queue**.
 Here Bruno's server is stopped. In your lab, the first line below stops it, from your virtual machine,
 and the second starts it again, which is what has to happen before `postqueue -f` can deliver
-anything; the corrected message is made on the laptop with the `sed` after them:
+anything. The corrected message is made on the laptop with the `sed` after them:
 
 ```sh
 sudo bash ~/netlab/netlab exec netmail root 'postfix stop'
@@ -81,6 +81,7 @@ to=<bruno@example.net>, relay=mail.example.net[192.0.2.26]:25, delay=5.7, delays
 
 `postqueue -p`, also called `mailq`, lists what is waiting and why: `Connection refused`. Postfix
 retries on its own for several days before bouncing; `postqueue -f` asks it to try now, and once
-Bruno's server was back the queue emptied. The log says the same in one word per message: `sent`,
-`bounced`, `deferred`, then `sent`. **A missing message is in one of three places: delivered, in a
+Bruno's server was back the queue emptied. The log says the same in one word per attempt: `sent` for the
+order, `bounced` for the mistyped address, `deferred` and then `sent` for the corrected one.
+**A missing message is in one of three places: delivered, in a
 bounce, or in a queue**, and the log says which.

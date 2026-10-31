@@ -21,10 +21,11 @@ ana@laptop:~$ curl -sS -o /dev/null -w "%{http_code}\n" https://www.example.com/
 200
 ```
 
-`www.example.com` resolved, since curl named the address it tried, and the connection was refused
-**after 1 ms**: something on the far end answered at once, and the answer was no. That is step 5. A
-refusal comes from the machine itself, with nothing listening on the port (lesson 3); a firewall that
-drops would have left curl waiting instead.
+`www.example.com` resolved, since curl's error is `(7) Failed to connect` and not the
+`(6) Could not resolve host` of section 04. The connection was refused **after 1 ms**: something on
+the far end answered at once, and the answer was no. That is step 5. A refusal comes from the
+machine itself, with nothing listening on the port (lesson 3); a firewall that drops would have left
+curl waiting instead.
 
 On the server, `ss -tlnp` has nothing on 80 or 443, so the web server is not running. Starting it,
 here `sudo nginx` and on a normal server `sudo systemctl start nginx`, and asking again gave `200`.

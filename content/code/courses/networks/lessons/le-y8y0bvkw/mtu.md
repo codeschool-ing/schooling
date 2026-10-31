@@ -3,7 +3,7 @@ title: How big a packet can be
 version: 2
 ---
 
-Every link has a **MTU**, *maximum transmission unit*: the largest IP packet it carries in one frame.
+Every link has an **MTU**, *maximum transmission unit*: the largest IP packet it carries in one frame.
 On Ethernet it is 1500 bytes, and `ping` can test it. `-s` sets the size of the data, and `-M do` sets
 the **don't fragment** flag, forbidding any router from cutting the packet into pieces:
 
@@ -29,7 +29,7 @@ ping: local error: message too long, mtu=1500
 One byte more and the laptop refused to send it at all: `message too long, mtu=1500`.
 
 Now the office line is changed to the kind many small offices have, DSL with **PPPoE**, which spends 8
-bytes of every frame on its own header and leaves an MTU of **1492**. To make that change in your lab,
+bytes of every frame on its own header and leaves an MTU of 1492. To make that change in your lab,
 lower the MTU on both ends of the line between the router and the provider, from your virtual
 machine:
 
