@@ -33,10 +33,10 @@ consegue começar uma com um aparelho de dentro.
 
 ## DHCP, que é a distribuição
 
-Ninguém digita esses números. **DHCP** é o serviço — rodando no roteador — que responde a um
-aparelho dizendo *sou novo aqui, qual é o meu endereço?* com um endereço, um prazo de validade, e
-as outras duas coisas de que um aparelho precisa: qual endereço é o próprio roteador, e qual
-endereço responde perguntas de nome.
+Ninguém digita esses números. **DHCP** é o serviço, rodando no roteador, que atende um
+aparelho dizendo *sou novo aqui, qual é o meu endereço?* Ele responde com um endereço, um prazo
+de validade, e as outras duas coisas de que um aparelho precisa: qual endereço é o próprio
+roteador, e qual endereço responde perguntas de nome.
 
 O prazo de validade se chama **concessão**, e é por isso que um endereço pode mudar. Um celular
 que ficou fora uma semana volta e pode receber outro número, o que é inofensivo para um celular e

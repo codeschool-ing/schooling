@@ -3,8 +3,8 @@ title: Word in practice, and the feature behind most of the pain
 version: 1
 ---
 
-Four things in Word cause almost all the difficulty people have with it, and three of them are
-one feature misunderstood.
+Four things in Word cause almost all the difficulty people have with it, and the first of them
+causes most of it.
 
 ## Section breaks, which is the one
 
@@ -23,7 +23,7 @@ Two things make this tractable:
 
 ## Lists that renumber themselves
 
-Automatic numbering is genuinely good and it has one behaviour that catches everybody: a list
+Automatic numbering is good and it has one behaviour that catches everybody: a list
 that continues after an interruption sometimes restarts at one, and sometimes a new list
 continues from the old one.
 

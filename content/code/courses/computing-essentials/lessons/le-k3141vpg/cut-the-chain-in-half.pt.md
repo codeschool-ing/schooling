@@ -29,7 +29,7 @@ driver, a conexão, a impressora. O meio é a fila — imprima de outro aplicati
 de teste pelo menu da própria impressora. Um teste, e metade da corrente já foi.
 
 **Uma página não carrega.** O aplicativo, a consulta de nome, a rede, a linha, o site. O meio é
-*outro site carrega*, que é a primeira pergunta da aula passada e é o mesmo movimento.
+*outro site carrega*, que é a segunda pergunta da aula passada e é o mesmo movimento.
 
 **Uma máquina não liga.** Energia na tomada, o cabo, a fonte, a placa, a tela. O meio é *alguma
 coisa acende ou gira* — o que separa duas metades que não têm nada a ver uma com a outra.

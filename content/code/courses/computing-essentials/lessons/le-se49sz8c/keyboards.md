@@ -37,10 +37,10 @@ So there are two distinct faults:
 - **`R$`** printed and produced, and a `/` on the numeric pad where an American keyboard does not
   have one.
 
-The US-International layout composes the same accents from the apostrophe and quote keys, which
-works and is slower, and has one famous side effect: typing an apostrophe before a vowel
-silently becomes an accented vowel, so `don't` needs a space after the apostrophe to come out
-right.
+The US-International layout composes the same accents from the apostrophe and quote keys. That
+works, it is slower, and it has one famous side effect: an apostrophe typed before a vowel
+silently becomes an accent on that vowel, so an apostrophe meant to stand on its own needs a
+space typed after it.
 
 ## Membrane, mechanical, and what actually differs
 

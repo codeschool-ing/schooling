@@ -14,7 +14,7 @@ the tax rate everything is multiplied by.
 ```
 
 `F4` cycles a reference through the four forms while you are typing it: `C1`, `$C$1`, `C$1`,
-`$C1`. The middle two freeze one direction and are what you want in a multiplication table.
+`$C1`. The last two freeze one direction and are what you want in a multiplication table.
 
 ## The two rules
 
@@ -61,4 +61,4 @@ still covering the first eight hundred rows of a sheet that now has nine hundred
 - **Never sort one column on its own.** Select the whole range, or use a table. Sorting a single
   column separates it from the rows it described, silently and irreversibly.
 - **Check the total against something.** A `COUNT` beside a `SUM` catches the text-in-a-number-
-  column problem from the last section, and it is the only check that costs nothing.
+  column problem from the last section, and it costs nothing.

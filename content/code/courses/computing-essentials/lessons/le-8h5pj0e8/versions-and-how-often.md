@@ -52,7 +52,7 @@ with real life.
 
 ## Full, incremental, differential
 
-Three words on the settings screen, and one paragraph is enough:
+Three words on the settings screen, and three lines are enough:
 
 - A **full** backup copies everything. Slow, large, and self-contained.
 - An **incremental** copies what changed since the last backup of any kind. Fast and small, and

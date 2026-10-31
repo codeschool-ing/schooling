@@ -3,8 +3,8 @@ title: As gerações, e o único ajuste de segurança que importa
 version: 1
 ---
 
-O Wi-Fi teve dois conjuntos de nomes por vinte anos: o de engenharia, `802.11` seguido de letras,
-e mais nada. Em 2018 alguém finalmente deu números a eles.
+O Wi-Fi teve um só conjunto de nomes por vinte anos: o de engenharia, `802.11` seguido de letras.
+Em 2018 alguém finalmente deu números a eles, e desde então são dois.
 
 | nome de engenharia | vendido como | banda | mais ou menos |
 |---|---|---|---|

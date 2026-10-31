@@ -53,4 +53,4 @@ Desconectá-lo entre os backups é de graça e converte a quarta linha de *talve
 Se você fizer uma coisa desta aula: **um disco externo, conectado uma vez por semana, com
 versionamento ligado, desconectado no intervalo, e guardado em outro lugar que não em cima da
 mesa.** São duas cópias e uma mídia e não é a regra — e responde a três das quatro linhas, que é
-três a mais do que a maioria das pessoas consegue.
+mais do que um serviço de sincronia sozinho responde.

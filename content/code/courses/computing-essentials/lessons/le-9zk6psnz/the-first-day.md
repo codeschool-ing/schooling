@@ -32,7 +32,7 @@ The old ritual was a disc of drivers and an afternoon. Today a current Windows o
 installation arrives with almost everything working, and there are exactly two to fetch by hand:
 
 - **the graphics driver**, from the card maker rather than from the update service, because it is
-  the one that is genuinely newer and genuinely matters;
+  the one that is newer and matters;
 - **the chipset driver**, from the motherboard's own page, which mostly affects power management
   and is worth ten minutes.
 
@@ -55,8 +55,8 @@ driver disc is a machine whose drivers are three years old.
 **Set up the backup today.** Not when there is something on the machine worth keeping — today,
 while the machine is empty and the job takes ten minutes.
 
-The reason is not diligence. It is that **a backup arranged later is a backup arranged after the
-first thing you would have wanted back**, and every person who has lost something set theirs up
+**A backup arranged later is a backup arranged after the first thing you would have wanted
+back**, and every person who has lost something set theirs up
 the week afterwards. An external drive and the operating system's own tool is enough; anything
 automatic beats anything better that is done by hand.
 

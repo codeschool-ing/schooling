@@ -35,8 +35,7 @@ a column with one piece of text in it, and every `SUM` down that column is quiet
 `SEP2` becomes September. A measurement written `2-3` becomes the third of February and cannot be
 turned back, because **the original characters are gone** — the cell holds a day number now.
 
-The second half of that sentence is the part that matters. Converting the column back to text
-afterwards gives you `45016`, not `2-3`. **There is no undo once the file is saved**, which is why
+Converting the column back to text afterwards gives you the day number, not `2-3`. **There is no undo once the file is saved**, which is why
 this is a lesson about what to do beforehand.
 
 ## Doing it beforehand

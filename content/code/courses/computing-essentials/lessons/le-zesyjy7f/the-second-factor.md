@@ -3,7 +3,7 @@ title: The second factor, and which kind is worth the trouble
 version: 1
 ---
 
-A second factor means that knowing the password is not enough. It is the single most effective
+A second factor means that knowing the password is not enough. It is the most effective
 thing on this list, because it breaks the attack from the previous section: a password from a
 breach, tried against your bank, no longer opens anything.
 

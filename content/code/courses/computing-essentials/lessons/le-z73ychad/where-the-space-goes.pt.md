@@ -40,8 +40,8 @@ que parou de sincronizar em silêncio há três semanas é uma máquina cujo tra
 um lugar só.
 
 Então a ordem é: libere alguma coisa hoje, depois decida. Pagar por mais espaço é barato e é a
-resposta certa para a maioria das pessoas; é uma resposta pior se o que enche são doze anos de
-fotografias que ninguém olhou, que é o caso que vale uma noite em vez de uma mensalidade.
+resposta certa para a maioria das pessoas. É uma resposta pior se o que enche são doze anos de
+fotografias que ninguém olhou, e esse caso vale uma noite em vez de uma mensalidade.
 
 ## E a linha que pega as pessoas
 

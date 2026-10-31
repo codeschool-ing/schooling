@@ -33,7 +33,7 @@ Disks keep their own health counters — reallocated sectors, pending sectors, r
 powered on — and report them under the name **SMART**. Every system can read them, and free tools
 show them plainly.
 
-Two things about that number:
+Two things about what it reports:
 
 - **A SMART warning is a very good reason to act.** Reallocated sectors that keep increasing means
   the disk is running out of spare places to put your data.

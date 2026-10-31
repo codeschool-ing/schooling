@@ -31,10 +31,10 @@ ela que decide se o texto fica nítido.
 | 27 polegadas | `2560 × 1440` | 109 ppp — o ponto doce em que a maioria para |
 | 27 polegadas | `3840 × 2160` | 163 ppp — nítido, e precisa de escala para ser usável |
 
-A terceira linha dessa tabela é a recomendação honesta para uma mesa, e a quarta é a armadilha: a
-163 ppp os menus do sistema ficam fisicamente minúsculos, então você liga a escala em 150%, e
-volta para perto da área útil do painel 1440p — tendo pago por um 4K e pedido quatro vezes mais
-da placa de vídeo para exibi-lo.
+A terceira linha dessa tabela é a recomendação honesta para uma mesa, e a quarta é a armadilha. A
+163 ppp os menus do sistema ficam fisicamente minúsculos, então você liga a escala em 150%. Com
+isso você volta para perto da área útil do painel 1440p — tendo pago por um 4K e pedido mais que
+o dobro da placa de vídeo para exibi-lo.
 
 **O 4K se paga numa televisão do outro lado da sala e num notebook perto do rosto.** Num monitor
 de 27 polegadas a um braço de distância ele é quase só um número.

@@ -40,8 +40,8 @@ An eight-year-old laptop with a hard disk in it, given an SSD, boots in fifteen 
 of ninety and opens programs instantly. The processor is the same processor. Nothing about it
 got faster.
 
-That is worth sitting with, because it is the lesson's whole argument in one purchase: **the
-machine was never slow. It was waiting**, and the waiting was all in one place.
+That is the lesson's whole argument in one purchase: **the machine was never slow. It was
+waiting**, and the waiting was all in one place.
 
 ## SATA and NVMe, briefly
 
@@ -51,8 +51,8 @@ is made of:
 - **SATA** is the older connection, shared with hard disks, and tops out around 550 MB/s.
 - **NVMe** plugs straight into the motherboard's fast lanes and reaches 3 000 to 7 000 MB/s.
 
-In honesty: going from a hard disk to any SSD is transformative, and going from a SATA SSD to an
-NVMe one is a number you can measure and rarely feel. The first step is the one that matters.
+Going from a hard disk to any SSD is transformative, and going from a SATA SSD to an NVMe
+one is a number you can measure and rarely feel. The first step is the one that matters.
 
 ## And a word about capacity, which is not speed
 

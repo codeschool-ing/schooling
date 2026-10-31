@@ -36,7 +36,7 @@ The payment row is the important one. **A contactless payment does not send your
 The chip produces a cryptogram — a one-time value derived from a key that never leaves the card —
 so a captured transaction cannot be replayed and the merchant never holds anything reusable.
 
-This is genuinely more private than handing a waiter a card with the number printed on it.
+This is more private than handing a waiter a card with the number printed on it.
 
 ## The honest risks, which are small and not zero
 

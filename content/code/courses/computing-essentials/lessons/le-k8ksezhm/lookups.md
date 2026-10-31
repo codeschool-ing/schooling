@@ -3,7 +3,7 @@ title: Lookups, which is how two tables become one answer
 version: 2
 ---
 
-The single most useful thing a spreadsheet does: **take a value from one table and find the row
+The most useful thing a spreadsheet does: **take a value from one table and find the row
 it belongs to in another.** A product code and a price list. An employee number and a department.
 An order and a customer.
 
