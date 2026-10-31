@@ -29,7 +29,7 @@ baixar, um driver antigo que bloqueia, ou uma política que alguém definiu e es
 Entre as atualizações de recursos vêm as *atualizações cumulativas mensais*, lançadas na segunda
 terça-feira do mês, que o pessoal de TI chama de *Patch Tuesday*. Cada uma contém todas as correções
 anteriores, então um PC que perdeu três meses se põe em dia com uma só. São elas que sobem o número de
-revisão da seção 01.
+revisão da seção 02.
 
 ## Windows 10
 

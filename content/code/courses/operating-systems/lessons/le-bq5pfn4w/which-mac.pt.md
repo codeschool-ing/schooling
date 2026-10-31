@@ -46,6 +46,6 @@ As mesmas três perguntas da aula 2, mais uma:
 
 1. **Os dados.** Tudo o que importa no Mac é copiado para outro lugar antes, com o **Time Machine**
    para um disco externo ou copiando as pastas.
-2. **A Conta Apple.** De quem é a conta em que ele está? Anote a resposta; ela decide a seção 04.
+2. **A Conta Apple.** De quem é a conta em que ele está? Anote a resposta; ela decide a seção 05.
 3. **O modelo.** Apple silicon ou Intel, e qual macOS o modelo suporta.
 4. **A licença.** Não há com o que se preocupar. O macOS vem com o Mac e reinstalá-lo é de graça.

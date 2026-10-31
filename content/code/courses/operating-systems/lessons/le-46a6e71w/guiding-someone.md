@@ -11,8 +11,8 @@ into a five-minute one.
 2. **Give landmarks, not colours or shapes.** "The clock at the bottom right" works on every Windows
    PC; "the little blue icon" works on none, because icons change with each release and each theme.
 3. **Prefer typing to finding.** "Press the Windows key and type *printers*" works whatever their
-   layout is. It is the reason the first row of section 05's table matters most.
-4. **Ask for a screenshot.** The shortcut from section 05, and the picture pasted into the chat,
+   layout is. It is the reason the first row of section 06's table matters most.
+4. **Ask for a screenshot.** The shortcut from section 06, and the picture pasted into the chat,
    replaces five questions. It also records the exact error text.
 5. **When it is still unclear, look.** Windows has *Quick Assist*, built in: the person reads you a
    code, and you see their screen and can control it. macOS has *Screen Sharing*, and GNOME has

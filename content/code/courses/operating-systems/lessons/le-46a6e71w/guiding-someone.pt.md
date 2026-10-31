@@ -12,8 +12,8 @@ vinte minutos numa de cinco.
    todo PC com Windows; "o iconezinho azul" não funciona em nenhum, porque os ícones mudam a cada versão
    e a cada tema.
 3. **Prefira digitar a procurar.** "Aperte a tecla Windows e digite *impressoras*" funciona seja qual
-   for a arrumação da tela. É por isso que a primeira linha da tabela da seção 05 é a que mais importa.
-4. **Peça uma captura de tela.** O atalho da seção 05, e a imagem colada no chat, substituem cinco
+   for a arrumação da tela. É por isso que a primeira linha da tabela da seção 06 é a que mais importa.
+4. **Peça uma captura de tela.** O atalho da seção 06, e a imagem colada no chat, substituem cinco
    perguntas. E ainda registram o texto exato do erro.
 5. **Quando ainda não estiver claro, olhe.** O Windows tem a **Assistência Rápida**, já instalada: a
    pessoa lê um código para você, e você vê a tela dela e pode controlá-la. O macOS tem o

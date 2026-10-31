@@ -59,7 +59,7 @@ experimental
 ```
 
 O Debian 13 é a versão estável. O `forky` é o que vai virar a 14, o `sid` é o ramo contínuo da seção
-03, e o `experimental` é o que o nome diz.
+04, e o `experimental` é o que o nome diz.
 
 ## Para que servem os números
 

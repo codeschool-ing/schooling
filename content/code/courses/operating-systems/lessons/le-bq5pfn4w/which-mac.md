@@ -46,7 +46,7 @@ The same three questions as lesson 2, with one more:
 
 1. **The data.** Anything on the Mac that matters is copied somewhere else first, with **Time
    Machine** to an external disk or by copying the folders.
-2. **The Apple Account.** Whose is it signed into? Write the answer down; it decides section 04.
+2. **The Apple Account.** Whose is it signed into? Write the answer down; it decides section 05.
 3. **The model.** Apple silicon or Intel, and which macOS the model supports.
 4. **The licence.** There is none to worry about. macOS comes with the Mac and reinstalling it is
    free.

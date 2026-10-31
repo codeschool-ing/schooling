@@ -22,7 +22,7 @@ choose **Not Now**: migrating the previous user's things is exactly what the era
 ## Apple Account
 
 Signing in here turns on iCloud, the App Store and, by default, **Find My**, which is what switches on
-Activation Lock (section 04). On a Mac the office owns, decide **whose account** before this screen,
+Activation Lock (section 05). On a Mac the office owns, decide **whose account** before this screen,
 for the same reason as the Microsoft account in lesson 2. Skipping it is allowed, and the person can
 sign in to the App Store alone later.
 

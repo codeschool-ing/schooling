@@ -58,7 +58,7 @@ experimental
 ```
 
 Debian 13 is the stable release. `forky` is what will become 14, `sid` is the rolling branch from
-section 03, and `experimental` is what it sounds like.
+section 04, and `experimental` is what it sounds like.
 
 ## What the numbers are for
 

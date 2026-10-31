@@ -27,7 +27,7 @@ an old driver that blocks it, or a policy somebody set and forgot.
 
 Between feature updates come the *monthly cumulative updates*, released on the second Tuesday of the
 month, which people in IT call *Patch Tuesday*. Each one contains every fix before it, so a PC that
-missed three months catches up with one. They are what raises the revision number from section 01.
+missed three months catches up with one. They are what raises the revision number from section 02.
 
 ## Windows 10
 

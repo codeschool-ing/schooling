@@ -45,7 +45,7 @@ Section: universe/games
 
 The last command shows it on two packages: `bash` is in `main`, so its section carries no prefix, and
 `cowsay` is `universe/games`. The component is how you know, before installing, whose promise the
-support dates of section 04 are.
+support dates of section 05 are.
 
 ## Outside the repositories
 
