@@ -169,6 +169,28 @@ resource "google_cloud_run_v2_job" "load" {
         // Where the image keeps the files. See `deploy/Dockerfile`.
         args = ["/content"]
 
+        /* MEMORY IS DECLARED, because the default stopped being enough without
+           anything here changing. The job reads and validates the whole
+           catalogue before it writes a row, and that is the point of it — so
+           its peak grows with `content/`, not with traffic. At v0.53.0 the
+           catalogue was some forty courses; at v0.54.0 it is 120, and loading
+           and validating it alone peaks at 573 MiB. Cloud Run's default is
+           512 MiB, and the v0.54.0 deploy was killed by the kernel one minute
+           into the load ("Out-of-memory event detected in container"), after
+           the schema had already moved.
+
+           2 GiB is a little over three times the measured peak. That leaves
+           room for the write and for the catalogue to keep growing, and it
+           costs nothing between deploys, because a job only bills while it
+           runs. Measure again before raising it: a load that needs much more
+           than this is telling you something about the loader. */
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "2Gi"
+          }
+        }
+
         volume_mounts {
           name       = "cloudsql"
           mount_path = "/cloudsql"
