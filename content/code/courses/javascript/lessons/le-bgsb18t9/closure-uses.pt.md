@@ -3,8 +3,8 @@ title: Para que servem as closures
 version: 1
 ---
 
-Closures não são uma curiosidade para saber; **são como o JavaScript guarda estado que pertence a
-uma função**, sem classe e sem global. Três padrões cobrem quase tudo o que você vai escrever e ler.
+**Closures são como o JavaScript guarda estado que pertence a uma função**, sem classe e sem
+global. Três padrões cobrem quase tudo o que você vai escrever e ler.
 
 ## Rodar algo uma vez
 
@@ -26,7 +26,7 @@ uma função**, sem classe e sem global. Três padrões cobrem quase tudo o que 
       "note": "A primeira chamada roda `fn` e lembra o resultado. Toda chamada seguinte vai direto devolver esse resultado."
     },
     {
-      "code": "const connect = once(() => {\n  console.log(\"connecting...\");\n  return \"connection 1\";\n});\n\nconsole.log(connect());\nconsole.log(connect());\nconsole.log(connect());",
+      "code": "\nconst connect = once(() => {\n  console.log(\"connecting...\");\n  return \"connection 1\";\n});\n\nconsole.log(connect());\nconsole.log(connect());\nconsole.log(connect());",
       "note": "`connect` é a função embrulhada. A mensagem dentro dela saiu uma vez, embora `connect` tenha sido chamada três vezes."
     }
   ],

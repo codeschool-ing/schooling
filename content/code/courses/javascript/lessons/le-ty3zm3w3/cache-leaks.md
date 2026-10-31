@@ -46,7 +46,7 @@ collector works harder, and falls over some days later, at an hour nobody chose.
   "file": "cache-bounded.js",
   "parts": [
     {
-      "code": "const mb = () => {\n  globalThis.gc();\n  return Math.round(process.memoryUsage().heapUsed / 1024 / 1024);\n};",
+      "code": "const mb = () => {\n  globalThis.gc();\n  return Math.round(process.memoryUsage().heapUsed / 1024 / 1024);\n};\n",
       "note": "The same measurement."
     },
     {
@@ -58,7 +58,7 @@ collector works harder, and falls over some days later, at an hour nobody chose.
       "note": "A hit moves the entry to the end, by deleting and setting it again. A `Map` keeps keys in the order they were set (lesson 5), so the end of the `Map` is always the most recently used entry."
     },
     {
-      "code": "  const value = `<li>book ${bookId}</li>`.repeat(20);\n  cache.set(bookId, value);\n  if (cache.size > LIMIT) cache.delete(cache.keys().next().value);\n  return value;\n}",
+      "code": "  const value = `<li>book ${bookId}</li>`.repeat(20);\n  cache.set(bookId, value);\n  if (cache.size > LIMIT) cache.delete(cache.keys().next().value);\n  return value;\n}\n",
       "note": "A miss computes the value and stores it. If that takes the cache over its limit, the first key in the `Map`, the least recently used, is removed."
     },
     {

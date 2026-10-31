@@ -13,7 +13,8 @@ about when the line runs, not where it sits:
 
 ## Two different errors
 
-`tdz-read.js` reads the name a line too early:
+`tdz-read.js` reads the name a line too early, and `not-declared.js` is its first line alone, with
+no declaration anywhere:
 
 ```javascript
 console.log(title);

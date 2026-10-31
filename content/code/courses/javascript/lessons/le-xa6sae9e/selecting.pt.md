@@ -43,7 +43,8 @@ null
 ## Três coisas que a saída mostra
 
 - **Um seletor que não bate com nada dá `null`**, não erro. A próxima linha que o usa, como
-  `.textContent`, é onde o erro aparece, e a mensagem é o `Cannot read properties of null` da aula 4.
+  `.textContent`, é onde o erro aparece, como `Cannot read properties of null`: a mensagem da aula 4,
+  com `null` no lugar de `undefined`.
   Quando você vir essa mensagem em código de página, o seletor é o primeiro suspeito: um erro de
   digitação, ou um script que rodou antes de o elemento existir;
 - o `querySelectorAll` devolve uma `NodeList` **estática**: uma foto tirada quando rodou. Depois de um

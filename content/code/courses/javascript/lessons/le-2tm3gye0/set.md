@@ -39,7 +39,7 @@ true 4
   Lesson 2's equality section is why.
 
 `has` on a `Set` stays fast however large the set grows, while `includes` on an array checks the
-items one by one. **For a long list you ask "is this in it?" many times, build a `Set` once.**
+items one by one. **For a long list that you ask "is this in it?" many times, build a `Set` once.**
 
 ## Set operations
 
@@ -64,5 +64,5 @@ true
 Since 2024 a `Set` has the operations from mathematics: **union** is everything in either,
 **intersection** is what both share, **difference** is what the first has and the second does
 not. Node 22 has them, as do current browsers; this is one of the features lesson 1 meant when it
-said to install 22 or newer. Before them, the same was written with `filter` and `has`:
+said to install Node 22. Before them, the same was written with `filter` and `has`:
 `[...ana].filter((t) => bia.has(t))` is the intersection.

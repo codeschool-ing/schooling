@@ -48,8 +48,8 @@ milissegundos, porque a categoria é o que se mantém entre execuções.
 - **zero é "logo", e "logo" depende do que mais está na fila.** Código que precisa de algo antes do
   próximo quadro usa `requestAnimationFrame`; código que precisa antes de qualquer outra tarefa usa um
   microtask, `queueMicrotask` ou `await`;
-- **uma corrente de temporizadores de espera zero é mais lenta do que parece**: mil deles levam pelo
-  menos quatro segundos num navegador. O fatiamento da aula 13 os usou pelo motivo oposto, para dar à
+- **uma corrente de temporizadores de espera zero é mais lenta do que parece**: mil deles levam uns
+  quatro segundos num navegador. O fatiamento da aula 13 os usou pelo motivo oposto, para dar à
   página espaço entre as fatias, e esse é o uso honesto deles;
 - o Node tem o seu próprio mínimo de um milissegundo para temporizadores, e nenhuma regra de 4 ms.
   **A linguagem não diz nada sobre temporizadores**: o `setTimeout` faz parte do que cada hospedeiro

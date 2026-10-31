@@ -13,7 +13,8 @@ linha roda, não de onde ela fica:
 
 ## Dois erros diferentes
 
-O `tdz-read.js` lê o nome uma linha cedo demais:
+O `tdz-read.js` lê o nome uma linha cedo demais, e o `not-declared.js` é só a primeira linha dele,
+sem declaração nenhuma:
 
 ```javascript
 console.log(title);

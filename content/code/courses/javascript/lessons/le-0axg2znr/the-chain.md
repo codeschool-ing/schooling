@@ -38,8 +38,8 @@ every chain ends**. `list.map` is not a copy of `Array.prototype.map`; it is the
 found by walking up one step, and `===` says so.
 
 When the walk reaches `null` without finding the name, the answer is `undefined`, as `list.missing`
-shows. **A missing property costs a walk of the whole chain**, which is why it is never an error and
-never instant.
+shows. **A missing property costs a walk of the whole chain**, so it is never instant, and what it
+ends in is `undefined`, never an error.
 
 That explains two things from earlier lessons. The empty object of lesson 5 that already had a
 `constructor` had inherited it from `Object.prototype`. And the `Object.create(null)` dictionary of
