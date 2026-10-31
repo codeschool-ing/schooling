@@ -30,9 +30,9 @@ Uma linha inserida por qualquer outra coisa — uma carga em massa, outro servi�
 `UPDATE` escrito à mão — carrega o status que quiser. O ponto da aula 1 sobre restrições chega:
 **uma regra que o banco não conhece é uma regra que algumas linhas não seguem.**
 
-O mesmo vale para o `NOT NULL` que só existe como campo obrigatório, para a unicidade que só
-existe como validação — a aula 8 mostrou que essa é um write skew esperando duas requisições — e
-para tamanhos e faixas conferidos no formulário e em mais lugar nenhum. Ponha-os na tabela. A
+O mesmo vale para o `NOT NULL` que só existe como campo obrigatório, e para tamanhos e faixas
+conferidos no formulário e em mais lugar nenhum. E para a unicidade que só existe como validação,
+que a aula 8 mostrou ser um write skew esperando duas requisições. Ponha-os na tabela. A
 validação do modelo ainda vale a pena, pela mensagem de erro, e é a segunda linha de defesa em vez
 da primeira.
 

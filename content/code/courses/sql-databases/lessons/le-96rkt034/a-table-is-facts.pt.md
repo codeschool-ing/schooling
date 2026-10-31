@@ -37,7 +37,7 @@ Cada linha diz uma coisa que é verdade:
 Uma linha não é uma posição numa lista. **Linhas não têm ordem.** Isso surpreende quem vem de
 planilhas, onde a linha 4 está inequivocamente abaixo da 3 e você pode arrastá-la para outro lugar.
 Uma tabela é um *conjunto* de linhas, e um conjunto não tem primeiro elemento. Quando você pede
-linhas a um banco sem dizer como ordenar, você pode receber em qualquer ordem — e em sistemas
+linhas a um banco sem dizer como ordenar, você pode receber em qualquer ordem. Em sistemas
 reais a ordem muda com o tempo, silenciosamente, conforme os dados crescem e o banco muda de ideia
 sobre como buscá-los.
 

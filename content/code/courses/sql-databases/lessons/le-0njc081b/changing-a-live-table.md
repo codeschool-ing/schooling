@@ -31,28 +31,34 @@ live with.
 
 The trick is that PostgreSQL will trust a `CHECK` constraint it has already validated.
 
-```sql
--- 1. add the rule, NOT VALID: instant, no scan, applies to new rows only
-ALTER TABLE invoices
-    ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;
-
--- 2. backfill the existing nulls, in batches, at your own pace
-UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;
--- … repeat
-
--- 3. validate: scans, but takes only a SHARE UPDATE EXCLUSIVE lock,
---    so reads and writes continue
-ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;
-
--- 4. now SET NOT NULL is instant, because the proof already exists
-ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;
-ALTER TABLE invoices DROP CONSTRAINT invoices_status_present;
+```schooling-example
+{
+  "language": "sql",
+  "parts": [
+    {
+      "code": "ALTER TABLE invoices\n    ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;\n",
+      "note": "**Add the rule, `NOT VALID`.** It is instant, it scans nothing, and it applies to new rows only."
+    },
+    {
+      "code": "UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;\n",
+      "note": "**Backfill the existing nulls**, in batches, at your own pace — and repeat until none is left."
+    },
+    {
+      "code": "ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;\n",
+      "note": "**Validate.** This one scans, but it takes only a `SHARE UPDATE EXCLUSIVE` lock, so reads and writes continue."
+    },
+    {
+      "code": "ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;\nALTER TABLE invoices DROP CONSTRAINT invoices_status_present;",
+      "note": "**Now `SET NOT NULL` is instant**, because the proof already exists, and the helper constraint can go."
+    }
+  ]
+}
 ```
 
-Four statements instead of one, and at no point is the table locked for more than a moment.
+Four steps instead of one statement, and at no point is the table locked for more than a moment.
 
 **`NOT VALID` is the key idea and it generalises.** It means *"apply this rule from now on, and do
-not check what is already here"* — which is exactly what you want, because new rows are the ones
+not check what is already here"*. That is exactly what you want: new rows are the ones
 you can control, and the old ones you will fix at your own speed. Foreign keys take it too:
 
 ```sql

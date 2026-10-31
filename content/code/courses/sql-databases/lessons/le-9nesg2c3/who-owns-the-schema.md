@@ -30,9 +30,9 @@ anything else — a bulk load, another service, a migration, a hand-written `UPD
 whatever status it likes. Lesson 1's point about constraints arrives: **a rule the database
 does not know is a rule some rows do not follow.**
 
-The same goes for `NOT NULL` that lives only as a required field, uniqueness that lives only as
-a validation — lesson 8 showed that one is a write skew waiting for two requests — and lengths and
-ranges checked in the form and nowhere else. Put them on the table. The model's validation is
+The same goes for `NOT NULL` that lives only as a required field, and for lengths and ranges
+checked in the form and nowhere else. And for uniqueness that lives only as a validation, which
+lesson 8 showed is a write skew waiting for two requests. Put them on the table. The model's validation is
 still worth having, for the error message, and it is the second line of defence rather than the
 first.
 

@@ -107,7 +107,7 @@ precisa mostrar um número sempre vai ter um número para mostrar, depois que vo
 SELECT sum(quantity) / count(*) FROM order_lines;
 ```
 
-Se os dois forem inteiros, alguns bancos fazem divisão inteira: 7 itens em 2 pedidos dá `3`, não
+Se os dois forem inteiros, alguns bancos fazem divisão inteira: 7 itens em 2 linhas dá `3`, não
 `3,5`, e o arredondamento é silencioso. `avg()` não tem esse problema — promove para um tipo
 decimal — o que é mais uma razão para usá-la em vez de dividir à mão. Quando precisar dividir,
 converta:

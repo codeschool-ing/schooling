@@ -68,9 +68,9 @@ Uma vez que você tem o teste, vê em todo lugar, e a resposta é sempre a mesma
 | a taxa de câmbio no pagamento | câmbio se move o tempo todo e o pagamento aconteceu uma vez |
 | os termos aceitos, no aceite | os termos foram reescritos; aquela pessoa concordou com os antigos |
 
-Este repositório faz exatamente isso, o que vale saber porque é um sistema real e não um exercício.
-A migração do certificado dele diz que tudo no documento é capturado na emissão — o nome, o título,
-a escola — e nada lido ao vivo, porque *"um curso pode ser renomeado ou removido do catálogo por
+A plataforma em que você está lendo isto faz exatamente isso, o que vale saber porque é um sistema
+real e não um exercício. A migração do certificado dela diz que tudo no documento é capturado na
+emissão: o nome, o título, a escola. Nada disso é lido ao vivo, porque *"um curso pode ser renomeado ou removido do catálogo por
 completo… e um certificado que lesse o título ao vivo passaria silenciosamente a nomear outra
 coisa, ou nada."*
 

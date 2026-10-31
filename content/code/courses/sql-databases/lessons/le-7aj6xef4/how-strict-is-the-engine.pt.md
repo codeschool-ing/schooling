@@ -70,8 +70,8 @@ shop=# SELECT sku, price, pg_typeof(price) FROM products;
 (4 rows)
 ```
 
-É por isso que o relatório da seção anterior voltou como `2998.00` em três motores e `2998` no
-quarto. Não foi diferença de formatação. Foi aritmética de ponto flutuante, e a aula 3 já nomeou a
+É por isso que o relatório da seção anterior voltou como `2998.00` do PostgreSQL e do MySQL e
+como `2998` do SQLite. Não foi diferença de formatação. Foi aritmética de ponto flutuante, e a aula 3 já nomeou a
 falha a que ela leva:
 
 ```
@@ -119,7 +119,7 @@ acima é `TEXT` em vez de `NUMERIC(10,2)`: não há decimal a declarar, e as op�
 ou centavos num inteiro.
 
 **Escreva `STRICT` em toda tabela SQLite nova.** Custa uma palavra, não é o padrão apenas porque
-trinta anos de bancos existentes dependem do comportamento antigo, e a falha que evita é silenciosa.
+mais de vinte anos de bancos existentes dependem do comportamento antigo, e a falha que evita é silenciosa.
 
 ## MySQL, MariaDB, e o modo que já esteve desligado
 
@@ -145,8 +145,9 @@ Os dois vêm com `STRICT_TRANS_TABLES`, então uma instalação nova de qualquer
 acima — e os dois podem ser desligados de novo, por sessão, por conexão ou num arquivo de
 configuração. Num sistema que você não montou, essa variável merece ser lida em vez de suposta.
 
-Ponha as duas listas lado a lado e uma palavra está na do MySQL e não na do MariaDB:
-`ONLY_FULL_GROUP_BY`. A aula 6 disse que toda coluna da lista do `SELECT` tem que estar agrupada ou
+Ponha as duas listas lado a lado e três palavras estão na do MySQL e não na do MariaDB. Duas
+delas, `NO_ZERO_IN_DATE` e `NO_ZERO_DATE`, são sobre datas; a terceira é `ONLY_FULL_GROUP_BY`.
+A aula 6 disse que toda coluna da lista do `SELECT` tem que estar agrupada ou
 agregada. Essa regra é do motor fazer valer, e aqui os dois discordam.
 
 Esta consulta quebra a regra, e Recife tem dois clientes:

@@ -76,8 +76,8 @@ takes parameters, in every ORM, and the rule is one line:
 > trust.**
 
 Not for an integer you validated, not for a value from your own configuration, not for a column
-name — a column name cannot be a parameter, and a column name that comes from a user goes through
-an allow-list of the names you accept, never into the text.
+name. A column name cannot be a parameter, and one that comes from a user goes through an
+allow-list of the names you accept, never into the text.
 
 ## The one thing a parameter cannot be
 

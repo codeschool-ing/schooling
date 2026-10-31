@@ -75,7 +75,7 @@ rather than in features.
 
 **And the answer is often "none of them yet".** For a tool, a prototype, a desktop application or
 a service with one process, SQLite needs no server, no backup job, no upgrade plan and nobody on
-call — and the section on it says exactly when that stops being true.
+call. The section on it says exactly when that stops being true.
 
 ## The part that does not change
 

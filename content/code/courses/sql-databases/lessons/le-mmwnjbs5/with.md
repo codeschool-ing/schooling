@@ -3,7 +3,7 @@ title: WITH, which is the same query with the steps named
 version: 1
 ---
 
-Here is the nested query from two sections ago, and here it is again:
+Here is the nested query from four sections ago, and here it is again:
 
 ```sql
 SELECT * FROM (
@@ -74,7 +74,7 @@ FROM     monthly this
 LEFT JOIN monthly prev ON prev.month = this.month - INTERVAL '1 month';
 ```
 
-`monthly` is defined once and used twice. As a derived table that is the same twenty lines written
+`monthly` is defined once and used twice. As a derived table that is the same body written
 out twice, and the second copy is the one somebody forgets to change.
 
 Being able to name it does not mean it is computed once — that is the next section, and it is the

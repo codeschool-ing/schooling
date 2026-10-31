@@ -66,7 +66,7 @@ INSERT INTO cancelled_archive (id, customer_id, ordered_on)
 SELECT id, customer_id, ordered_on FROM orders WHERE status = 'cancelled';
 ```
 
-**What you leave out is what the table decides.** Lesson 3 declared `ordered_on` as
+**What you leave out is what the table decides.** Lesson 1's schema declared `ordered_on` as
 `DEFAULT current_date` and `status` as `DEFAULT 'placed'`, and this is the first time you watch them
 fire:
 

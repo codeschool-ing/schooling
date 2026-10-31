@@ -23,8 +23,8 @@ assunto desta seção. Leia como três tipos de linha:
 
 - **definições de coluna** — um nome, um tipo, e as restrições que valem só para aquela coluna;
 - **restrições de tabela** — no fim, para o que abrange mais de uma coluna;
-- **mais nada.** Não há lugar no `CREATE TABLE` para um comentário sobre intenção, que é por que a
-  última seção desta aula é sobre nomear.
+- **mais nada.** Não há lugar no `CREATE TABLE` para um comentário sobre intenção, que é por que
+  esta aula tem uma seção sobre nomear.
 
 ## `IF NOT EXISTS` e por que normalmente é errado
 

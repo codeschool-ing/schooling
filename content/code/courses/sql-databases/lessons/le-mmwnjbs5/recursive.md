@@ -3,7 +3,8 @@ title: Walking a tree with WITH RECURSIVE
 version: 2
 ---
 
-Lesson 1 gave you a table that points at itself:
+Lesson 5 joined `employees` to itself through `manager_id`. A category tree is the same shape, a
+table that points at itself:
 
 ```sql
 CREATE TABLE categories (

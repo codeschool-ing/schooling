@@ -39,7 +39,7 @@ that is wrong is the same node with a sequential scan as the inner child: then t
 read once per outer row, and the plan's cost is the product of the two sides. That shape means an
 index is missing, and it is the single most common finding in a slow join.
 
-Here is the loop count doing what the previous section warned about:
+Here is the loop count doing what the section on `EXPLAIN ANALYZE` warned about:
 
 ```
 shop=# EXPLAIN ANALYZE SELECT count(*) FROM orders o JOIN order_lines l ON l.order_id = o.id WHERE o.status = 'pending';
@@ -135,8 +135,8 @@ Both children are `Index Only Scan`s on primary keys, so both arrive sorted for 
 walks them. It is the plan when the inputs are already ordered — two indexed keys, or an `ORDER BY`
 that had to happen anyway — and it is the one that scales past memory, because nothing is hashed.
 That it beat the hash join here, 874 ms against 1212, is the `Batches: 8` above: on a bigger
-`work_mem` the hash would have won, and the planner's estimate of that is a setting, which is the
-last section's subject.
+`work_mem` the hash would have won, and the planner's estimate of that is a setting, which the
+section on sorts takes up.
 
 Switching a join method off is a way to **see** a plan and never a way to ship one. The setting
 is per session, and the section on fixing things says what to do instead.
@@ -188,7 +188,7 @@ shop=# EXPLAIN ANALYZE SELECT c.city, count(*) FROM customers c JOIN orders o ON
 ```
 
 Every capture so far was taken in a session that began with
-`SET max_parallel_workers_per_gather = 0`, the line from the start of the first section, so the
+`SET max_parallel_workers_per_gather = 0`, the line from the section on `EXPLAIN`, so the
 plans would read as one tree. This is the same city report in a new session, where parallel query
 is on, which is the default: `Gather Merge` at the top, `Workers Launched: 2`, and `Parallel` in
 front of the scan of `orders`. Three processes read a third of `orders` each —

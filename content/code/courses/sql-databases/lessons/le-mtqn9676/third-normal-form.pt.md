@@ -79,7 +79,7 @@ existe estado em que o banco guarde duas respostas.
 **Note que `teachers` ganhou uma chave substituta** enquanto `courses` manteve `code` e `students`
 manteve `email`. Esse é o argumento da aula 1 chegando na prática: um código de curso é impresso no
 catálogo e não muda, um email é pelo menos discutível, e o nome de uma professora é exatamente o
-tipo de coisa que muda — então a que está sendo inventada aqui é a que precisava ser inventada.
+tipo de coisa que muda. Então a que está sendo inventada aqui é a que precisava ser inventada.
 Normalização diz *divida*; não diz qual deve ser a chave da tabela nova, e isso continua sendo
 decisão sua.
 

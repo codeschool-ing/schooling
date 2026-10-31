@@ -61,7 +61,7 @@ revertida. O Oracle se comporta do mesmo jeito: **`CREATE`, `ALTER`, `DROP` e `T
 commit implícito antes e depois de si mesmos.** Uma transação em andamento quando você roda um
 deles é confirmada, inclusive a parte sobre a qual você ainda não tinha decidido.
 
-Então a regra de migração da aula 11 é a regra do Oracle também: **um passo reversível por vez, e
+Então a regra de migração da aula 12 é a regra do Oracle também: **um passo reversível por vez, e
 uma ferramenta que saiba retomar**, porque um script de seis `ALTER TABLE` que falha no quarto já
 aplicou três.
 

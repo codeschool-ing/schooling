@@ -3,7 +3,7 @@ title: Índices de cobertura, em que a tabela nunca é tocada
 version: 1
 ---
 
-A primeira seção deixou um fio solto. Usar um índice são dois passos: achar a entrada, e depois
+A seção sobre o que é um índice deixou um fio solto. Usar um índice são dois passos: achar a entrada, e depois
 seguir o ponteiro dela para buscar a linha. Esse segundo passo é uma leitura aleatória, e numa
 consulta que devolve muitas linhas é a maior parte do custo.
 
@@ -30,7 +30,7 @@ SELECT customer_id, placed_at, total FROM orders WHERE customer_id = 2;
 mesmo `WHERE`, várias vezes o trabalho — e a única diferença é uma coluna na lista do `SELECT`, que
 não é onde ninguém procura por uma mudança de desempenho.
 
-O que é a lição prática, e é o argumento da aula 4 chegando com um número junto: **`SELECT *` não
+O que é a lição prática, e é o argumento da aula 4 chegando com o seu mecanismo junto: **`SELECT *` não
 pode ser coberto por nada.** Pedir colunas de que você não precisa não é só banda; pode ser a
 diferença entre ler um índice e ler uma tabela.
 

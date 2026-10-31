@@ -13,7 +13,7 @@ return the wrong rows.
 | row | city | what it says |
 |---|---|---|
 | Ana | `'Porto'` | her city is Porto |
-| Bruno | `''` | her city is the empty string — which is a value, and a strange one |
+| Bruno | `''` | his city is the empty string — which is a value, and a strange one |
 | Célia | `NULL` | **nobody knows her city** |
 
 Those are three different states and the third is not a value at all. It is the absence of one.
@@ -90,7 +90,7 @@ To include the unknowns deliberately:
 SELECT count(*) FROM customers WHERE city <> 'Porto' OR city IS NULL;   -- 6
 ```
 
-Now it is six and three and one, which adds to ten.
+Now it is six, and with the four in Porto that makes ten.
 
 ## The places it bites that nobody warns you about
 

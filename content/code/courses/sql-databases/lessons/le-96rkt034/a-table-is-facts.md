@@ -37,7 +37,7 @@ Each row says one thing that is true:
 A row is not a position in a list. **Rows have no order.** This surprises people coming from
 spreadsheets, where row 4 is unambiguously below row 3 and you can drag it somewhere else. A table
 is a *set* of rows, and a set has no first element. When you ask a database for rows without
-saying how to sort them, you are allowed to get them in any order at all — and in real systems the
+saying how to sort them, you are allowed to get them in any order at all. In real systems the
 order changes over time, silently, as the data grows and the database changes its mind about how
 to fetch them.
 

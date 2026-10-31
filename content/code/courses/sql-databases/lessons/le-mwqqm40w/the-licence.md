@@ -92,7 +92,7 @@ Because it answers questions that otherwise look like bad engineering, and a dev
 read those answers will spend a year proposing things that are already understood:
 
 - **why the business logic is in the database.** The licence is paid; the application servers are
-  cheap. The next section is about what that looks like.
+  cheap. The section on PL/SQL is about what that looks like.
 - **why there is no reporting replica**, and why reports run at night on the production instance.
 - **why the test environment is smaller**, and why a plan that is fine there is not evidence.
 - **why nobody has run the tuning advisor.** It may be an option nobody bought.

@@ -3,7 +3,7 @@ title: Covering indexes, where the table is never touched
 version: 1
 ---
 
-The first section left a thread hanging. Using an index is two steps: find the entry, then follow
+The section on what an index is left a thread hanging. Using an index is two steps: find the entry, then follow
 its pointer to fetch the row. That second step is a random read, and on a query returning many rows
 it is most of the cost.
 
@@ -30,7 +30,7 @@ SELECT customer_id, placed_at, total FROM orders WHERE customer_id = 2;
 several times the work — and the only difference is a column in the `SELECT` list, which is not
 where anybody looks for a performance change.
 
-Which is the practical lesson, and it is lesson 4's argument arriving with a number attached:
+Which is the practical lesson, and it is lesson 4's argument arriving with its mechanism attached:
 **`SELECT *` cannot be covered by anything.** Asking for columns you do not need is not only
 bandwidth; it can be the difference between reading an index and reading a table.
 

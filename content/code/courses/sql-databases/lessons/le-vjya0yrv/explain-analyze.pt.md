@@ -49,7 +49,7 @@ estimativa. O que conta como uma ruim é assunto de uma seção própria, e o h�
 
 **`loops` é quantas vezes o nó rodou.** Uma, aqui. Nem sempre é uma, e quando não é, todo outro
 número da linha é **por volta** — a seção sobre junções tem um nó que rodou 2923 vezes e relata
-três linhas, que são três linhas a cada vez. Multiplique antes de acreditar num número.
+duas linhas, que são duas linhas a cada vez, em média. Multiplique antes de acreditar num número.
 
 Abaixo do nó, `Rows Removed by Filter: 999993` é o custo de uma linha `Filter` tornado visível: o
 nó leu um milhão de linhas para ficar com sete. Essa linha sozinha é o argumento inteiro a favor

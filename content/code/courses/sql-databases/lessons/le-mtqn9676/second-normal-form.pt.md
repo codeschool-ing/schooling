@@ -99,8 +99,8 @@ JOIN courses  c ON c.code  = e.course_code;
 ```
 
 Esta é a troca sendo feita, dita claramente: **escrever ficou mais seguro e ler ficou mais longo.**
-Toda pergunta que era uma tabela agora é uma junção. Esse custo é real, é do que tratam as duas
-últimas seções desta aula, e quase sempre vale pagar — porque uma junção é trabalho que uma máquina
+Toda pergunta que era uma tabela agora é uma junção. Esse custo é real, e é do que tratam as duas
+últimas seções desta aula. Quase sempre vale pagar, porque uma junção é trabalho que uma máquina
 faz, e uma anomalia de atualização é trabalho que uma pessoa faz, mal, em algum momento no futuro.
 
 ## `courses` não terminou

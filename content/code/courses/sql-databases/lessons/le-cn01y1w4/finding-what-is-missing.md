@@ -26,7 +26,7 @@ Read it in two steps. The `LEFT JOIN` keeps every customer and fills the right-h
 nulls where there was no partner. Then `WHERE o.id IS NULL` keeps exactly those — **the rows where
 the join found nothing**.
 
-This is the deliberate exception from the last section: a condition on the right-hand table in
+This is the deliberate exception from the `on-against-where` section: a condition on the right-hand table in
 `WHERE`, and here it is the entire point.
 
 **The column you test must be one that cannot be null in the table.** Test `o.id` — a primary key —

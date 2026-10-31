@@ -3,7 +3,7 @@ title: WITH, que é a mesma consulta com os passos nomeados
 version: 1
 ---
 
-Esta é a consulta aninhada de duas seções atrás, e esta é ela de novo:
+Esta é a consulta aninhada de quatro seções atrás, e esta é ela de novo:
 
 ```sql
 SELECT * FROM (
@@ -74,8 +74,8 @@ FROM     monthly this
 LEFT JOIN monthly prev ON prev.month = this.month - INTERVAL '1 month';
 ```
 
-`monthly` é definido uma vez e usado duas. Como tabela derivada isso são as mesmas vinte linhas
-escritas duas vezes, e a segunda cópia é a que alguém esquece de mudar.
+`monthly` é definido uma vez e usado duas. Como tabela derivada isso é o mesmo corpo
+escrito duas vezes, e a segunda cópia é a que alguém esquece de mudar.
 
 Poder nomear não significa que seja calculado uma vez — isso é a próxima seção, e é o único pedaço
 de folclore desta aula que vale desmontar.

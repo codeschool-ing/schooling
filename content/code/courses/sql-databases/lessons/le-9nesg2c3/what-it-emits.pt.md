@@ -106,8 +106,9 @@ perguntas valem ser feitas primeiro, porque são onde a saída de um mapeador di
 pessoa teria escrito:
 
 **Quais colunas ele pediu?** Quase todo ORM seleciona toda coluna da tabela por padrão, porque
-está montando um objeto e o objeto tem todo campo. A aula 10 mostrou o que isso custa quando um
-índice poderia ter coberto três delas, e a seção sobre o que o ORM esconde tem o mecanismo.
+está montando um objeto e o objeto tem todo campo. A aula 10 pôs um preço nisso: uma
+aplicação que precisa de três colunas e pede vinte paga pelas dezessete em páginas lidas. A seção
+sobre o que o ORM esconde tem o mecanismo.
 
 **Quantas vezes?** Uma instrução é barata uma vez e cara num laço, e o laço está na aplicação e
 não na instrução. `calls` no `pg_stat_statements` é o único lugar em que a contagem é visível sem

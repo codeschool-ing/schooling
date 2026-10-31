@@ -76,7 +76,7 @@ recursos.
 
 **E a resposta muitas vezes é "nenhum deles ainda".** Para uma ferramenta, um protótipo, uma
 aplicação de desktop ou um serviço com um processo, o SQLite não precisa de servidor, nem de rotina
-de backup, nem de plano de atualização, nem de ninguém de plantão — e a seção sobre ele diz
+de backup, nem de plano de atualização, nem de ninguém de plantão. A seção sobre ele diz
 exatamente quando isso deixa de ser verdade.
 
 ## A parte que não muda

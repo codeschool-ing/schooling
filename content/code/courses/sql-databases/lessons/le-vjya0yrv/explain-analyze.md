@@ -48,7 +48,7 @@ now is to put the two `rows` side by side on every node you read.
 
 **`loops` is how many times the node ran.** One, here. It is not always one, and when it is not,
 every other number on the line is **per loop** — the join section has a node that ran 2923 times
-and reports three rows, which is three rows each time. Multiply before you believe a number.
+and reports two rows, which is two rows each time, on average. Multiply before you believe a number.
 
 Below the node, `Rows Removed by Filter: 999993` is the cost of a `Filter` line made visible: the
 node read a million rows to keep seven. That single line is the whole case for the index, and

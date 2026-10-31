@@ -41,7 +41,7 @@ SELECT DISTINCT c.name FROM customers c JOIN orders o ON o.customer_id = c.id;
 ```
 
 Duas linhas, resposta correta, e o defeito continua lá — a consulta construiu quatro linhas e jogou
-uma fora. Acrescente uma coluna e ele volta. Acrescente um `count(*)` e o `DISTINCT` não salva nada.
+duas fora. Acrescente uma coluna e ele volta. Acrescente um `count(*)` e o `DISTINCT` não salva nada.
 
 ## A multiplicação é propriedade da relação
 

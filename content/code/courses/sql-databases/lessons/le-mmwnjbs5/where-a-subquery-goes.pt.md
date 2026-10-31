@@ -26,7 +26,7 @@ SELECT * FROM products
 WHERE  category_id IN (SELECT id FROM categories WHERE archived);
 ```
 
-Você já escreveu a segunda delas quatro vezes neste curso, nas aulas 5 e 6, sem que ela recebesse um
+Você já escreveu a segunda delas várias vezes, nas aulas 5 e 6, sem que ela recebesse um
 nome. Este é o nome.
 
 ## Uma subconsulta escalar devolve exatamente um valor
@@ -56,9 +56,10 @@ Essa assimetria vale guardar. Linhas demais é barulhento; linha nenhuma é sile
 SELECT * FROM (SELECT customer_id, count(*) AS orders FROM orders GROUP BY customer_id) t;
 ```
 
-O `t` no fim não é enfeite. PostgreSQL e MySQL recusam uma tabela derivada sem apelido, porque toda
-coluna dela tem que ser alcançável como `algo.coluna`. O SQLite é relaxado quanto a isso; escreva o
-apelido de todo jeito, para a consulta querer dizer o mesmo em todo lugar.
+O `t` no fim não é enfeite. O MySQL recusa uma tabela derivada sem apelido, e o PostgreSQL também
+recusava antes da versão 16, porque toda coluna dela tem que ser alcançável como `algo.coluna`. O
+PostgreSQL 16 e o SQLite são relaxados quanto a isso; escreva o apelido de todo jeito, para a
+consulta querer dizer o mesmo em todo lugar.
 
 A mesma regra vale para as colunas de dentro: `count(*)` sem `AS` lhe dá uma coluna cujo nome fica a
 cargo do banco, e você não consegue se referir a ela de fora com segurança. Nomeie tudo o que uma

@@ -41,7 +41,7 @@ seeing.
 ## Fourth and fifth
 
 **4NF** is about two independent multi-valued facts crammed into one table. A course has several
-textbooks and several scheduled times, and the books have nothing to do with the times — put both
+textbooks and several scheduled times, and the books have nothing to do with the times. Put both
 in one table and you are forced to write a row for every combination, so three books and four
 times means twelve rows saying nothing. The fix is two tables, and the giveaway is exactly that
 feeling of multiplying things that are unrelated.

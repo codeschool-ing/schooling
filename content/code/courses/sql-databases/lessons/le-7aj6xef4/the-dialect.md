@@ -115,7 +115,7 @@ even the alias in the column type. PostgreSQL has a real `boolean` and a real th
 
 ## `RETURNING`, which three of the four have
 
-Lesson 11 used `RETURNING` to get a generated key back in the same round trip as the insert:
+Lesson 8 used `RETURNING` to get a generated key back in the same round trip as the insert:
 
 ```
 shop=# INSERT INTO customers (name, email, city) VALUES ('Felipe Nunes', 'felipe@example.com', 'Recife') RETURNING id;

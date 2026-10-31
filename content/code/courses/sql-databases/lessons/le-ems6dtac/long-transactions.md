@@ -58,9 +58,9 @@ Two hours. The query finished in a millisecond; the transaction is still open be
 committed. **`idle in transaction` means the connection is holding everything above and doing
 nothing with it.**
 
-It is nearly always one of three things: a driver with autocommit off, where a stray `SELECT`
-opened a transaction nobody meant to open; a framework that opens one at the start of a request and
-closes it at the end; or code that called out to something slow in the middle.
+It is nearly always one of three things. A driver with autocommit off, where a stray `SELECT`
+opened a transaction nobody meant to open. A framework that opens one at the start of a request and
+closes it at the end. Or code that called out to something slow in the middle.
 
 PostgreSQL has a blunt instrument for it, and it is worth setting:
 

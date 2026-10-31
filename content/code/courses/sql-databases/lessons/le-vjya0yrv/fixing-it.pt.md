@@ -37,8 +37,8 @@ coisa.
 
 O plano está pedindo um quando uma varredura lê uma tabela grande para ficar com poucas linhas, ou
 quando um nested loop tem uma varredura sequencial no lado interno. Ele diz qual coluna na linha
-`Filter`. Estas são as duas rodadas da etapa sobre `EXPLAIN ANALYZE`, antes do índice em
-`customer_id` e depois dele:
+`Filter`. Esta é a rodada da etapa sobre `EXPLAIN ANALYZE`, antes do índice em
+`customer_id`, e a mesma consulta depois dele:
 
 ```
 shop=# EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;
@@ -125,7 +125,7 @@ página do que na anterior.
 ## 4. Conserte a estimativa
 
 Quando a forma do plano está errada — um nested loop que deveria ter sido hash, um hash montado
-do lado errado — e as varreduras já usam seus índices, a seção anterior se aplica. `ANALYZE`; um
+do lado errado — e as varreduras já usam seus índices, a seção sobre estimativas se aplica. `ANALYZE`; um
 índice de expressão, ou uma reescrita para a coluna ficar nua; estatísticas estendidas para colunas
 que andam juntas. O índice não é a correção aqui; o planejador o teria usado se soubesse.
 

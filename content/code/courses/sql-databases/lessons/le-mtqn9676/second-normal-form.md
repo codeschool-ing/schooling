@@ -101,8 +101,8 @@ JOIN courses  c ON c.code  = e.course_code;
 ```
 
 This is the trade being made, stated plainly: **writing got safer and reading got longer.** Every
-question that was one table is now a join. That cost is real, it is what the last two sections of
-this lesson are about, and it is almost always worth paying — because a join is work a machine
+question that was one table is now a join. That cost is real, and it is what the last two sections of
+this lesson are about. It is almost always worth paying, because a join is work a machine
 does, and an update anomaly is work a person does, badly, at some point in the future.
 
 ## `courses` is not finished

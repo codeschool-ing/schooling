@@ -69,8 +69,8 @@ shop=# SELECT sku, price, pg_typeof(price) FROM products;
 (4 rows)
 ```
 
-Which is why the report in the last section came back as `2998.00` on three engines and `2998` on
-the fourth. That was not a formatting difference. It was float arithmetic, and lesson 3 named the
+Which is why the report in the last section came back as `2998.00` from PostgreSQL and MySQL and
+as `2998` from SQLite. That was not a formatting difference. It was float arithmetic, and lesson 3 named the
 failure it leads to:
 
 ```
@@ -118,7 +118,7 @@ The same insert is now refused, with the column named. A `STRICT` table accepts 
 text or cents in an integer.
 
 **Write `STRICT` on every new SQLite table.** It costs one word, it is not the default only
-because thirty years of existing databases depend on the old behaviour, and the failure it
+because more than twenty years of existing databases depend on the old behaviour, and the failure it
 prevents is silent.
 
 ## MySQL, MariaDB, and the mode that used to be off
@@ -145,7 +145,8 @@ Both ship with `STRICT_TRANS_TABLES`, so a fresh install of either refuses the s
 both can be turned back off, per session, per connection or in a configuration file. On a system
 you did not set up, this variable is worth reading rather than assuming.
 
-Put the two lists side by side and one word is in MySQL's and not MariaDB's: `ONLY_FULL_GROUP_BY`.
+Put the two lists side by side and three words are in MySQL's and not MariaDB's. Two of them,
+`NO_ZERO_IN_DATE` and `NO_ZERO_DATE`, are about dates; the third is `ONLY_FULL_GROUP_BY`.
 Lesson 6 said that every column in the `SELECT` list must be grouped or aggregated. That rule is
 the engine's to enforce, and here the two disagree.
 This query breaks the rule, and Recife has two customers:

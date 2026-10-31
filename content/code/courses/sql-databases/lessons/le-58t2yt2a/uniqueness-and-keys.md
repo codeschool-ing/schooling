@@ -94,7 +94,7 @@ In PostgreSQL the two are not quite interchangeable:
 Which decides it in practice. Use a constraint for plain uniqueness on a column, because it says
 what it means and other tables can reference it. Use a unique index when you need the last two rows
 of that table — *"unique among the rows that are not deleted"*, *"unique ignoring case"* — which is
-the previous section's material.
+the material of the section on partial and expression indexes.
 
 An index built first can be promoted afterwards, which is how you add a unique constraint to a live
 table without holding a lock while it builds:

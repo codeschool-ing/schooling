@@ -16,8 +16,8 @@ que os outros dois.
 Um servidor de banco de dados, desenvolvido desde 1996 por um grupo distribuído de colaboradores
 sem nenhuma empresa por trás, sob uma licença permissiva própria. É o mais rigoroso dos quatro
 sobre o que aceita, o mais amplo no que consegue guardar, e o que tem um mecanismo de extensões em
-cima do qual outros projetos são construídos — PostGIS para geografia, TimescaleDB para séries
-temporais, `pgvector` para embeddings são todos Postgres com algo carregado dentro.
+cima do qual outros projetos são construídos. PostGIS para geografia, TimescaleDB para séries
+temporais e `pgvector` para embeddings são todos Postgres com algo carregado dentro.
 
 O nome se lê *post-gres-quiu-éle*, e o projeto atende por `postgres` em todo comando que você
 digita, que é o que o resto desta aula usa.
@@ -34,16 +34,16 @@ principal motivo pelo qual você vai encontrá-lo.
 
 O fork do MySQL que os autores originais começaram em 2009, quando a Oracle adquiriu a Sun. É GPL,
 sem edição comercial do motor, e por vários anos foi um substituto direto: o mesmo protocolo, o
-mesmo cliente, o mesmo SQL. Quinze anos de desenvolvimento separado afastaram os dois, e a seção
+mesmo cliente, o mesmo SQL. Mais de quinze anos de desenvolvimento separado afastaram os dois, e a seção
 sobre o fork é sobre o quanto.
 
 ## SQLite
 
 **Não é um servidor.** É uma biblioteca C contra a qual seu programa é ligado, e o banco é um
 arquivo no disco. Não há processo para subir, porta para conectar, usuário para criar. Está em
-domínio público, é o banco de dados mais instalado do mundo por uma margem enorme — todo celular
-Android, todo iPhone, todo navegador, a maioria das aplicações de desktop — e é aquele cujo lugar
-na lista é mais mal compreendido.
+domínio público, e é o banco de dados mais instalado do mundo por uma margem enorme — todo celular
+Android, todo iPhone, todo navegador, a maioria das aplicações de desktop. É também aquele cujo
+lugar na lista é mais mal compreendido.
 
 ## A forma da comparação
 
@@ -219,6 +219,6 @@ As linhas são os `INSERT`s da aula 1, sem mudança — são a parte portável. 
 `sqlite3` nesta aula são tiradas com `sqlite3 -column -header shop.db`, que desenha os
 cabeçalhos, e as do `mysql` com `sudo mysql -t shop`, que desenha as caixas.
 
-Existe um quinto motor que você vai encontrar num emprego corporativo, e ele é diferente o
+Existe um quinto motor que você vai encontrar num emprego corporativo. Ele é diferente o
 bastante — no que custa, em como é comprado, e no que faz com a forma de um sistema — para ganhar
 a aula 13 só para ele.

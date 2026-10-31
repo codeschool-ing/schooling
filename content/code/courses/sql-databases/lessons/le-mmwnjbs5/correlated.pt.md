@@ -13,8 +13,8 @@ WHERE price > (SELECT avg(price) FROM products)
 WHERE price > (SELECT avg(price) FROM products p2 WHERE p2.category_id = p.category_id)
 ```
 
-A segunda nomeia `p`, que pertence à consulta em volta. Cole-a sozinha num cliente e é erro de
-sintaxe. Essa única referência é o que a torna correlacionada, e ela muda quando a subconsulta roda:
+A segunda nomeia `p`, que pertence à consulta em volta. Cole-a sozinha num cliente e dá
+erro. Essa única referência é o que a torna correlacionada, e ela muda quando a subconsulta roda:
 conceitualmente, **uma vez para cada linha da consulta de fora**.
 
 *"Mais caro que a média da própria categoria"* é uma pergunta real que não tem outra grafia curta,

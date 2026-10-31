@@ -57,7 +57,7 @@ the tables — data moves — it is everything that grew around them.
 | **PL/SQL packages** | rewritten, in the target's language or in the application. This is the project |
 | the operational practice | the backups, the standby, the monitoring and the people, all replaced |
 
-The middle two rows are the honest answer to "how long". A system with a thousand packages is a
+The two rows in bold are the honest answer to "how long". A system with a thousand packages is a
 system whose business logic has to be rewritten and re-tested, and there is no tool that does that
 for you — the translators produce something that runs and nobody will sign for.
 

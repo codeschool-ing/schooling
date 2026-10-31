@@ -8,8 +8,8 @@ Widenius — who had written the first version of MySQL and named it after his d
 the code and started MariaDB, named after his other daughter. That is the whole origin, and it
 explains the two things people get wrong about the pair.
 
-**They are not two brands of the same product.** They have been developed separately for fifteen
-years by different teams with different priorities.
+**They are not two brands of the same product.** They have been developed separately for more than
+fifteen years by different teams with different priorities.
 
 **They are also not two different databases.** They share an ancestor, a wire protocol, a client,
 a dialect and a storage engine, and the overwhelming majority of application code runs on either
@@ -17,10 +17,11 @@ without a character changing.
 
 ## What is still the same
 
-Every capture in this lesson that was not about `RETURNING` or `GROUP BY` came back identical from
-both. The same `CREATE TABLE` loaded into both without an edit. `AUTO_INCREMENT`, `DESCRIBE`,
+The same `CREATE TABLE` loaded into both without an edit. `AUTO_INCREMENT`, `DESCRIBE`,
 `SHOW CREATE TABLE`, `||` as OR, `5 / 2` as `2.5000`, the case-insensitive default collation,
-InnoDB as the storage engine, DDL committing implicitly — all shared, because all inherited.
+InnoDB as the storage engine, DDL committing implicitly — all shared, because all inherited. Where
+this lesson captured MariaDB, it was to show where the two part: `sql_mode`, `GROUP BY` and
+`RETURNING`.
 
 The client is shared too: `mysql` connects to a MariaDB server and `mariadb` connects to a MySQL
 one, because the protocol is the same. Most drivers list one and speak to both.
@@ -39,8 +40,8 @@ one, because the protocol is the same. Most drivers list one and speak to both.
 | licence of the engine | GPL, plus a commercial edition | GPL only |
 | replication | its own, plus Group Replication | its own, plus Galera |
 
-The `DESCRIBE` captures in the last section show the third row without being asked to:
-MariaDB printed `int(11)` and MySQL printed `int`. The number was never a width limit — it is a
+The `DESCRIBE` capture in the last section shows MySQL's half of the third row without being asked
+to: `int`, with no number after it. MariaDB keeps the number and prints `int(11)`. The number was never a width limit — it is a
 display hint almost nothing has ever used — and MySQL 8 dropped it while MariaDB kept it. It is
 the smallest possible difference and it is a good example of the shape: cosmetic, harmless, and
 enough to make a schema diff between the two noisy.
@@ -63,9 +64,9 @@ licence term anybody can point to.
 Galera for multi-primary replication. Or because your Linux distribution ships MariaDB as its
 default, which many do, and which is how most people end up on it without ever choosing.
 
-**Neither, if the decision is actually open.** That sounds glib and it is the honest reading of
-this lesson so far: if nothing constrains you, the strictness sections are an argument for
-PostgreSQL, and the reason to be on MySQL or MariaDB is almost always that you already are.
+**Neither, if the decision is actually open.** That sounds glib, and it is the honest reading of
+this lesson so far. If nothing constrains you, the strictness sections are an argument for
+PostgreSQL. The reason to be on MySQL or MariaDB is almost always that you already are.
 
 ## Migrating between them
 

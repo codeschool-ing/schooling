@@ -107,7 +107,7 @@ render a figure will always have a figure to render, once you have wrapped it in
 SELECT sum(quantity) / count(*) FROM order_lines;
 ```
 
-If both are integers, some databases give you integer division: 7 items over 2 orders is `3`, not
+If both are integers, some databases give you integer division: 7 items over 2 lines is `3`, not
 `3.5`, and the rounding is silent. `avg()` does not have this problem — it promotes to a decimal
 type — which is one more reason to use it rather than dividing by hand. When you must divide,
 cast:

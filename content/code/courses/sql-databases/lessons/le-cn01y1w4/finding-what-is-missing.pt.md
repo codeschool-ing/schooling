@@ -26,7 +26,7 @@ Leia em dois passos. O `LEFT JOIN` mantém todo cliente e preenche as colunas da
 onde não houve parceiro. Aí o `WHERE o.id IS NULL` mantém exatamente esses — **as linhas em que a
 junção não achou nada**.
 
-Esta é a exceção deliberada da seção anterior: uma condição sobre a tabela da direita no `WHERE`, e
+Esta é a exceção deliberada da seção `on-against-where`: uma condição sobre a tabela da direita no `WHERE`, e
 aqui ela é o ponto inteiro.
 
 **A coluna que você testa tem que ser uma que não possa ser nula na tabela.** Teste `o.id` — uma

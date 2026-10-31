@@ -40,7 +40,7 @@ tabela tem mais de uma chave candidata e elas se sobrepõem, que é coisa de pas
 ## Quarta e quinta
 
 A **4FN** trata de dois fatos multivalorados independentes espremidos numa tabela. Um curso tem
-vários livros e vários horários, e os livros nada têm a ver com os horários — ponha os dois numa
+vários livros e vários horários, e os livros nada têm a ver com os horários. Ponha os dois numa
 tabela e você é obrigado a escrever uma linha por combinação, então três livros e quatro horários
 são doze linhas que não dizem nada. O conserto são duas tabelas, e o sinal é exatamente essa
 sensação de multiplicar coisas que não se relacionam.
