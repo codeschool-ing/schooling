@@ -11,8 +11,8 @@ of them is live, and nothing to record that they decided.
 
 So from here on the lab also has `prompts/triage.txt`, the prompt as it would ship, and its past is
 in git. In real work that past is made one commit at a time, as the prompt changes. Here it is made
-in one go, out of the prompt files the earlier lessons saved, by a script that commits each version
-with a date and an author written into it, so that the commit hashes it makes are the ones this
+in one go, out of the prompt files the earlier lessons saved. A script commits each version with a
+date and an author written into it, so that the commit hashes it makes are the ones this
 lesson quotes. It needs git, which Ubuntu installs with `sudo apt install git` if `git --version`
 says it is missing. Save it as `history.sh`:
 

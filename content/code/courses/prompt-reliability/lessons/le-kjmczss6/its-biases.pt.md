@@ -38,7 +38,7 @@ agrees AND keeps its verdict: 3 of 16
 ```
 
 **Doze de dezesseis vereditos mudam.** Leia as duas colunas juntas: na primeira ordem o juiz
-escolheu `b`, a resposta mostrada em segundo, treze vezes; com a ordem trocada escolheu `a`, que agora
+escolheu `b`, a resposta mostrada em segundo, catorze vezes; com a ordem trocada escolheu `a`, que agora
 era a mostrada em segundo, doze vezes. O que quer que ele esteja lendo, está lendo sobretudo a
 posição. **Um veredito que muda quando só a ordem muda é um veredito sobre a ordem.** Dos oito
 pares em que ele concordou com a pessoa na primeira execução, só três mantêm o veredito nas duas

@@ -40,8 +40,8 @@ with the labels a person gave them. Save them as `cases/holdout.jsonl`:
 {"id": "h30", "message": "Thank you for sorting out the refund so quickly last week.", "expect": {"category": "other", "urgency": "low"}}
 ```
 
-Join the two sets into one file, which lessons 12, 18, 19 and 20 use too, and run both prompts over
-all seventy:
+Join the two sets into one file, which lessons 6, 7, 12 and 18 to 21 use too, and run both prompts
+over all seventy:
 
 ```
 ana@lab:~/triage$ cat cases/dev.jsonl cases/holdout.jsonl > cases/all.jsonl

@@ -55,8 +55,8 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 On macOS and Windows, download the installer from ollama.com and run it. **Those two were not run
-for this course.** On Windows, the commands in this course are typed in a Linux terminal: install
-WSL with Ubuntu 24.04 (`wsl --install -d Ubuntu-24.04` in PowerShell), and install Ollama inside
+for this course.** On Windows, the commands in this course are typed in a Linux terminal. Install
+WSL with Ubuntu 24.04 (`wsl --install -d Ubuntu-24.04` in PowerShell), then install Ollama inside
 it with the Linux line above, so the model and the harness live in the same place.
 
 Then download the model. It is a single command, and the first time it fetches about two

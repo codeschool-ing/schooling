@@ -6,7 +6,7 @@ version: 1
 Tudo neste curso mora num diretório, `~/triage`, e você o monta aqui. Ele guarda três tipos de
 arquivo:
 
-- **`pl.py`**, o harness: um programa em Python de umas duzentas linhas que roda um prompt sobre um
+- **`pl.py`**, o harness: um programa em Python de umas duzentas e cinquenta linhas que roda um prompt sobre um
   conjunto de teste e conta as respostas que passam;
 - **`cases/`**, os conjuntos de teste: mensagens, uma por linha, cada uma com a resposta que uma
   pessoa decidiu que era a certa;
@@ -121,7 +121,7 @@ ele que o `pl check` compara a resposta.
 | `pl check RUN` | submete cada resposta a cinco verificações e conta as aprovações |
 | `pl show RUN ID` | imprime uma resposta exatamente como o modelo a escreveu |
 
-As verificações rodam em ordem, e uma resposta que falha numa falha em todas as seguintes: `json`
+As verificações rodam em ordem, e uma resposta que falha numa falha em todas as seguintes. São elas: `json`
 (ela é JSON válido), `fields` (tem os campos e nenhum outro), `labels` (os valores vêm das
 listas), `category` e `urgency` (batem com a resposta da pessoa). `all` conta as respostas que
 passaram em tudo.

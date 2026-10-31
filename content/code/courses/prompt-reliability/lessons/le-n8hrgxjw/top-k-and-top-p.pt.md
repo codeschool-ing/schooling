@@ -42,9 +42,9 @@ de rótulo.
 **O top-p mantém o menor conjunto de primeiros candidatos cujas probabilidades somam pelo menos p.**
 Os três primeiros somam 96,3%, o que já chega a 90%, então o top-p 0,9 mantém exatamente as mesmas
 três palavras aqui e as duas tabelas são idênticas. Top-k é uma contagem e top-p é uma parte, e a
-diferença aparece quando a distribuição muda de forma: k mantém três palavras quer o primeiro tenha
-99% quer tenha 40%, enquanto p mantém menos palavras quando um domina e mais quando a probabilidade
-está espalhada.
+diferença aparece quando a distribuição muda de forma. O top-k mantém três palavras quer o primeiro
+tenha 99% quer tenha 40%, enquanto o top-p mantém menos palavras quando um domina e mais quando a
+probabilidade está espalhada.
 
 ## A ordem das etapas
 
@@ -66,7 +66,7 @@ t22, temperature 1.5, top-k off, top-p 0.9, 1000 draws
   'accounts'   -6.68    0.0%     0  
 ```
 
-A temperatura 1,5 a distribuição está mais achatada antes de o top-p olhar para ela. Os três
+Com temperatura 1,5, a distribuição está mais achatada antes de o top-p olhar para ela. Os três
 primeiros agora somam só 87,8%, abaixo de 90%, então o top-p mantém um quarto token, e o quarto é o
 `' billing'`, o que tem espaço e reprova na verificação de rótulo: 62 tiragens em mil. **O efeito de
 uma configuração depende das configurações aplicadas antes dela.**

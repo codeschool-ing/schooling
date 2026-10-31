@@ -82,8 +82,8 @@ Neither number means anything without the other.
 Those two numbers need a baseline, and the honest one is a check that never reads anything. Flag 45
 replies of the seventy at random, and on average the flags land on wrong replies in the same share
 as wrong replies have in the whole run: 26 of 70, a precision of 0.37. Recall would be 45 of 70,
-0.64. **The reviewer's 0.40 and 0.69 are barely above a check that flips a coin**, which is what
-the table says when you read it by columns: it flagged 18 of the 26 wrong replies, 69%, and 27 of
+0.64. **The reviewer's 0.40 and 0.69 are barely above a check that flips a coin**. The table
+says the same when you read it by columns: it flagged 18 of the 26 wrong replies, 69%, and 27 of
 the 44 right ones, 61%.
 
 ## What it said
