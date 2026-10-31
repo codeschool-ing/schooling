@@ -41,5 +41,4 @@ então aqui ela tem papéis, que é a forma mais fraca: **um papel só é respon
 sobre quem o ocupa nesta semana**.
 
 A coluna de data ficou fora daqui porque o laboratório não tem calendário contra o qual marcar uma, e
-ela não é opcional num registro de verdade. Uma
-ação sem data fica pronta quando alguém se lembra dela, o que acontece depois que a falha volta.
+ela não é opcional num registro de verdade. Uma ação sem data fica pronta quando alguém se lembra dela, o que acontece depois que a falha volta.

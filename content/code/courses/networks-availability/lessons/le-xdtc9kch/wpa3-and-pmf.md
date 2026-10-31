@@ -7,8 +7,8 @@ WPA3-Personal keeps the passphrase and the four-way handshake, and changes where
 Instead of hashing the passphrase, the two sides run **SAE, Simultaneous Authentication of Equals**, a
 key exchange in the Diffie-Hellman family with the password mixed into it. Each side sends values that
 depend on the password and on secrets it picked for this exchange, and each ends up with the same PMK, a
-**new random one every time**. The four-way handshake of the figure above then runs on that PMK exactly
-as before.
+**new random one every time**. The four-way handshake drawn in the section on WPA2 then runs on that PMK
+exactly as before.
 
 That one change fixes both problems of the section before.
 
@@ -38,7 +38,7 @@ runs both on one SSID with the same passphrase: WPA3 clients use SAE, the others
 and PMF becomes optional so the old ones can join.
 
 The cost is that **the passphrase is exactly as exposed as in WPA2**: any WPA2 handshake recorded on that
-network allows the offline guessing described above, whatever the WPA3 clients do. The WPA3
+network allows the offline guessing described in the section on WPA2, whatever the WPA3 clients do. The WPA3
 specification adds a **Transition Disable** indication so that a client which has joined with WPA3 once refuses to use WPA2 on that network again. That protects the modern clients from being steered down to
 the old method. It does not protect the passphrase. Two ways out:
 

@@ -62,7 +62,7 @@ Dez pacotes, e dá para explicar cada um deles.
 
 | quadros | o que aconteceu |
 |---|---|
-| 1 a 3 | o handshake TCP para a porta 8443, como na primeira seção |
+| 1 a 3 | o handshake TCP para a porta 8443, como na seção sobre o handshake TCP |
 | 4 | o Client Hello, 583 bytes, com o SNI |
 | 5 | `web1` confirma: `Ack=518`, o próximo byte depois de 517 bytes de TLS contados a partir de 1 |
 | 6 | o Server Hello e o certificado criptografado, 1509 bytes |

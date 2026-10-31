@@ -30,12 +30,12 @@ net.ipv4.icmp_ratemask = 6168
 **The first report shows real loss.** web2, the destination, lost 10.0%, 2 of 20 probes, to a rule that
 drops 20% at random: the sampling of the ping section at work again. Hops 1 and 2 lost nothing, because
 the probes that expire there never reach the rule, which acts on what the ISP forwards. **Loss that
-appears at a hop and stays on every hop after it, down to the destination, is real**, and it starts at or
-after the first hop that shows it.
+appears at a hop and stays on every hop after it, down to the destination, is real**, and it starts at the
+first hop that shows it or on the link into it.
 
 **The second report shows loss that is not real.** `hq` and the ISP router each lost 80.0% of 50
 probes, and the destination lost none. If `hq` were really dropping four packets in five, nothing beyond
-it could do better than one in five, and web2 got every one. What the two routers lost is their own
+it could do better than one in five, and web1 got every one. What the two routers lost is their own
 answers, and the `sysctl` on `hq` says why:
 
 - `icmp_ratelimit = 1000` is a gap in milliseconds: after a small burst, the kernel sends a given
@@ -54,5 +54,5 @@ five seconds, and each router answered ten: the burst, then one a second.
 Reading an mtr report comes down to one rule: **look at the last line
 first.** If the destination loses nothing, loss on the hops above it is those routers declining to
 answer, however large the percentage. If the destination loses, walk up the table to the first hop where
-the loss begins and stays; that link, or the one after it, is where to look. A trace that ends in a
+the loss begins and stays; that hop, or the link into it, is where to look. A trace that ends in a
 firewall which drops the probes altogether needs `-T` or `-u`, the same choice traceroute offered.

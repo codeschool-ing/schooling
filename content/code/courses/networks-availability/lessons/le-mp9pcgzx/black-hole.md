@@ -4,8 +4,9 @@ version: 1
 ---
 
 The worked case is the one lesson 1 promised: a PMTU black hole. The two offices are joined by a
-WireGuard tunnel built as in lesson 4, `wg0` on `hq` and on `branch`: the key pairs, the files of `hq`
-and `branch` from lesson 4's first section, and `sudo wg-quick up wg0` on both. The fault is three
+WireGuard tunnel built as in lesson 4, `wg0` on `hq` and on `branch`. Building it takes the key pairs, the files
+of `hq` and `branch` from lesson 4's section "Two keys and a short file", and `sudo wg-quick up wg0` on
+both. The fault is three
 commands on `hq`, given here; the rest of the section finds them the way it would have to without
 knowing:
 
@@ -14,7 +15,8 @@ sudo nft add table ip hardening
 sudo nft add chain ip hardening out '{ type filter hook output priority 0; }'
 sudo nft add rule ip hardening out icmp type destination-unreachable drop
 ```
- The report from the branch is the
+
+The report from the branch is the
 kind nobody can reproduce over the phone: **the file server's web page opens, and a download from it
 never finishes.** Both halves are true:
 

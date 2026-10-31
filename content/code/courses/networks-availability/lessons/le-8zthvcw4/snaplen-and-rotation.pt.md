@@ -11,7 +11,7 @@ de cada pacote, a outra guarda só os últimos megabytes.
 **O snap length é quantos bytes de cada pacote são guardados.** Por padrão o `tcpdump` guarda 262144,
 o pacote inteiro de qualquer coisa que esta rede leva. Para uma pergunta sobre conexões e flags os
 cabeçalhos bastam, e `-s 96` guarda os primeiros 96 bytes. O laptop fez as mesmas quatro requisições,
-com a mesma linha da seção anterior:
+com a mesma linha da seção sobre gravar o arquivo:
 
 ```
 ana@web1:~$ sudo tcpdump -n -i eth0 -s 96 -c 40 -Z ana -w short.pcap tcp port 80
@@ -65,7 +65,7 @@ ana@web1:~$ ls -l ring.pcap*
 -rw-r--r-- 1 ana ana 1000412 Sep 28 18:10 ring.pcap2
 ```
 
-Passaram 15316 pacotes, e o que sobrou são três arquivos de cerca de um megabyte. `ring.pcap0` é o
+Passaram 15316 pacotes, e o que sobrou são três arquivos de no máximo cerca de um megabyte. `ring.pcap0` é o
 menor porque estava sendo gravado quando a captura parou: **é o arquivo mais novo, não o mais
 antigo**. O `tcpdump` gravou 0, 1 e 2, depois voltou ao 0 e começou a sobrescrevê-lo, então os pacotes
 mais antigos ainda guardados estão no começo de `ring.pcap1`. O handshake e o `GET` que iniciaram o

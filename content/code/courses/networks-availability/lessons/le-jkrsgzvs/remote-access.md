@@ -28,7 +28,7 @@ system patched, company software running.
 
 The rest follows from the device being somewhere else. The endpoint moves between home, a hotel and a
 phone, and is nearly always behind somebody's NAT, which is what lesson 4's roaming and
-`PersistentKeepalive` are for. Its address inside the tunnel comes from a pool, `10.8.0.2` in lesson 4,
+`PersistentKeepalive` are for. Its address inside the tunnel usually comes from a pool, `10.8.0.2` in lesson 4's OpenVPN,
 and not from anything the person chose.
 
 | | site to site | remote access |

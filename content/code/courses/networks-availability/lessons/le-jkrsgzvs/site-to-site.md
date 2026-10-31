@@ -8,8 +8,8 @@ no button and no user.** It joins two networks, router to router, and the people
 never learn it is there.
 
 The two offices are joined that way, by the WireGuard tunnel of lesson 4 between `hq` and `branch`.
-**This lesson starts where lesson 4's first section left off**, on a freshly reset network: make the
-three key pairs as lesson 4 did, write the three `wg0.conf` files from that section with your own keys
+**This lesson starts where lesson 4's section on keys and configuration left off**, on a freshly reset
+network. Make the three key pairs as lesson 4 did, write the three `wg0.conf` files from that section with your own keys
 in them, and bring the tunnel up with `sudo wg-quick up wg0` on `hq` and on `branch`. Ana's laptop comes
 up later, in the section on split tunnels. This is the till tracing its way to the file server at the
 head office:

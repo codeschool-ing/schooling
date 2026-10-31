@@ -15,7 +15,6 @@ do servidor, `/etc/openvpn/server.conf`, para escrever em `hq` com `sudo nano`:
 **Onde o WireGuard identifica um par por uma chave escrita no arquivo do servidor, o OpenVPN identifica
 uma pessoa por um certificado que o servidor nunca viu antes.** Qualquer cliente cujo certificado a
 autoridade do laboratório assinou consegue conectar, e o servidor não precisa de uma linha por usuário.
-Essa é a diferença que o resto desta seção encontra várias vezes.
 
 O `/etc/openvpn/client.conf` da Ana em `remote` é o da aula 3 com uma linha a mais, `tls-crypt tc.key`,
 escrita depois da linha `key vpn-ana.key`. Os certificados são copiados como na aula 3, e o `tls-crypt`

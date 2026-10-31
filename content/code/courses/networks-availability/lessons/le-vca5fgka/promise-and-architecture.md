@@ -5,7 +5,7 @@ version: 1
 
 The number in a contract is usually decided in a sales meeting, and the number the architecture can
 deliver is decided by the architecture. **Nothing forces the two to agree**, and the gap between them is
-where the credits of the first section get paid.
+where the credits from the section on SLI, SLO and SLA get paid.
 
 The first check is arithmetic lesson 14 already did. Its program gave the lab's data centre, with two
 balancers and three web servers but one ISP link and one DNS server, an availability of 99.79990%, about

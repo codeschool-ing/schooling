@@ -47,7 +47,7 @@ rtt min/avg/max/mdev = 0.053/0.065/0.092/0.014 ms
 ```
 
 O ping sem marcação está onde estava, até **221 ms**, porque divide a classe `1:20` com o upload. O
-marcado voltou em **0,065 ms** em média, o mesmo que num enlace ocioso. O enlace está tão cheio quanto
+marcado voltou em **0,065 ms** em média, tão rápido quanto num enlace ocioso. O enlace está tão cheio quanto
 antes; os pacotes de voz só não estão mais na fila dele.
 
 O `tc -s` conta o que foi para onde, e as contas batem:

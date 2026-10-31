@@ -58,7 +58,7 @@ above.
 
 The 84-byte ping is 140 bytes on the wire: **56 bytes of IPsec, against 20 for IP-in-IP** in lesson 1.
 Twenty are the new IP header. `length 120` is ESP's share, and its 36 bytes of overhead split as the
-figure in the first section draws them. The padding depends on the length of what is inside, so **ESP's
+figure in the section on what IPsec adds draws them. The padding depends on the length of what is inside, so **ESP's
 overhead is not one fixed number**, and lesson 1's MTU arithmetic needs a margin.
 
 ## Nothing readable

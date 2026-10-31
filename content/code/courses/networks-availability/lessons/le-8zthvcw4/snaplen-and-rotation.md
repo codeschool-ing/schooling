@@ -11,7 +11,7 @@ packet, the other keeps only the last few megabytes.
 **The snap length is how many bytes of each packet are kept.** By default `tcpdump` keeps 262144, the
 whole of any packet this network carries. For a question about connections and flags the headers
 are enough, and `-s 96` keeps the first 96 bytes. The laptop made the same four requests, with the same
-line as in the previous section:
+line as in the section on writing the file:
 
 ```
 ana@web1:~$ sudo tcpdump -n -i eth0 -s 96 -c 40 -Z ana -w short.pcap tcp port 80
@@ -65,7 +65,7 @@ ana@web1:~$ ls -l ring.pcap*
 -rw-r--r-- 1 ana ana 1000412 Sep 28 18:10 ring.pcap2
 ```
 
-15316 packets passed, and three files of about a megabyte are what is left. `ring.pcap0` is the
+15316 packets passed, and three files of at most about a megabyte are what is left. `ring.pcap0` is the
 smallest because it was being written when the capture stopped: **it is the newest file, not the
 oldest**. `tcpdump` wrote 0, 1 and 2, then went back to 0 and started overwriting it, so the oldest
 packets still kept are at the start of `ring.pcap1`. The handshake and the `GET` that began the

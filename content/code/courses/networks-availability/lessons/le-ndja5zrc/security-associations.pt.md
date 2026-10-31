@@ -59,7 +59,7 @@ contados acima.
 
 O ping de 84 bytes tem 140 no fio: **56 bytes de IPsec, contra 20 do IP-in-IP** da aula 1. Vinte são o
 cabeçalho IP novo. `length 120` é a parte do ESP, e os 36 bytes de custo dele se dividem como a figura da
-primeira seção desenha. O enchimento depende do tamanho do que vai dentro, então **o custo do ESP não é
+seção sobre o que o IPsec acrescenta desenha. O enchimento depende do tamanho do que vai dentro, então **o custo do ESP não é
 um número fixo**, e a conta de MTU da aula 1 precisa de uma folga.
 
 ## Nada legível

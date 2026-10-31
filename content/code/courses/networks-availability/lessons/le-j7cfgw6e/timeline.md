@@ -17,8 +17,8 @@ means a prompt that shows the time, or `date` run before a command that matters;
 clock before the sentence. Neither was done in lesson 21's lab, which is why its write-up has an order and
 no times.
 
-When times are written, their zone decides whether they can be compared. The one clock time these
-lessons printed is in lesson 22, where mtr opened each report with a line like `Start:
+When times are written, their zone decides whether they can be compared. In lesson 22,
+mtr opened each report with a line like `Start:
 2026-09-28T18:17:16-0300`. **The `-0300` is the offset from UTC**, and it is there because the lab's
 clock runs on `America/Sao_Paulo`. A ticketing system in UTC, a provider's support desk in another
 country and a cloud console in a zone of its own will each write the same instant differently. A few

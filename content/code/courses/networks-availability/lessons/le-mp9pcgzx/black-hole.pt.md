@@ -4,8 +4,9 @@ version: 1
 ---
 
 O caso resolvido é o que a aula 1 prometeu: um buraco negro de PMTU. Os dois escritórios estão ligados
-por um túnel WireGuard montado como na aula 4, `wg0` em `hq` e em `branch`: os pares de chaves, os
-arquivos de `hq` e de `branch` da primeira seção da aula 4, e `sudo wg-quick up wg0` nos dois. A falha são
+por um túnel WireGuard montado como na aula 4, `wg0` em `hq` e em `branch`. Montá-lo pede os pares de chaves,
+os arquivos de `hq` e de `branch` da seção "Duas chaves e um arquivo curto" da aula 4, e
+`sudo wg-quick up wg0` nos dois. A falha são
 três comandos em `hq`, dados aqui; o resto da seção os encontra como teria de encontrar sem saber:
 
 ```sh
@@ -13,7 +14,8 @@ sudo nft add table ip hardening
 sudo nft add chain ip hardening out '{ type filter hook output priority 0; }'
 sudo nft add rule ip hardening out icmp type destination-unreachable drop
 ```
- O chamado da filial é do tipo
+
+O chamado da filial é do tipo
 que ninguém consegue reproduzir por telefone: **a página web do servidor de arquivos abre, e um download
 dele nunca termina.** As duas metades são verdade:
 

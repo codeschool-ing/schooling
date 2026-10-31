@@ -11,8 +11,8 @@ alcançam pelo endereço MAC como se dividissem um switch.
 O VXLAN, Virtual eXtensible LAN, faz isso levando quadros Ethernet inteiros dentro de UDP, porta 4789,
 com um cabeçalho de 8 bytes cujo campo principal é um identificador de rede de 24 bits, o **VNI**.
 Enquanto uma tag de VLAN, vista em `networks-addressing`, tem 12 bits e uns quatro mil valores, um VNI
-tem uns dezesseis milhões. Diferente do GRE, o kernel em que estas transcrições foram gravadas o tem,
-então o túnel é o do próprio kernel, como no seu. Em `hq`:
+tem uns dezesseis milhões. O kernel em que estas transcrições foram gravadas não tem GRE, mas tem VXLAN,
+então este túnel é o do próprio kernel, como no seu. Em `hq`:
 
 ```
 ana@hq:~$ sudo ip link add vx0 type vxlan id 100 local 203.0.113.2 remote 198.51.100.2 dstport 4789 dev eth1
@@ -84,6 +84,6 @@ diferença: **cada entrada aponta não para uma porta, e sim para o endereço p�
 lista de inundação, para onde vai um broadcast ou um destino desconhecido. Com mais sites haveria uma
 linha dessas por site, e um broadcast seria copiado para cada um.
 
-**Nada disso vai cifrado.** O provedor leu o pedido ARP e o ping tão facilmente quanto leu o GRE da aula
-1. O VXLAN foi feito para data centers, sobre enlaces que o operador controla; atravessando uma rede que
+**Nada disso vai cifrado.** O provedor leu o pedido ARP e o ping tão facilmente quanto leu o GRE da
+aula 1. O VXLAN foi feito para data centers, sobre enlaces que o operador controla; atravessando uma rede que
 você não controla, ele vai dentro de IPsec ou de outro túnel cifrado, e paga os dois custos.

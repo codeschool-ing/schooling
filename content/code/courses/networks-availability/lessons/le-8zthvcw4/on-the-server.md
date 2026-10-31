@@ -23,7 +23,7 @@ sections take care that only the capture runs with that privilege.
 ## Reading one line
 
 The laptop fetched the home page, `curl -s http://192.0.2.21/` on `laptop`, while `tcpdump` on `web1`
-printed the first four packets it saw on port 80, once as it comes and once with `-n`; start the capture
+printed the first four packets it saw on port 80, once as it comes and once with `-n`. Start the capture
 first, then fetch the page, twice:
 
 ```

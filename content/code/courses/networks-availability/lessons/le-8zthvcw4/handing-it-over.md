@@ -34,7 +34,7 @@ Total HTTP Packets      8                                                       
 ```
 
 Eight HTTP packets, four requests and four responses: three `200 OK` and one `404 Not Found`, the
-same count the `grep` produced in the section before. **The statistics menu reads a file, so it
+same count the `grep` produced in the section on reading the file back. **The statistics menu reads a file, so it
 reads a file from anywhere**, and it needs no privilege to do it.
 
 When the file does travel, it travels over something encrypted, `scp` or `sftp` from lesson 8 of

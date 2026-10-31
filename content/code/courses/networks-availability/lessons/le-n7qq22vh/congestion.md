@@ -32,7 +32,7 @@ rtt min/avg/max/mdev = 0.094/0.106/0.129/0.014 ms
 ```
 
 `rate 5Mbit` is the link's new speed and `pfifo ... limit 100p` is the queue: first in, first out, at
-most 100 packets. The ping after it is **0.106 ms**, the same as before. A 5 Mbit/s link is slow for a
+most 100 packets. The ping after it is **0.106 ms**, no slower than the 0.161 ms before. A 5 Mbit/s link is slow for a
 file and fast for five pings, so the queue was empty each time and there was nothing to wait behind.
 
 ## One upload changes everything

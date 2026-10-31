@@ -11,8 +11,8 @@ other by MAC address as if they shared a switch.
 VXLAN, Virtual eXtensible LAN, does it by carrying whole Ethernet frames inside UDP, port 4789, with an
 8-byte header whose main field is a 24-bit network identifier, the **VNI**. Where a VLAN tag,
 from `networks-addressing`, has 12 bits and about four thousand values, a VNI has about sixteen
-million. Unlike GRE, the kernel these transcripts were recorded on has it, so the tunnel is the kernel's own, as it
-is on yours. On `hq`:
+million. The kernel these transcripts were recorded on has no GRE but does have VXLAN, so this tunnel is the
+kernel's own, as it is on yours. On `hq`:
 
 ```
 ana@hq:~$ sudo ip link add vx0 type vxlan id 100 local 203.0.113.2 remote 198.51.100.2 dstport 4789 dev eth1

@@ -6,8 +6,8 @@ version: 1
 Quando um túnel não sobe, o pessoal lê a configuração de novo, e os dois arquivos parecem certos para
 quem os escreveu. **O log de uma negociação diz qual passo falhou**, e isso reduz a busca a poucas
 linhas. O `swanctl --initiate` começa uma negociação na mão e imprime o log do daemon enquanto ela
-acontece. Uma que funciona é a referência para ler uma quebrada. Derrube a conexão antes, como na seção
-anterior, para que haja o que negociar:
+acontece. Uma que funciona é a referência para ler uma quebrada. Derrube a conexão antes, com
+`sudo swanctl --terminate --ike offices` como na seção sobre o IKEv2, para que haja o que negociar:
 
 ```
 ana@hq:~$ sudo swanctl --initiate --child lans

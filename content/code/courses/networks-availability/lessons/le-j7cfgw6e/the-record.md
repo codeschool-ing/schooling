@@ -27,8 +27,8 @@ again. A refuted hypothesis is a result, and often the most useful one in the re
 
 **A test names its machine.** `ping -M do -s 1400` from `files` and the same command from the till cross
 the tunnel in opposite directions and hit different routers' rules, so the record says where it ran.
-Lesson 21 ran only the first. It also says what would count against the hypothesis before the result is in, which is what keeps a
-result from being read to fit.
+Lesson 21 ran only the first. A test also says what would count against the hypothesis before the
+result is in, which is what keeps a result from being read to fit.
 
 **A result is pasted.** "The big ping failed" loses the detail that solved the case: the statistics line
 had no `+1 errors`, where lesson 1's tunnel had printed `Frag needed`. Nobody summarising knows yet which

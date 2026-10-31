@@ -3,8 +3,8 @@ title: Where QoS stops
 version: 1
 ---
 
-Every capture in this lesson was taken on the ISP's router, and every one of them showed the mark
-arriving intact. That router read `tos 0xb8`, printed it, and treated the packet like any other. **DSCP
+Both packet captures in this lesson were taken on the ISP's router, and both showed the mark
+arriving as `hq` had sent it. That router read `tos 0xb8`, printed it, and treated the packet like any other. **DSCP
 is a per-hop behaviour**: each router decides for itself what a mark means, and a router with no classes
 configured decides that it means nothing.
 

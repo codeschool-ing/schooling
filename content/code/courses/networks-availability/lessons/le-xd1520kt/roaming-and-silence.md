@@ -4,7 +4,7 @@ version: 1
 ---
 
 `remote` is Ana's laptop at home, `192.168.1.50`, behind a home router, `homegw`, that translates it to
-`198.51.100.77`. `hq`'s file has no `Endpoint` for her. Her own file, the third in the first section,
+`198.51.100.77`. `hq`'s file has no `Endpoint` for her. Her own file, the third in the section on keys and configuration,
 names `hq` as `vpn.example.com:51820` and carries one extra line, `PersistentKeepalive = 25`. She
 brings the tunnel up, `sudo wg-quick up wg0` on `remote`, and pings the file server:
 

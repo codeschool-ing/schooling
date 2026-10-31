@@ -28,7 +28,7 @@ criptografado, sistema atualizado, software da empresa rodando.
 
 O resto decorre de o dispositivo estar em outro lugar. O endpoint muda entre a casa, um hotel e um
 celular, e quase sempre está atrás do NAT de alguém, que é para o que servem o roaming e o
-`PersistentKeepalive` da aula 4. O endereço dele dentro do túnel vem de um pool, `10.8.0.2` na aula 4,
+`PersistentKeepalive` da aula 4. O endereço dele dentro do túnel costuma vir de um pool, `10.8.0.2` no OpenVPN da aula 4,
 e não de nada que a pessoa escolheu.
 
 | | site a site | acesso remoto |

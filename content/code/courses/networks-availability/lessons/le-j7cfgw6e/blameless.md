@@ -40,5 +40,4 @@ column holds a person's name. The lab has one user, `ana`, so here it holds role
 form: **a role is an owner only if everybody agrees who fills it this week**.
 
 The date column is left out here because the lab has no calendar to set one against, and it is not
-optional in a real record.
-An action item with no date is done when somebody remembers it, which is after the fault comes back.
+optional in a real record. An action item with no date is done when somebody remembers it, which is after the fault comes back.
