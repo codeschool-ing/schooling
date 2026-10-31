@@ -17,7 +17,7 @@ backup.log  clients.csv  invoices  notes-todo.txt  notes.txt  reports
 ```
 
 - O `rm` apaga arquivos. O `rm invoices/*.tmp` removeu os dois nomes que o `echo` tinha mostrado na
-  seção 04, e nada mais.
+  seção 05, e nada mais.
 - O `rmdir` apaga só uma pasta **vazia**, e recusou `reports-copy`. Essa recusa é uma rede de
   segurança: ele não consegue remover nada que você ainda não esvaziou.
 - O `rm -r` apaga uma pasta e tudo o que há dentro, em qualquer profundidade.

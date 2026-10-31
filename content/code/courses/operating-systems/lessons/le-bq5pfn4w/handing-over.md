@@ -27,7 +27,7 @@ Lock** on the way. The Mac restarts into Setup Assistant, ready for the next per
 
 **This is the one for a Mac changing hands.** It asks for the administrator's password and, when the
 Mac is signed into an Apple Account, for that account's password too. That second password is why
-section 01 asked whose it is.
+section 02 asked whose it is.
 
 ## Activation Lock, and why the third way fails
 

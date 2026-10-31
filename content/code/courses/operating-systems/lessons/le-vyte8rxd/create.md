@@ -35,7 +35,7 @@ reports/2026/q3
 - `touch` creates an empty file, or, if the file exists, only updates its date. It changes no
   contents either way.
 - `echo "…" > todo.txt` creates a file with one line in it. The `>` sends the output of `echo` into
-  the file instead of the screen, the subject of section 03.
+  the file instead of the screen, the subject of section 04.
 - `ls -F` marks folders with a `/`, and `find` lists everything below a folder, however deep.
 
 Most commands that succeed **print nothing**. The silence is the answer; errors are the only thing

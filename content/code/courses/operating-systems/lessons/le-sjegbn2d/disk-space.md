@@ -4,7 +4,7 @@ version: 2
 ---
 
 Two different questions, and each has its own command. The second needs a folder to measure. Lesson 12
-left a `work` folder in your home; this replaces it with four small files and one of 3 MB, all zeros,
+left a `work` folder in your home; this replaces it with three small files and one of 3 MB, all zeros,
 standing in for a scanned document, dated like the ones here:
 
 ```sh

@@ -46,7 +46,7 @@ objetos.
 
 ## Três hábitos para qualquer shell
 
-- O *Tab* completa nomes, a checagem de segurança da seção 03.
+- O *Tab* completa nomes, a checagem de segurança da seção 04.
 - A *seta para cima* traz de volta o comando anterior, e o *Ctrl+R* busca em todos eles.
 - O *Ctrl+C* para um comando que está rodando, e é o que apertar quando algo rola sem parar.
 

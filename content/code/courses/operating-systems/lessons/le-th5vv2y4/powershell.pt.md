@@ -43,7 +43,7 @@ Path
 ```
 
 - `Get-Location` é o `pwd`, e responde com uma tabelinha, porque o que ele devolve é um objeto com
-  uma propriedade `Path`. A seção 06 volta a isso.
+  uma propriedade `Path`. A seção 07 volta a isso.
 - `Set-Location` é o `cd`. As aspas funcionam do mesmo jeito em volta de `'invoices 2026'`.
 - `Get-ChildItem` é o `ls`, e no Linux mostra a mesma sequência de permissões numa coluna chamada
   `UnixMode`.

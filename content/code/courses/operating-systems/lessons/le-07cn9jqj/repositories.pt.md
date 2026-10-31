@@ -45,7 +45,7 @@ Section: universe/games
 
 O último comando mostra isso em dois pacotes: o `bash` está no `main`, então a seção dele não tem
 prefixo, e o `cowsay` é `universe/games`. O componente é como você sabe, antes de instalar, de quem é
-a promessa que as datas de suporte da seção 04 representam.
+a promessa que as datas de suporte da seção 05 representam.
 
 ## Fora dos repositórios
 

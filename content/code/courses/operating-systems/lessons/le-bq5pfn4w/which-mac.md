@@ -37,7 +37,7 @@ system_profiler SPHardwareDataType       # model, chip, memory, serial number
 ```
 
 **None of these were run for this lesson.** They are macOS commands, and the machine this course's
-transcripts come from is Linux. `uname` is the one you already know from lesson 1, and on a Mac it
+transcripts come from is Linux. `uname` is the same command as on Linux, and on a Mac it
 prints `arm64` or `x86_64` depending on the chip.
 
 ## Before touching anything
@@ -46,7 +46,7 @@ The same three questions as lesson 2, with one more:
 
 1. **The data.** Anything on the Mac that matters is copied somewhere else first, with **Time
    Machine** to an external disk or by copying the folders.
-2. **The Apple Account.** Whose is it signed into? Write the answer down; it decides section 04.
+2. **The Apple Account.** Whose is it signed into? Write the answer down; it decides section 05.
 3. **The model.** Apple silicon or Intel, and which macOS the model supports.
 4. **The licence.** There is none to worry about. macOS comes with the Mac and reinstalling it is
    free.

@@ -4,7 +4,7 @@ version: 2
 ---
 
 A standard Ubuntu Server installs **unattended-upgrades** and turns it on, and the one you built in
-lesson 1 has it. The server these transcripts were recorded on was built without it, so there it is
+lesson 1 has it. The server these transcripts were recorded on was built without it, so it is
 installed here, with lesson 11's tool. On yours the first command answers that it is already the newest
 version, and the rest read the same files:
 

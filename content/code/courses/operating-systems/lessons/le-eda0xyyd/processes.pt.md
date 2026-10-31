@@ -8,8 +8,8 @@ duas vezes e há um programa e dois processos, cada um com a própria memória e
 Quando alguém diz que o computador está lento, a pergunta quase nunca é *qual programa está
 instalado*. É *quais processos estão rodando*, e o que cada um está fazendo.
 
-Tudo nesta aula acontece numa pasta chamada `office`, dentro da sua pasta pessoal, com um arquivo
-curto. Crie as duas primeiro, no seu servidor:
+Daqui até o fim da aula, tudo acontece numa pasta chamada `office`, dentro da sua pasta pessoal, com
+um arquivo curto. Crie as duas primeiro, no seu servidor:
 
 ```sh
 mkdir ~/office && cd ~/office

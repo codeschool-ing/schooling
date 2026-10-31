@@ -18,7 +18,7 @@ The tools change between systems; the order of the questions does not.
    leave you not knowing which one worked.
 5. **Fix the smallest thing** that removes the cause, and prefer the fix that can be undone, lesson 15's
    rule.
-6. **Confirm, and write it down.** Check the output, as section 03 did with the report file, and record
+6. **Confirm, and write it down.** Check the output, as section 04 did with the report file, and record
    what happened, what fixed it, and how you knew. The next person with this problem may be you, in a
    year.
 

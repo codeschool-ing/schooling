@@ -34,4 +34,4 @@ O Ubuntu publica uma versão a cada **abril e outubro**, numerada por ano e mês
 A cada dois abris a versão é uma **LTS**, *long-term support*, suporte de longo prazo. As do meio são
 versões *intermediárias*, com suporte por *nove meses*, feitas para experimentar o que vem por aí.
 
-A seção 04 põe números nisso, e o servidor consegue lê-los sozinho.
+A seção 05 põe números nisso, e o servidor consegue lê-los sozinho.

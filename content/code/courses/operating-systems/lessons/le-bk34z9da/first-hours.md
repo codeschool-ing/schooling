@@ -25,9 +25,10 @@ diffutils/noble-updates,noble-security 1:3.10-1ubuntu0.1 amd64 [upgradable from:
 dpkg/noble-updates,noble-security 1.22.6ubuntu6.6 amd64 [upgradable from: 1.22.6ubuntu6]
 ```
 
-`sudo apt update` only **refreshes the list**: it downloaded the current catalogue from Ubuntu's servers
-(the four `Hit` lines) and compared it with what is installed. Fifty packages have newer versions, and
-the second command lists them: `apt`, the package tool itself, the base files, the core utilities. Lesson
+`sudo apt update` only **refreshes the list**: it asked Ubuntu's servers for the current catalogue
+(the four `Hit` lines, each a repository whose list had not changed since the last fetch) and compared it
+with what is installed. Fifty packages have newer versions, and `apt list --upgradable` shows the first
+five: `apt`, the package tool itself, the base files, the core utilities. Lesson
 11 is about `apt` in detail.
 
 The second command installs them:

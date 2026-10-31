@@ -38,7 +38,7 @@ systemd-timesyncd.service   enabled enabled
 ```
 
 Sete, neste servidor. A mesma lista num notebook que "demora uma eternidade para ligar" é onde procurar
-algo de que ninguém precisa, e a aula 16 volta à inicialização quando uma máquina está lenta.
+algo de que ninguém precisa, e a aula 17 volta a essas listas quando uma máquina se comporta mal.
 
 ## restart e reload
 

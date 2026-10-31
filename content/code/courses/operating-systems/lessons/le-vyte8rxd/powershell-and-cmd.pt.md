@@ -47,7 +47,7 @@ shells, com o mesmo perigo.
 
 A opção mais útil do PowerShell para esta aula é o **`-WhatIf`**. O `Remove-Item archive -Recurse
 -WhatIf` **descreveu** o que apagaria e não apagou nada: o último comando ainda achou os dois arquivos em
-`archive`. É o "olhe antes" da seção 05, embutido no comando, e a maioria dos cmdlets que mudam algo o
+`archive`. É o "olhe antes" da seção 06, embutido no comando, e a maioria dos cmdlets que mudam algo o
 aceita. O **`-Confirm`** é o equivalente do `rm -i`.
 
 O `Remove-Item` numa pasta que tem algo dentro pede confirmação a não ser que o `-Recurse` seja dado,

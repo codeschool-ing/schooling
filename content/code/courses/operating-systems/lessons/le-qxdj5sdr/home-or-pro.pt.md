@@ -6,7 +6,7 @@ version: 1
 De volta à loja. Para uma pessoa em casa, a **Home** basta: roda os mesmos programas na mesma
 velocidade, e nada na coluna "não" da tabela é algo de que uma casa sinta falta.
 
-Para o escritório, **Pro**, e os motivos são específicos, não gerais:
+Para o escritório, **Pro**, por quatro motivos:
 
 1. **Ela consegue entrar na organização.** A aula 2 disse que um PC de escritório deve ser configurado
    com uma conta corporativa. Na Home essa opção não existe, então o PC fica sendo uma máquina pessoal

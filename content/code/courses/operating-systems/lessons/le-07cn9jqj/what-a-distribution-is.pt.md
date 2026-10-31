@@ -35,7 +35,7 @@ Três dessas linhas são para programas, não para pessoas:
 
 - `ID=ubuntu` é a distribuição, numa forma que um script consegue comparar.
 - `ID_LIKE=debian` é a família a que ela pertence. Um script que sabe instalar algo no Debian pode
-  ler essa linha e concluir que os mesmos comandos funcionam aqui. Isso é a seção 02.
+  ler essa linha e concluir que os mesmos comandos funcionam aqui. Isso é a seção 03.
 - `VERSION_CODENAME=noble` é a versão, pelo nome. Os codinomes do Ubuntu seguem o alfabeto, então
   a letra diz mais ou menos a idade de uma versão.
 

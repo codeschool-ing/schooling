@@ -23,7 +23,7 @@ veio desfazer.
 ## Conta Apple
 
 Entrar aqui liga o iCloud, a App Store e, por padrão, o **Buscar**, que é o que liga o Bloqueio de
-Ativação (seção 04). Num Mac que é do escritório, decida **de quem é a conta** antes desta tela, pelo
+Ativação (seção 05). Num Mac que é do escritório, decida **de quem é a conta** antes desta tela, pelo
 mesmo motivo da conta Microsoft da aula 2. Pular é permitido, e a pessoa pode entrar só na App Store
 depois.
 

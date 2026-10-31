@@ -30,7 +30,7 @@ Três regras decidem o que uma pessoa realmente recebe:
 3. **As entradas são herdadas** da pasta de cima, a não ser que a herança seja desligada. Uma entrada
    definida direto numa pasta vence uma herdada.
 
-O **Avançado > Acesso Efetivo** da aba *Segurança* responde a única pergunta que importa num chamado:
+O **Avançado > Acesso Efetivo** da aba *Segurança* responde à pergunta a que um chamado costuma se resumir:
 com todas as entradas, o que *esta* pessoa pode fazer aqui?
 
 Pela rede há uma segunda lista, as **permissões de compartilhamento** da pasta compartilhada. **O usuário

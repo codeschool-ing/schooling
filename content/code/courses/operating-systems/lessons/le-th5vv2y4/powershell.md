@@ -43,7 +43,7 @@ Path
 ```
 
 - `Get-Location` is `pwd`, and answers with a small table, because what it returns is an object
-  with a `Path` property. Section 06 comes back to that.
+  with a `Path` property. Section 07 comes back to that.
 - `Set-Location` is `cd`. Quotes work the same way around `'invoices 2026'`.
 - `Get-ChildItem` is `ls`, and on Linux it shows the same permission string in a column called
   `UnixMode`.

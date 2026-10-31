@@ -3,7 +3,7 @@ title: Changing the registry, and the Mac's version of it
 version: 1
 ---
 
-The rules of section 03 apply, and matter more: a text file broken by a typo is fixed with an editor, a
+The rules of section 04 apply, and matter more: a text file broken by a typo is fixed with an editor; a
 registry broken in the wrong key can stop Windows from starting.
 
 1. *Export before changing.* In `regedit`, *File > Export* the key you are about to touch; the `.reg`
@@ -31,8 +31,8 @@ Remove-ItemProperty -Path 'HKCU:\Software\OfficeApp' -Name Server
 ```
 
 **None of those were run for this lesson.** PowerShell treats the registry as a drive, `HKLM:` and
-`HKCU:`, so lesson 12's `New-Item`, `Get-ItemProperty` and `Remove-ItemProperty` work on keys and values
-as they work on folders and files, and `-WhatIf` works too.
+`HKCU:`, so `New-Item`, `Get-ItemProperty` and `Remove-ItemProperty` work on keys and values as lesson
+12's commands work on folders and files, and `-WhatIf` works too.
 
 **System Restore**, when it is turned on, saves the registry with each restore point, and is the way back
 when a change stops Windows from working normally. Lesson 17 uses it.

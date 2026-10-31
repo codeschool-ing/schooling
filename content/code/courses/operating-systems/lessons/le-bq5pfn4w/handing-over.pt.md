@@ -25,7 +25,7 @@ segundos; mantém o macOS como está; e **sai da Conta Apple e desliga o Bloquei
 caminho. O Mac reinicia no Assistente de Configuração, pronto para a próxima pessoa.
 
 **Este é o certo para um Mac que muda de mãos.** Ele pede a senha do administrador e, quando o Mac está
-numa Conta Apple, a senha dessa conta também. Essa segunda senha é o motivo de a seção 01 perguntar de
+numa Conta Apple, a senha dessa conta também. Essa segunda senha é o motivo de a seção 02 perguntar de
 quem ela é.
 
 ## O Bloqueio de Ativação, e por que o terceiro jeito falha

@@ -45,8 +45,8 @@ System clock synchronized: no
           RTC in local TZ: no
 ```
 
-This transcript comes from a virtual machine that borrows its clock from the computer running it, so it
-has no hardware clock of its own: `RTC time: n/a`, and no time synchronisation of its own either. On a
+This transcript comes from a container, a system running inside another computer and borrowing that
+computer's clock, so it has no hardware clock of its own: `RTC time: n/a`, and no time synchronisation of its own either. On a
 real PC the line shows the hardware clock, and `RTC in local TZ: no` is the Linux habit. The usual fix
 for dual boot is to tell Linux to do what Windows does:
 
