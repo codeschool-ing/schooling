@@ -35,10 +35,10 @@ ana@host:~$ sudo pmap -x $(pgrep -o qemu-system) | awk "\$5 == \"rwx--\" { n++; 
 ```
 
 `actual` é a memória que o convidado recebeu, 1048576 KiB, e `rss` é o que o processo ocupa de fato,
-1713460 KiB. O `pmap` lista as áreas de memória do processo, e as que têm mais de 60 MB dizem onde ela
-está. A área de exatamente 1048576 KiB é **a memória do convidado**, e só 446464 KiB dela estão
-residentes: o convidado tocou menos da metade do que recebeu. As outras áreas grandes estão marcadas
-`rwx`, memória que pode ser executada, e são 16, com 1046796 KiB entre elas.
+1713460 KiB. O `pmap` lista as áreas de memória do processo, e as que têm mais de 60000 KiB residentes
+dizem onde ela está. A área de exatamente 1048576 KiB é **a memória do convidado**, e só 446464 KiB dela estão
+residentes: o convidado tocou menos da metade do que recebeu. Das outras áreas grandes, 16 estão marcadas
+`rwx`, memória que pode ser executada, e somam 1046796 KiB entre elas.
 
 Isso é **código traduzido**. Sem VT-x, o QEMU transforma as instruções do convidado em instruções para o
 processador do host e guarda o resultado, para não ter de traduzir o mesmo laço duas vezes. Ele reserva

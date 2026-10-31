@@ -17,7 +17,8 @@ SharedFolderNameMachineMapping1="docs"
 SharedFolderPathMachineMapping1="/srv/docs"
 ```
 
-O `--readonly` e o `--automount` fizeram o que dizem. Num convidado com os **Guest Additions**, um
+O `--readonly` e o `--automount` querem dizer o que dizem, embora as linhas acima mostrem só o nome e
+o caminho do compartilhamento. Num convidado com os **Guest Additions**, um
 compartilhamento montado automaticamente aparece como `/media/sf_docs` no Linux, legível pelos membros do
 grupo `vboxsf`, ao qual um usuário precisa ser acrescentado antes, ou como uma unidade de rede no Windows.
 As pastas compartilhadas do VMware vêm com o **VMware Tools** e aparecem em `/mnt/hgfs` no Linux.
@@ -26,7 +27,7 @@ As pastas compartilhadas do VMware vêm com o **VMware Tools** e aparecem em `/m
 **arrastar e soltar** move arquivos do mesmo jeito. As duas precisam do agente do convidado e de uma área
 de trabalho gráfica no convidado, então nenhuma pode ser mostrada no host deste curso, cujos convidados
 não têm tela. Cada uma pode ficar *desativada*, *hospedeiro para convidado*, *convidado para
-hospedeiro* ou *bidirecional*, e essa escolha é tão de segurança quanto de conforto: **uma área de
+hospedeiro* ou *bidirecional*. Essa escolha é tão de segurança quanto de conforto: **uma área de
 transferência bidirecional entrega ao convidado tudo o que você copia no host**, inclusive uma senha do seu
 gerenciador de senhas. Para um convidado em que você não confia, *desativada* é a configuração; para um
 que você só alimenta com arquivos, *hospedeiro para convidado*, como a `lab1` tem para arrastar e soltar.

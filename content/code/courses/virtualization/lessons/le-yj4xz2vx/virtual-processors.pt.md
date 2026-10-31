@@ -33,8 +33,8 @@ contagem **atual** que pode subir até ele, e cada um existe tanto na descriçã
 convidado ligado (`live`). O `vcpuinfo` mostra que cada vCPU roda **em algum processador de verdade do
 host**: naquele momento, a vCPU 0 no processador 3 do host e a vCPU 1 no processador 1. `CPU
 Affinity: yyyy` quer dizer que qualquer uma pode rodar em qualquer um dos quatro do host; o escalonador
-do host as move como move qualquer thread. Cada uma usou uns 90,2 segundos de
-processador, a maior parte dando boot sob imitação.
+do host as move como move qualquer thread. A vCPU 0 usou 90,2 segundos de processador e a vCPU 1,
+90,4, a maior parte dando boot sob imitação.
 
 Então uma vCPU é uma promessa de vez, não um processador reservado. Dois convidados com duas vCPUs cada
 num host de quatro processadores cabem; dez deles também ligam, e revezam, e cada um roda mais devagar.

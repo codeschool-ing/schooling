@@ -30,7 +30,7 @@ ana@client:~$ curl -sS -o /dev/null -w "%{http_code}\n" http://target/
 200
 ```
 
-`200` do client: consertado, e verificado do client, que é a única verificação que importa para o usuário.
+`200` do client: consertado, e verificado de onde o usuário está, a única conferência que importa para ele.
 Depois, a parte que faz disto um laboratório:
 
 ```
@@ -46,5 +46,5 @@ curl: (7) Failed to connect to target port 80 after 32 ms: Couldn't connect to s
 ```
 
 Uma reversão e o target está quebrado de novo, exatamente como antes, pronto para a próxima tentativa ou a
-próxima pessoa. Um laboratório assim é como praticar um defeito até achá-lo ficar rápido, e como testar um
-conserto de que você não tem certeza sem nada a perder.
+próxima pessoa. Com um laboratório assim você pratica um defeito até achá-lo depressa, e testa um
+conserto de que não tem certeza sem nada a perder.

@@ -18,13 +18,15 @@ went instead.
 
 Its command line is reached over SSH, when an administrator enables it, and looks like this:
 
-```sh
-esxcli system version get          # the ESXi version and build
-esxcli network ip interface ipv4 get   # the host's own addresses
-esxcli storage filesystem list     # the datastores this host sees
-vim-cmd vmsvc/getallvms            # every VM registered on this host, with its id
-vim-cmd vmsvc/power.getstate 12    # whether VM 12 is on
-vim-cmd vmsvc/power.shutdown 12    # ask VM 12's guest to shut down, through VMware Tools
+```schooling-example
+{"language": "sh", "parts": [
+ {"code": "esxcli system version get", "note": "The ESXi version and build."},
+ {"code": "esxcli network ip interface ipv4 get", "note": "The host's own addresses."},
+ {"code": "esxcli storage filesystem list", "note": "The datastores this host sees."},
+ {"code": "vim-cmd vmsvc/getallvms", "note": "Every VM registered on this host, each with its id."},
+ {"code": "vim-cmd vmsvc/power.getstate 12", "note": "Whether VM 12 is on."},
+ {"code": "vim-cmd vmsvc/power.shutdown 12", "note": "Asks VM 12's guest to shut down, through VMware Tools."}
+]}
 ```
 
 **None of these were run for this lesson**; ESXi is not installed on the course's host and cannot be.

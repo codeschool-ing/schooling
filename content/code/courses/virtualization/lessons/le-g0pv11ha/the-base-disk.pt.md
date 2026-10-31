@@ -21,7 +21,7 @@ a não ser que algo falhe. O `sha256sum --check` calculou o checksum da imagem e
 **`OK`**. O `--ignore-missing` pula os outros arquivos que a lista cita, que não foram baixados. Um
 arquivo que chegou cortado ou mudou no caminho diz `FAILED` aqui, e é baixado de novo.
 
-A imagem é usada como está, mais cinco programas de que as aulas precisam dentro de todo convidado, que
+A imagem é usada como está, mais cinco programas de que as aulas precisam dentro de todo convidado. Eles
 entram agora porque alguns convidados mais adiante não têm internet para buscá-los: `qemu-guest-agent`,
 aula 3; `nginx-light`, um servidor web pequeno, desligado até uma aula ligá-lo; e `curl`,
 `netcat-openbsd` e `tcpdump`, para testar redes. O `virt-customize` os põe **sem ligar a imagem como

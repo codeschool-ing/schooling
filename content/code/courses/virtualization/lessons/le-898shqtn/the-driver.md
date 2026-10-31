@@ -24,7 +24,9 @@ WARNING: The character device /dev/vboxdrv does not exist.
 The warning comes from Ubuntu's wrapper around `VBoxManage`, which checks for the driver before every
 command. Everything that only changes a machine's description works without it, and all of this
 lesson does. **Starting a guest does not**, and section 07 shows the failure. On this computer the
-driver cannot be loaded at all, because the processor offers it nothing to use, as lesson 2 found.
+driver was never built, and the warning names what building it takes: the `virtualbox-dkms` package
+and the kernel's headers. Even with it, no guest could start here, because the processor offers the
+driver nothing to use, as lesson 2 found.
 
 On a customer's Linux computer the same warning has two usual causes, and both are worth knowing
 because nothing else in the message names them:

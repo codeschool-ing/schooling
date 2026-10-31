@@ -25,21 +25,20 @@ e o nome), *OS* (a ISO), *System* (firmware e o agente do convidado, aula 3), *D
 navegador, e é assim que você instala um sistema num servidor sem ninguém na frente. Na linha de
 comando, o mesmo trabalho é o `qm` para máquinas e o `pct` para contêineres:
 
-```sh
-qm create 100 --name lab1 --ostype l26 --memory 2048 --cores 2 \
-   --scsihw virtio-scsi-pci --scsi0 local-lvm:32 \
-   --ide2 local:iso/ubuntu-24.04-live-server-amd64.iso,media=cdrom \
-   --net0 virtio,bridge=vmbr0 --boot 'order=scsi0;ide2'   # a VM, id 100
-qm start 100                                   # start it
-qm list                                        # every VM on this node
-qm config 100                                  # its settings, from /etc/pve/qemu-server/100.conf
-qm showcmd 100 --pretty                        # the QEMU command line Proxmox will run
-qm snapshot 100 clean                          # a snapshot called clean, lesson 9
-qm template 100                                # turn it into a template, lesson 10
-qm clone 100 101 --name lab2 --full            # a full clone of it, id 101
-qm disk import 101 lab-base.qcow2 local-lvm    # bring a disk from another hypervisor
-pct create 200 local:vztmpl/TEMPLATE.tar.zst --hostname ct1 --memory 512   # a container
-vzdump 100 --storage local --mode snapshot     # back VM 100 up while it runs
+```schooling-example
+{"language": "sh", "parts": [
+ {"code": "qm create 100 --name lab1 --ostype l26 --memory 2048 --cores 2 \\\n   --scsihw virtio-scsi-pci --scsi0 local-lvm:32 \\\n   --ide2 local:iso/ubuntu-24.04-live-server-amd64.iso,media=cdrom \\\n   --net0 virtio,bridge=vmbr0 --boot 'order=scsi0;ide2'", "note": "Uma VM com id 100, chamada lab1: o disco no `local-lvm`, a ISO no drive de CD, a placa na ponte `vmbr0`."},
+ {"code": "qm start 100", "note": "Liga a VM."},
+ {"code": "qm list", "note": "Todas as VMs deste nó."},
+ {"code": "qm config 100", "note": "As configurações dela, lidas de `/etc/pve/qemu-server/100.conf`."},
+ {"code": "qm showcmd 100 --pretty", "note": "A linha de comando QEMU que o Proxmox vai rodar: a linha da seção 03, para a máquina 100."},
+ {"code": "qm snapshot 100 clean", "note": "Um snapshot chamado clean, aula 9."},
+ {"code": "qm template 100", "note": "Transforma a VM num modelo, aula 10."},
+ {"code": "qm clone 100 101 --name lab2 --full", "note": "Um clone completo dela, com id 101 e o nome lab2."},
+ {"code": "qm disk import 101 lab-base.qcow2 local-lvm", "note": "Traz um disco de outro hypervisor para a VM 101, no `local-lvm`."},
+ {"code": "pct create 200 local:vztmpl/TEMPLATE.tar.zst --hostname ct1 --memory 512", "note": "Um contêiner, id 200, feito a partir de um modelo no `local`."},
+ {"code": "vzdump 100 --storage local --mode snapshot", "note": "Faz backup da VM 100 enquanto ela roda."}
+]}
 ```
 
 **Nenhum deles foi rodado para esta aula.** `TEMPLATE` está no lugar de um modelo de contêiner baixado

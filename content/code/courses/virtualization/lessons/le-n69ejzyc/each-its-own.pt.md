@@ -21,8 +21,7 @@ enp1s0           UP             192.168.122.87/24 metric 100 fe80::5054:ff:fec6:
 Cada um tem **o próprio nome**, `web1` e `web2`, do próprio disco do cloud-init. Cada um tem **o
 próprio machine-id**, `497efb056e9e47e2ad5e043f60c0197e` e `cad521dab6f54a3c8e19814358bd185d`, e nenhum é o antigo `f2b0a97d568b4cd0bb0179512eaab5f9` do modelo. Cada um tem **a
 própria chave de host**, e **o próprio endereço**, `192.168.122.94` e `192.168.122.87`, porque a configuração de rede
-foi escrita de novo para cada placa. Dois convidados de um modelo, e nada que deveria ser único é
-dividido.
+foi escrita de novo para cada placa.
 
 É assim que todo laboratório do resto deste curso é feito, e como a maioria das nuvens faz máquinas: uma
 imagem selada, uma camada fina por máquina, e um disco pequeno de configurações lido no primeiro boot. O

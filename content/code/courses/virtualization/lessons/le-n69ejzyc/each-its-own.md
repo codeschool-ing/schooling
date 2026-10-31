@@ -21,8 +21,7 @@ enp1s0           UP             192.168.122.87/24 metric 100 fe80::5054:ff:fec6:
 Each has **its own name**, `web1` and `web2`, from its own cloud-init disk. Each has **its own
 machine-id**, `497efb056e9e47e2ad5e043f60c0197e` and `cad521dab6f54a3c8e19814358bd185d`, and neither is the template's old `f2b0a97d568b4cd0bb0179512eaab5f9`. Each has **its own
 host key**, and **its own address**, `192.168.122.94` and `192.168.122.87`, because the network configuration was
-written again for each card. Two guests from one template, and nothing that should be unique is
-shared.
+written again for each card.
 
 This is how every lab in the rest of this course is made, and how most clouds make machines: a sealed
 image, a thin layer per machine, and a small disk of settings read on the first boot. `newvm.sh` has

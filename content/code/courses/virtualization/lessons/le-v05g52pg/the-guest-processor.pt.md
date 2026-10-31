@@ -24,7 +24,7 @@ de lado.
 
 O que o `lscpu` não imprime é uma linha `Hypervisor vendor`. A flag diz "você é convidado"; a linha do
 fabricante precisa que o hypervisor diga também o nome, e o processador em software do QEMU não diz.
-Compare com o processador do host, acima, onde o KVM diz.
+Compare com o processador do host, na seção 04, onde o KVM diz.
 
 **Flags são afirmações que um processador faz sobre si mesmo**, e o processador de um convidado afirma
 o que o hypervisor dele decidir. Leia-as no host para saber o que o processador de verdade oferece, e

@@ -16,7 +16,7 @@ ana@vm1:~$ sudo dmesg | grep -m1 "DMI:"
 
 `/sys/class/dmi/id` holds what the firmware reports about the machine: the maker is `QEMU` and the
 product is `Ubuntu 24.04 PC (Q35 + ICH9, 2009)`, the same `q35` motherboard the XML asked for. The
-kernel logged the same thing as its first line, with the version of the firmware QEMU supplies. This is
+kernel logged the same thing at the instant it started, `0.000000`, with the version of the firmware QEMU supplies. This is
 where `systemd-detect-virt` found its answer in lesson 1.
 
 On a real PC these files name Dell, Lenovo or whoever built it, and a support technician reads them to

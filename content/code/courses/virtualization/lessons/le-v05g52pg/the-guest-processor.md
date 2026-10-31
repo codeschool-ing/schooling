@@ -23,7 +23,7 @@ is imitating, and running guests inside a guest is something this course leaves 
 
 What `lscpu` does not print is a `Hypervisor vendor` line. The flag says "you are a guest"; the
 vendor line needs the hypervisor to say its name as well, and QEMU's software processor does not.
-Compare the host's processor above, where KVM does.
+Compare the host's processor in section 04, where KVM does.
 
 **Flags are claims that a processor makes about itself**, and a guest's processor claims whatever its
 hypervisor decides. Read them on the host to know what the real processor offers, and in a guest to
