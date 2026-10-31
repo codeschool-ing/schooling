@@ -86,8 +86,8 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 
 O pedido ARP foi para `ff:ff:ff:ff:ff:ff`, e o pc2 o recebeu, embora nada no pc2 tenha a ver com
 10.20.10.23. Com cinco PCs isso é uma linha de saída. Num andar com algumas centenas de máquinas,
-toda pergunta ARP, todo pedido DHCP e toda impressora se anunciando chega a todas elas, e toda placa
-de rede tem de receber o quadro e todo sistema operacional tem de olhar para ele antes de jogá-lo
+toda pergunta ARP, todo pedido DHCP e toda impressora se anunciando chega a todas elas. Toda placa
+de rede tem de receber o quadro, e todo sistema operacional tem de olhar para ele antes de jogá-lo
 fora. Todo mundo também vê quem está perguntando por quem, e um departamento com outro nível de
 confiança não tem nada que ver isso.
 

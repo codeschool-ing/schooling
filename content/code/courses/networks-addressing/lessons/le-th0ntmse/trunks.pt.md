@@ -49,7 +49,7 @@ portas da VLAN 10. A última seção põe uma máquina na VLAN 20 e mostra que e
 
 **Um tronco só leva as VLANs de que é membro.** Na bridge do Linux essa lista é explícita, e a VLAN
 30 não cruzaria a p24 até alguém adicioná-la nas duas pontas. Alguns switches comerciais começam ao
-contrário, permitindo toda VLAN num tronco até que alguém diga outra coisa; escrever a lista à mão
+contrário, permitindo toda VLAN num tronco até que alguém diga outra coisa. Escrever a lista à mão
 faz uma VLAN existir só onde ela devia existir, e uma tempestade de broadcast numa VLAN fica fora dos
 cabos que não têm por que levá-la.
 

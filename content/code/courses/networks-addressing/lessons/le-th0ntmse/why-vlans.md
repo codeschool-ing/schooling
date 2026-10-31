@@ -86,8 +86,8 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 The ARP request went to `ff:ff:ff:ff:ff:ff`, and pc2 received it although nothing on pc2 has
 anything to do with 10.20.10.23. On five PCs that is one line of output. On a floor of a few
 hundred machines, every ARP question, every DHCP request and every printer announcing itself
-reaches all of them, and every network card has to take the frame in and every operating system
-has to look at it before throwing it away. Everybody can also see who is asking for whom, which a
+reaches all of them. Every network card has to take the frame in, and every operating system has
+to look at it before throwing it away. Everybody can also see who is asking for whom, which a
 department in a different position of trust has no business seeing.
 
 That gives three reasons to split a network, and each is a different kind of reason. The first is
