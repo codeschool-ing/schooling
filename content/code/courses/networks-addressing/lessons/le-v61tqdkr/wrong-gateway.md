@@ -45,8 +45,8 @@ Two details in the failure tell you what happened.
 **The error comes from pc2's own address**: `From 10.20.10.22 ... Destination Host Unreachable`.
 No router said that. pc2's kernel said it, about a host it was trying to reach on its own link,
 and the host it was trying to reach was not 192.0.2.80. It was the gateway. To send any packet to
-192.0.2.80, pc2 first needs the MAC address of 10.20.10.254, asked for it with ARP, got no answer,
-and gave up. (`+2 errors` counts those two reports, and `pipe 2` is ping noting that both probes
+192.0.2.80, pc2 first needed the MAC address of 10.20.10.254. It asked for it with ARP, got no
+answer, and gave up. (`+2 errors` counts those two reports, and `pipe 2` is ping noting that both probes
 were outstanding at once.)
 
 **The neighbour table confirms it**: `10.20.10.254 dev eth0 FAILED`. FAILED is the state of an

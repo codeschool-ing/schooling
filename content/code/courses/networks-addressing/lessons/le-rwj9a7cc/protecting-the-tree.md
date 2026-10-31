@@ -3,8 +3,8 @@ title: Protecting the tree from what gets plugged in
 version: 1
 ---
 
-Spanning tree believes every BPDU it receives. That is what lets it work with no configuration, and
-it is also its weak side: **any device that sends BPDUs takes part in the election**, whether it is
+Spanning tree believes every BPDU it receives. That is what lets it work with no configuration. It
+is also its weak side: **any device that sends BPDUs takes part in the election**, whether it is
 the core switch or a cheap switch somebody brought from home and plugged in under a desk.
 
 Two things can go wrong. If the new device has a lower bridge ID, it **becomes the root**, and the
@@ -53,8 +53,8 @@ was placed.
 **BPDU filter** stops a port sending BPDUs and makes it ignore those it receives. It is sometimes
 used on ports facing another organisation's network, where the two trees must not merge. On an
 ordinary access port it is the opposite of protection: **a port that ignores BPDUs cannot find out
-that it is part of a loop**, so a cable between two filtered ports is the storm from the first
-section with spanning tree switched on everywhere else. If a port is meant to face computers only,
+that it is part of a loop**. A cable between two filtered ports is the storm from the first
+section, with spanning tree switched on everywhere else. If a port is meant to face computers only,
 BPDU guard is the setting that says so and acts on it.
 
 ## The last line: storm control

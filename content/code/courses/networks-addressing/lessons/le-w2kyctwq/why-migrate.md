@@ -6,7 +6,7 @@ version: 1
 IPv4 has 4,294,967,296 addresses, as lesson 8 counted, and the world has more devices than that.
 The pool did not run dry gradually, either. **IANA, which hands address blocks to the five
 regional registries, gave out its last ones on 3 February 2011.** The registries then ran out one
-after another over the following years, APNIC, for Asia and the Pacific, first, in April 2011. Since
+after another over the following years. APNIC, for Asia and the Pacific, was the first, in April 2011. Since
 then a new network gets IPv4 addresses by buying them from somebody who has spare ones, or does not
 get them.
 

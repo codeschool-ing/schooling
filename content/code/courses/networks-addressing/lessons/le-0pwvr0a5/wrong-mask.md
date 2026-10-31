@@ -68,7 +68,7 @@ ana@sales1:~$ ip route get 10.20.32.140
 ```
 
 `10.20.32.140 dev eth0 INCOMPLETE`. sales1 believed eng1 was on its own link, because `.140` is inside
-the `/24` it now has, so it sent ARP requests for `.140` out of `eth0` and waited for an answer. eng1 is
+the `/24` it now has. So it sent ARP requests for `.140` out of `eth0` and waited for an answer. eng1 is
 on a different cable, behind r1, and never heard them. r1 heard them on `eth1` and did not answer
 either, because `.140` is not one of its addresses. `ip route get` confirms it: `dev eth0`, no `via`.
 The packet never went to the gateway at all.

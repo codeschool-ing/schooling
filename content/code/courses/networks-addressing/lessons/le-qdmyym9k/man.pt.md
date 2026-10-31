@@ -39,6 +39,6 @@ metropolitana valer a pena como anel — duas saídas de cada prédio. A aula 3 
 
 Quando um chamado diz "o link para o outro prédio caiu", a primeira pergunta útil é a que esta aula
 continua fazendo: **de quem é o link?** Se é fibra da própria empresa, o defeito é seu para achar. Se é
-um serviço metropolitano de uma operadora, o próximo passo é o número do chamado na operadora, e as
+um serviço metropolitano de uma operadora, o próximo passo é o número do chamado na operadora. As
 evidências que você junta — um traceroute que para no seu próprio roteador, uma luz de link que apagou
 num minuto conhecido — são o que faz esse chamado andar.

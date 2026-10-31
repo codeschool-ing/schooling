@@ -16,8 +16,8 @@ DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 5 (xid=0x3731d01b)
 DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 14 (xid=0x3731d01b)
 ```
 
-Três DISCOVERs, com o cliente esperando 3, depois 5, depois 14 segundos entre eles enquanto recua, e
-nenhum OFFER. O srv nunca os ouviu. O arquivo dele já tem um escopo para 10.20.20.0, então o endereço
+Três DISCOVERs e nenhum OFFER. O cliente vai espaçando as tentativas: espera 3 segundos, depois 5, e
+depois do terceiro anuncia 14, que o `timeout` interrompe. O srv nunca os ouviu. O arquivo dele já tem um escopo para 10.20.20.0, então o endereço
 está lá para ser emprestado; o que falta é um jeito de a pergunta chegar até ele.
 
 Uma resposta é um servidor DHCP em cada sub-rede, o que dá muitos servidores para manter em sintonia.
@@ -72,8 +72,7 @@ porta 67, com o endereço MAC do pc4 ainda dentro: `Request from 02:25:46:c1:26:
 
 **As respostas vão para 10.20.20.1, não para o endereço de onde os pedidos vieram.** Antes de
 encaminhar, o relay escreveu o seu próprio endereço na sub-rede do cliente num campo do pedido
-chamado **giaddr** (*gateway IP address*).
-O servidor usou esse campo duas vezes: para saber para
+chamado **giaddr** (*gateway IP address*). O servidor usou esse campo duas vezes: para saber para
 onde mandar a resposta e para escolher o escopo. O 10.20.20.1 cai dentro de `subnet 10.20.20.0`, então
 o pc4 recebeu a oferta de 10.20.20.100, do pool daquele escopo. Este `tcpdump` não decodifica o
 campo, o que exige `-v`, mas o destino das respostas é o próprio campo, lido de volta.

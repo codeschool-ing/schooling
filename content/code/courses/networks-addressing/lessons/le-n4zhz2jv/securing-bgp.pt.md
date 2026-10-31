@@ -5,8 +5,8 @@ version: 1
 
 **O BGP acredita no que lhe dizem.** Nada no protocolo em si verifica se o AS que anuncia um prefixo tem
 algum direito a ele. Um erro, ou um anúncio falso e deliberado do bloco de outro, viaja até onde os vizinhos
-não o filtram, e o casamento pelo prefixo mais longo da aula 14 faz um anúncio falso mais específico vencer
-o verdadeiro onde quer que seja aceito. As defesas são camadas, cada uma acrescentada pelas redes que se
+não o filtram. O casamento pelo prefixo mais longo da aula 14 então faz um anúncio falso mais específico
+vencer o verdadeiro onde quer que seja aceito. As defesas são camadas, cada uma acrescentada pelas redes que se
 importam, e esta seção as descreve como um operador de rede as aplica e verifica. **Nada disto foi executado
 no laboratório**: não há validador nele, e endereços de documentação não têm registros reais contra os
 quais validar.
@@ -35,7 +35,7 @@ rota um de três estados:
 | **não encontrada** (*not found*) | nenhuma ROA cobre o prefixo |
 
 A política que a maioria das redes que validam aplica é simples: **descartar as inválidas, aceitar o
-resto**. Todo `show ip bgp` desta aula imprimiu `RPKI validation codes: V valid, I invalid, N Not found` na
+resto**. Toda tabela BGP listada nesta aula imprimiu `RPKI validation codes: V valid, I invalid, N Not found` na
 legenda e nenhum código ao lado de nenhuma rota, porque o FRR conhece os estados e este laboratório não lhe
 dá validador para consultar.
 

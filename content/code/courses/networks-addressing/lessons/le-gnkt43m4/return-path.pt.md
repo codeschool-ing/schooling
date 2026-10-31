@@ -66,7 +66,7 @@ responsável.
 
 As duas redes de PCs precisaram de quatro rotas: r1 e r2 em direção a `10.20.3.0/24`, r3 e r2 em direção
 a `10.20.1.0/24`. **Cada roteador no caminho precisa de uma rota para cada rede à qual não está
-conectado e para a qual tem de encaminhar.** Acrescente uma terceira rede atrás de r2 e r1 e r3 precisam
+conectado e para a qual tem de encaminhar.** Acrescente uma terceira rede atrás de r2, e r1 e r3 precisam
 de mais uma linha cada, e tudo o que deve alcançá-la a partir das outras redes precisa também do caminho
 de volta.
 

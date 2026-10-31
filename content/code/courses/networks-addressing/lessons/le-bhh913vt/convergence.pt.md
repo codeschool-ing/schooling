@@ -79,9 +79,9 @@ segundos, e é por isso que um cabo quebrado ali era percebido em quatro segundo
 preço são mais hellos em cada enlace e uma chance maior de declarar morto um vizinho ocupado que só demorou
 a responder, e os temporizadores têm de bater nas duas pontas de cada enlace.
 
-A resposta comum em redes reais é o **BFD** (*Bidirectional Forwarding Detection*), que a aula 15 citou:
-um protocolo separado e muito leve que troca hellos várias vezes por segundo e avisa o OSPF no instante em
-que um vizinho para de responder, e assim os temporizadores do próprio OSPF ficam nos padrões. Ele não foi
+A resposta comum em redes reais é o **BFD** (*Bidirectional Forwarding Detection*), que a aula 15 citou.
+É um protocolo separado e muito leve, que troca hellos várias vezes por segundo e avisa o OSPF no instante
+em que um vizinho para de responder; assim os temporizadores do próprio OSPF ficam nos padrões. Ele não foi
 executado neste laboratório.
 
 A aritmética para guardar: **uma falha que derruba o sinal custa o tempo de recalcular; uma falha que

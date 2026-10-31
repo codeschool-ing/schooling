@@ -46,11 +46,11 @@ office is one public address.
 
 A company buys one of three things, and the names are worth recognising:
 
-- **A leased line** — a dedicated circuit between two points, the same capacity day and night,
+- **A leased line** is a dedicated circuit between two points, the same capacity day and night,
   whether used or not. Simple and expensive.
-- **MPLS** — a provider's private network that carries several customers' traffic apart from each
+- **MPLS** is a provider's private network that carries several customers' traffic apart from each
   other, with the provider routing between the customer's sites.
-- **The internet** — an ordinary internet connection at each site, the cheapest by far, with the
+- **The internet** means an ordinary internet connection at each site, the cheapest by far, with the
   sites joined through it by a VPN. That is what the rest of this lesson builds.
 
 None of the three was run in the lab beyond what the lab shows: one router playing the provider,

@@ -16,8 +16,8 @@ DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 5 (xid=0x3731d01b)
 DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 14 (xid=0x3731d01b)
 ```
 
-Three DISCOVERs, the client waiting 3, then 5, then 14 seconds between them as it backs off, and
-not one OFFER. srv never heard them. Its file already holds a scope for 10.20.20.0, so the address
+Three DISCOVERs and not one OFFER. The client backs off: it waits 3 seconds, then 5, and after the
+third it announces 14, which `timeout` cuts short. srv never heard them. Its file already holds a scope for 10.20.20.0, so the address
 is there to lend; what is missing is a way for the question to reach it.
 
 One answer is a DHCP server on every subnet, which is many servers to keep in step. The usual
@@ -71,9 +71,9 @@ srv shows the other half. The requests arrive as `10.20.10.1.67 > 10.20.10.10.67
 to port 67, with pc4's MAC address still inside: `Request from 02:25:46:c1:26:7d`.
 
 **The replies go to 10.20.20.1, not to the address the requests came from.** Before forwarding, the
-relay wrote its own address on the client's subnet into a field of the request called **giaddr** (*gateway IP address*).
-The server used that field twice: to know where to send the reply, and
-to choose the scope. 10.20.20.1 falls inside `subnet 10.20.20.0`, so pc4 was offered 10.20.20.100,
+relay wrote its own address on the client's subnet into a field of the request called **giaddr**
+(*gateway IP address*). The server used that field twice: to know where to send the reply, and to
+choose the scope. 10.20.20.1 falls inside `subnet 10.20.20.0`, so pc4 was offered 10.20.20.100,
 from that scope's pool. This `tcpdump` does not decode the field, which takes `-v`, but the
 destination of the replies is the field, read back.
 

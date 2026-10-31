@@ -45,7 +45,7 @@ root@sw1:~# ip route
 `vlan10` e `vlan20` são interfaces de VLAN de novo, do mesmo tipo que o r1 usou, montadas desta vez
 sobre o `br0`, o próprio switch. O terceiro comando importa e é fácil de não ver: **o `br0` também
 tem de entrar nas VLANs 10 e 20** (`self` quer dizer a porta da própria bridge, e não um dos cabos
-dela), porque nas listagens da aula 19 ele estava só na VLAN 1, e as interfaces do próprio switch só
+dela). Nas listagens da aula 19 ele estava só na VLAN 1, e as interfaces do próprio switch só
 ouvem as VLANs em que o switch entrou. `sysctl -w net.ipv4.ip_forward=1` é a linha que transforma um
 host com dois endereços num roteador; o r1 já a tinha do laboratório, e o switch não. A tabela de
 rotas tem as mesmas duas rotas conectadas que o r1 tinha, agora na `vlan10` e na `vlan20`.
@@ -66,7 +66,7 @@ vlan10@br0       UP             02:6a:dc:93:3b:8a <BROADCAST,MULTICAST,UP,LOWER_
 ```
 
 Dois enviados, nenhum recebido. **A tabela de vizinhos do pc1 ainda diz que 10.20.10.1 está em
-`02:1f:23:e7:e9:d5`, que é o MAC do r1**, o mesmo que as duas últimas seções viram no tronco. A
+`02:1f:23:e7:e9:d5`, que é o MAC do r1**, o mesmo que a última seção viu no tronco. A
 `vlan10` do switch está em `02:6a:dc:93:3b:8a`. Então o pc1 faz exatamente o que a tabela manda:
 manda os quadros do gateway para um MAC que nada no switch atende mais. O endereço mudou de máquina;
 o cache de cada host da VLAN não mudou junto.
@@ -103,7 +103,7 @@ switch**.
 
 Qualquer mudança que leve um endereço de gateway para outro MAC, inclusive trocar um roteador com
 defeito por um reserva, esbarra nos mesmos caches velhos. Os protocolos de redundância de primeiro
-salto, como o VRRP, evitam o problema por construção: o endereço do gateway mantém um MAC virtual
+salto, como o VRRP, evitam o problema por construção. O endereço do gateway mantém um MAC virtual
 qualquer que seja o roteador que o tem, então nenhum cache de host fica velho, e o roteador que
 assume manda um ARP gratuito para que os switches aprendam atrás de que porta esse MAC vive agora.
 

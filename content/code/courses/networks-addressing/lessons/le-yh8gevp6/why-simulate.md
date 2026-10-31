@@ -7,11 +7,11 @@ Learning networks from a book alone fails in the same place every time: the mome
 work, and you have never seen what not working looks like. **A practice network exists so that you
 can break things on purpose and watch what happens.** Three reasons make one worth setting up:
 
-- **hardware**: a switch, two routers and a firewall cost money and a shelf, while a lab of twenty
+- hardware: a switch, two routers and a firewall cost money and a shelf, while a lab of twenty
   devices costs some of a laptop's memory;
-- **safety**: a wrong route on a practice network takes down nothing, and on the office router it takes
+- safety: a wrong route on a practice network takes down nothing, and on the office router it takes
   down the office;
-- **rehearsal**: a change you are about to make in production — a new VLAN, a route, a firewall rule —
+- rehearsal: a change you are about to make in production — a new VLAN, a route, a firewall rule —
   can be tried first on a copy of the network, and the copy is cheap to throw away.
 
 The tools that build these networks are all called "simulators" in conversation, and the word hides

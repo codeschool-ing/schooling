@@ -49,12 +49,12 @@ passou para o `e2`, porque um hash sobre os membros ainda ativos só tem uma res
 
 Há dois jeitos, e eles pegam falhas diferentes.
 
-- **O sinal do enlace.** `miimon 100` faz o bond conferir a portadora de cada membro a cada 100
+- O primeiro é o sinal do enlace. `miimon 100` faz o bond conferir a portadora de cada membro a cada 100
   milissegundos. Um cabo puxado ou cortado, ou uma porta desligada no switch da outra ponta, é visto
   numa conferência. Foi o que aconteceu aqui.
-- **O próprio LACP.** Um membro só fica no LAG enquanto os LACPDUs do parceiro continuam chegando.
-  Com `lacp_rate fast` eles chegam a cada segundo, e **um membro que perde três seguidos é tirado,
-  uns três segundos, mesmo que a luz do enlace continue acesa.** Essa é a falha que o sinal não
+- O segundo é o próprio LACP. Um membro só fica no LAG enquanto os LACPDUs do parceiro continuam chegando.
+  Com `lacp_rate fast` eles chegam a cada segundo, e **um membro que perde três seguidos é tirado
+  depois de uns três segundos, mesmo que a luz do enlace continue acesa.** Essa é a falha que o sinal não
   enxerga: um conversor de mídia no meio do cabo, ou um switch na outra ponta que travou com as
   portas ainda acesas. Com a taxa lenta a mesma espera é de 90 segundos. Um LAG estático não tem
   nenhuma conferência além do sinal.
@@ -64,7 +64,7 @@ Há dois jeitos, e eles pegam falhas diferentes.
 O LAG segue com metade da capacidade, e nada na rede precisa recalcular nada. Esse também é o risco
 silencioso dele. **Um bond com um membro fora parece saudável visto de cima**: o `bond0` está `UP`,
 os pings respondem, e o único sinal é uma linha em `/proc/net/bonding/bond0` ou o equivalente do
-switch. O `Min links: 0` na saída da seção anterior é a configuração que mudaria isso: com
+switch. O `Min links: 0` na saída da seção anterior é a configuração que mudaria isso. Com
 `min_links 2`, o bond se declararia fora do ar quando houvesse menos de dois membros ativos, para que
 um projeto que precisa dos dois cabos falhe de forma visível em vez de andar devagar. Seja qual for a
 escolha, um sistema de monitoramento deveria vigiar a contagem de membros, porque ninguém percebe a

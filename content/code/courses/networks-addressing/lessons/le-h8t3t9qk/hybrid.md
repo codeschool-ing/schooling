@@ -29,9 +29,9 @@ Read that table from the desks inwards and a typical company network draws itsel
 ## The lab is already a hybrid
 
 This course's `office` scenario looks like a star, and the switch sw1 is one. But follow the
-drawing at the top of `office.sh`, from lesson 1, out of the office: sw1 hangs off r1, r1 is cabled to the provider
-`isp`, `isp` to a load balancer `lb`, and `lb` is the centre of a second, small star with the two
-web servers `web1` and `web2` on it.
+drawing at the top of `office.sh`, from lesson 1, out of the office. The switch sw1 hangs off r1,
+r1 is cabled to the provider `isp`, and `isp` to a load balancer `lb`. And `lb` is the centre of a
+second, small star with the two web servers `web1` and `web2` on it.
 
 ```
 pc1 pc2 pc3 srv --- sw1 --- r1 === isp --- lb --- web1, web2

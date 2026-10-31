@@ -68,14 +68,14 @@ para ser achada**.
 
 Três jeitos de um projeto parecer redundante no papel e não ser:
 
-- **Destino compartilhado.** Dois cabos no mesmo duto são cortados pela mesma escavadeira. Dois
+- Destino compartilhado. Dois cabos no mesmo duto são cortados pela mesma escavadeira. Dois
   roteadores na mesma régua de tomadas apagam juntos. A redundância é só tão independente quanto a coisa
   menos óbvia que as duas metades compartilham.
-- **Um caminho que ninguém usa.** Um link de backup que não carrega tráfego há um ano pode estar
+- Um caminho que ninguém usa. Um link de backup que não carrega tráfego há um ano pode estar
   quebrado, mal configurado ou desligado no dia em que for necessário, e nada avisa. Caminhos de custo
   igual evitam isso mantendo as duas metades ocupadas; um link de reserva deveria ao menos ser testado
   com hora marcada.
-- **Metade da capacidade.** Com os dois núcleos em uso, cada um carrega metade da carga. Se um falha, o
+- Metade da capacidade. Com os dois núcleos em uso, cada um carrega metade da carga. Se um falha, o
   outro carrega tudo. Um projeto em que cada núcleo roda a 70% é redundante no desenho e sobrecarregado
   na falha.
 

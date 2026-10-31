@@ -30,14 +30,14 @@ várias pessoas compartilham. Ele vem numa edição Community gratuita e numa ed
 O que os dois dão é fidelidade: um firewall de um fabricante e um roteador de outro, cada um rodando o
 software real e configurado pela linha de comando real. O que isso custa:
 
-- **imagens**: nenhuma das duas ferramentas vem com software de fabricante. As imagens de roteador e
+- imagens: nenhuma das duas ferramentas vem com software de fabricante. As imagens de roteador e
   firewall vêm dos fabricantes, sob as licenças deles, muitas vezes ligadas a um contrato de suporte ou
   a uma conta de treinamento; uma imagem copiada de outro lugar é software que você não tem licença
   para rodar;
-- **memória e processador**: cada dispositivo é uma máquina virtual com memória reservada só para
+- memória e processador: cada dispositivo é uma máquina virtual com memória reservada só para
   ele, e uma imagem atual de fabricante pode querer gigabytes, então um laboratório de dez desses
   roteadores pede um servidor, não um notebook;
-- **preparação**: a imagem precisa ser importada e casada com as configurações que a fazem dar boot, o
+- preparação: a imagem precisa ser importada e casada com as configurações que a fazem dar boot, o
   que demora mais que desenhar a rede.
 
 Use os dois quando a marca e a versão importam: ensaiar uma mudança no software exato do firewall que

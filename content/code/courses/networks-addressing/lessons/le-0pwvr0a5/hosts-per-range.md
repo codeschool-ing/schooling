@@ -5,7 +5,7 @@ version: 1
 
 The question a plan asks most is how many machines a range holds. The answer comes from the host
 bits alone. **A prefix of length n leaves h = 32 − n host bits, which make 2^h addresses, and 2^h − 2
-of them are for hosts**, because the network and broadcast addresses are taken. sales1's `/25` has 7
+of them are for hosts.** The other two are the network and broadcast addresses. sales1's `/25` has 7
 host bits: 2^7 = 128 addresses and 126 hosts, the `Hosts/Net: 126` this lesson began with.
 
 The common mistake is to stop at 2^h. A `/26` holds 64 addresses and only 62 machines. The second

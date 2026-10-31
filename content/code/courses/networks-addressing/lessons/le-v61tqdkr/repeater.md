@@ -28,7 +28,7 @@ done in several directions at once, with the same consequences.
 ## Where you meet one today
 
 Hardly anybody installs a box called a repeater on an Ethernet network now, because a switch does
-the job better: it regenerates the signal too, since it receives each frame and sends it again, and
+the job better. It regenerates the signal too, since it receives each frame and sends it again, and
 it does not pass on what the other side does not need. The idea survives in three places:
 
 - **Media converters and fibre links.** When 100 metres is not enough, the answer is a switch at

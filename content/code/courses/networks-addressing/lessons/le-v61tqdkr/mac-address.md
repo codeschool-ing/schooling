@@ -9,8 +9,8 @@ means.** pc1's card from the network card section is `02:25:70:bc:29:c6`: six pa
 48 bits.
 
 The usual description says that the first three bytes name the manufacturer and the last three
-are the card's own number. For an address burnt into a card at the factory, that is how it works:
-the IEEE sells each manufacturer a block called an **OUI** (*Organizationally Unique Identifier*),
+are the card's own number. For an address burnt into a card at the factory, that is how it works.
+The IEEE sells each manufacturer a block called an **OUI** (*Organizationally Unique Identifier*),
 the manufacturer numbers its cards inside the block, and the two halves together are meant to be
 unique in the world. Plenty of tools will look up the first three bytes and print a maker's name.
 
@@ -31,9 +31,9 @@ with `02`. Look at that byte bit by bit:
   manufacturer at all.
 
 So `02` reads: one card, locally administered. The lab chose it on purpose. Its script,
-`netlab.sh` from lesson 1, gives every card an address made of `02` and five bytes computed from the device's and the interface's
-names, so that pc1 has the same MAC every time the lab is built and a transcript recorded today
-matches one recorded next month. The server, `02:9e:43:3e:ca:ae`, and the router, `02:1f:23:e7:e9:d5`,
+`netlab.sh` from lesson 1, gives every card an address made of `02` and five bytes computed from
+the device's and the interface's names. That way pc1 has the same MAC every time the lab is built,
+and a transcript recorded today matches one recorded next month. The server, `02:9e:43:3e:ca:ae`, and the router, `02:1f:23:e7:e9:d5`,
 follow the same rule.
 
 A quick way to recognise a local address: **look at the second hex digit**. If it is 2, 6, a or e,

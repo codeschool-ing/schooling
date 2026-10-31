@@ -44,8 +44,8 @@ máquina do enlace tinha de lê-la. **O pedido foi para `ff02::1:ff00:10`, um en
 solicitado (*solicited-node*)**: `ff02::1:ff` seguido dos últimos 24 bits do endereço procurado. O
 endereço do srv termina em `00:00:10` (os dois últimos grupos, `0000:0010`, dos quais se tomam os seis
 últimos dígitos hexadecimais), então o grupo é `ff02::1:ff00:10`. Cada máquina entra no grupo de cada
-um dos seus endereços, então na prática só a máquina com o endereço certo, e a rara cujo endereço
-termine nos mesmos 24 bits, precisa olhar a pergunta. O pc2, cujos endereços terminam em `d2:63ba`,
+um dos seus endereços. Então, na prática, só a máquina com o endereço certo precisa olhar a
+pergunta, e com ela a rara máquina cujo endereço termine nos mesmos 24 bits. O pc2, cujos endereços terminam em `d2:63ba`,
 está no grupo `ff02::1:ffd2:63ba` e nunca precisou ler esta.
 
 A resposta vai para o mesmo tipo de tabela que o ARP preenche:
@@ -55,8 +55,8 @@ ana@pc1:~$ ip -6 neigh
 2001:db8:20:10::10 dev eth0 lladdr 02:9e:43:3e:ca:ae REACHABLE 
 ```
 
-`02:9e:43:3e:ca:ae` é o MAC do srv, e dá para conferir com o endereço link-local do srv da primeira
-seção desta aula, `fe80::9e:43ff:fe3e:caae`: os mesmos dígitos com `ff:fe` no meio e o `02` virado em
+`02:9e:43:3e:ca:ae` é o MAC do srv, e dá para conferir com o endereço link-local do srv da seção
+sobre notação desta aula, `fe80::9e:43ff:fe3e:caae`: os mesmos dígitos com `ff:fe` no meio e o `02` virado em
 `00`.
 
 Ainda há um jeito de alcançar todas as máquinas de um enlace, e ele também é um grupo multicast:

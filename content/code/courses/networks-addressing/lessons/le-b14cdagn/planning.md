@@ -78,7 +78,7 @@ Unused:
 
 Read it piece by piece: sales is 10.20.32.0/25, hosts .1 to .126; engineering is 10.20.32.128/26,
 hosts .129 to .190; operations is 10.20.32.192/27, hosts .193 to .222; the link is
-10.20.32.224/30, hosts .225 and .226. The binary column shows each mask moving one more bit to the
+10.20.32.224/30, hosts .225 and .226. The binary column shows each mask moving further to the
 right, and each network starting where the last one ended. At the bottom, `Needed size: 228
 addresses`, the sum 128 + 64 + 32 + 4, and the 28 addresses left are listed as the three blocks they
 fall into: a /30, a /29 and a /28.
@@ -90,7 +90,7 @@ fall into: a /30, a /29 and a /28.
 The order is not decoration. Place the same subnets carelessly and a block that has room can still
 fail to hold them. Suppose somebody puts the link at 10.20.32.64/30 and operations at
 10.20.32.192/27 first, because those numbers looked tidy. 220 addresses are still free, and sales
-needs only 128 of them, but **a /25 can only start at .0 or at .128**, and each of those halves now
+needs only 128 of them. But **a /25 can only start at .0 or at .128**, and each of those halves now
 has a small subnet sitting inside it. Sales no longer fits anywhere in the block. Largest first
 never paints itself into that corner, and the free space it leaves is at the end, in aligned pieces
 that a later network can take whole.

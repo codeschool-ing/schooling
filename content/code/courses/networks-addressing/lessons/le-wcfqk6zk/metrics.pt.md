@@ -4,7 +4,7 @@ version: 2
 ---
 
 O prefixo mais longo não consegue escolher entre duas rotas para o mesmo prefixo: elas têm o mesmo
-tamanho. Aí a **métrica** decide, e **vence a métrica mais baixa**. Ela é um custo, e o roteador pega o
+tamanho. Aí a métrica decide, e **vence a métrica mais baixa**. Ela é um custo, e o roteador pega o
 caminho mais barato. O motivo mais comum para ter duas rotas assim é um reserva: duas saídas, uma
 preferida, a outra esperando.
 

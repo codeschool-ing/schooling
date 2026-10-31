@@ -10,8 +10,8 @@ public address outside.** The private ranges are set aside by RFC 1918 — `10.0
 address exists in thousands of offices at once, and no router on the internet carries a route to any
 of them.
 
-Lesson 1's office is built that way, and this lesson runs on it: `sudo bash ~/netlab/netlab.sh up office`.
-pc1 has a private address:
+Lesson 1's office is built that way, and this lesson runs on it:
+`sudo bash ~/netlab/netlab.sh up office`. pc1 has a private address:
 
 ```
 ana@pc1:~$ ip -br addr show eth0

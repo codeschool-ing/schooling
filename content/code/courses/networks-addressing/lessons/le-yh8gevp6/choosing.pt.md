@@ -31,8 +31,7 @@ Quatro perguntas mostram como a escolha cai:
   porta para um telefone, um canal de Wi-Fi — precisam da coisa física.
 
 Este curso usa o laboratório de namespaces por um motivo que é tanto de honestidade quanto de custo:
-cada transcrição nele é algo que um kernel real imprimiu, e qualquer pessoa com uma máquina Linux pode
+cada transcrição nele é algo que um kernel real imprimiu. Qualquer pessoa com uma máquina Linux pode
 montar as mesmas redes com os arquivos que estas aulas mostram e obter as mesmas linhas, tirando os
-tempos. Quando uma aula precisa de um dispositivo que o laboratório
-não consegue ser — um modem, um ponto de acesso, a linha de comando de um fabricante — ela diz isso e
-não mostra nada.
+tempos. Quando uma aula precisa de um dispositivo que o laboratório não consegue ser — um modem, um
+ponto de acesso, a linha de comando de um fabricante — ela diz isso e não mostra nada.

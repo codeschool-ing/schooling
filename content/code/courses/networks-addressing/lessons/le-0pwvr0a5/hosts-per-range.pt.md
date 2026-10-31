@@ -5,7 +5,7 @@ version: 1
 
 A pergunta que um plano mais faz é quantas máquinas uma faixa comporta. A resposta vem só dos bits de
 host. **Um prefixo de comprimento n deixa h = 32 − n bits de host, que dão 2^h endereços, e 2^h − 2 deles
-são para hosts**, porque os endereços de rede e de broadcast estão ocupados. O `/25` do sales1 tem 7 bits
+são para hosts.** Os outros dois são os endereços de rede e de broadcast. O `/25` do sales1 tem 7 bits
 de host: 2^7 = 128 endereços e 126 hosts, o `Hosts/Net: 126` com que esta aula começou.
 
 O erro comum é parar em 2^h. Um `/26` tem 64 endereços e só 62 máquinas. O segundo erro vem um passo

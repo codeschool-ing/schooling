@@ -80,7 +80,7 @@ gateway. To do that it needed the gateway's MAC, so it asked for 10.20.10.1 — 
 `10.20.10.1 dev eth0 INCOMPLETE` is the whole diagnosis: pc1 asked who has its gateway's address,
 and nobody in VLAN 10 owns it yet.**
 
-Notice what the switch did and did not do. pc2's frames would have had to cross from VLAN 10 into
+Notice what the switch did and did not do. Frames for pc2 would have had to cross from VLAN 10 into
 VLAN 20 somewhere inside sw1, and a switch only ever delivers a frame within the VLAN it arrived
 in. No setting on the access ports changes that, and even a switch that did carry the frame
 across would not be asked to: pc1 believes pc2 is in another subnet, so it will only ever send to

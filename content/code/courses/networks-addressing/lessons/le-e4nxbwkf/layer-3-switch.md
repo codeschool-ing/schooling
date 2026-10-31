@@ -42,7 +42,7 @@ root@sw1:~# ip route
 
 `vlan10` and `vlan20` are VLAN interfaces again, the same kind r1 used, built this time on top of
 `br0`, the switch itself. The third command matters and is easy to miss: **`br0` has to join VLANs
-10 and 20 as well** (`self` means the bridge's own port rather than one of its cables), because in
+10 and 20 as well** (`self` means the bridge's own port rather than one of its cables). In
 lesson 19's listings it was only in VLAN 1, and a switch's own interfaces hear only the VLANs the
 switch has joined. `sysctl -w net.ipv4.ip_forward=1` is the line that turns a host with two
 addresses into a router; r1 had it from the lab, and the switch did not. The routing table has the
@@ -64,7 +64,7 @@ vlan10@br0       UP             02:6a:dc:93:3b:8a <BROADCAST,MULTICAST,UP,LOWER_
 ```
 
 Two transmitted, none received. **pc1's neighbour table still says that 10.20.10.1 is at
-`02:1f:23:e7:e9:d5`, which is r1's MAC**, the one the last two sections watched on the trunk. The
+`02:1f:23:e7:e9:d5`, which is r1's MAC**, the one the last section watched on the trunk. The
 switch's `vlan10` is at `02:6a:dc:93:3b:8a`. So pc1 is doing exactly what its table tells it to:
 it sends frames for its gateway to a MAC that nothing on the switch answers to any more. The address
 moved to a new machine; the cache of every host in the VLAN did not move with it.
@@ -101,7 +101,7 @@ answering from inside the switch**.
 
 Any change that moves a gateway address to a different MAC, including swapping a failed router for
 a spare, meets the same stale caches. First-hop redundancy protocols such as VRRP avoid the problem
-by design: the gateway address keeps one virtual MAC whichever router holds it, so no host's cache
+by design. The gateway address keeps one virtual MAC whichever router holds it, so no host's cache
 goes stale, and the router taking over sends a gratuitous ARP so that the switches learn which port
 that MAC now lives behind.
 

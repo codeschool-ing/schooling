@@ -70,7 +70,7 @@ directory, and the PCs build their IPv6 addresses from what it announces. Build 
 `sudo bash ~/netlab/netlab.sh up dualstack` and give it ten seconds, so the first announcement has
 reached every PC.
 
-That form is long, and two rules shorten it. The server of this lesson's office was given its
+Written in full, an address is long, and two rules shorten it. The server of this lesson's office was given its
 address by hand, and the short form is what Linux prints:
 
 ```
@@ -135,12 +135,12 @@ dropped, and `::` on the longest run of zeros. Linux follows it, so search for t
 
 The prefix is written the IPv4 way, with a slash. **`/64` means the first 64 bits name the network,
 `2001:db8:20:10::/64`, and the last 64 bits name the interface on it.** In IPv4 the host part was
-whatever the mask left; in IPv6 a LAN is a `/64` almost always, so the host part is 64 bits: room for
+whatever the mask left. In IPv6 a LAN is a `/64` almost always, so the host part is 64 bits: room for
 as many interfaces as the whole IPv4 internet squared. srv's interface identifier, `::10`, was chosen by hand to be
 easy to remember. The PCs choose their own, which is the subject of the next two sections.
 
 Two more readings of the output. `2001:db8::/32` is the block RFC 3849 reserves for documentation,
 the IPv6 counterpart of the `203.0.113.0/24` lesson 8 showed, so the lab can print it safely.
 `Aggregatable Global Unicast Addresses` is sipcalc's name for the global addresses, the ones that
-are routed on the internet; without a prefix, sipcalc treated the address as a `/128`, a single
+are routed on the internet. Without a prefix, sipcalc treated the address as a `/128`, a single
 interface, the way ipcalc assumed a `/24`.

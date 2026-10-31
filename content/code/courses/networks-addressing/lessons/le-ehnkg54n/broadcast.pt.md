@@ -5,8 +5,8 @@ version: 1
 
 Um endereço de **broadcast** entrega um pacote a todas as máquinas de uma rede de uma vez. O IPv4 tem
 dois tipos. O **broadcast dirigido** de uma rede é o seu último endereço, aquele com todos os bits de
-host em 1: para `10.20.10.0/24` é `10.20.10.255`, a linha `Broadcast` que o ipcalc imprimiu na
-primeira seção desta aula. O **broadcast limitado**, `255.255.255.255`, quer dizer todas as máquinas
+host em 1: para `10.20.10.0/24` é `10.20.10.255`, a linha `Broadcast` que o ipcalc imprimiu para o
+pc1 no começo desta aula. O **broadcast limitado**, `255.255.255.255`, quer dizer todas as máquinas
 deste enlace, seja qual for a rede, e é o que uma máquina ainda sem endereço usa para pedir um; a
 aula 10 mostra um cliente DHCP fazendo isso.
 
@@ -77,7 +77,7 @@ ao pc3, ao srv e à `eth0` do r1, e não foi além: **o conjunto de máquinas qu
 domínio de broadcast**, e neste escritório é tudo o que está ligado ao sw1. A aula 18 mede um, e a aula
 19 divide um switch em vários com VLANs.
 
-Broadcasts não são curiosidade. O ARP faz a sua pergunta por broadcast, como o curso de redes mostrou
+Broadcasts fazem parte do tráfego comum. O ARP faz a sua pergunta por broadcast, como o curso de redes mostrou
 no fio, e o DHCP começa com um. Toda máquina do domínio recebe cada um deles e gasta um pouco de
 esforço decidindo ignorá-lo, e esse é um dos motivos para uma rede de milhares de máquinas ser
 cortada em redes menores, em vez de montada como uma LAN plana só.

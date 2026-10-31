@@ -82,7 +82,7 @@ switch marks an address the lab chose rather than a manufacturer, which lesson 2
 
 You have been running it since lesson 1, and the commands are few. `up` takes down whatever was there
 and builds a network from nothing, so every lesson starts from the same state rather than from what the
-last one left behind; `on` runs a command, or opens a shell, on one device as one user, which is how
-the transcripts in these lessons were recorded; `down` takes it all away. **It is the same kind of lab
+last one left behind. `on` runs a command, or opens a shell, on one device as one user, which is how
+the transcripts in these lessons were recorded. `down` takes it all away. **It is the same kind of lab
 as Mininet, so it has the same limit**: everything in it is Linux, and where a lesson talks about a
 vendor's command line, it says so and shows no output for it.

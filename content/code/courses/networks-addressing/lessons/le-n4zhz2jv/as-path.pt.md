@@ -38,11 +38,11 @@ Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down Sta
 Total number of neighbors 2
 ```
 
-**2 recebidos e 1 enviado em cada sessão**: cada provedor mandou suas duas redes de clientes, e edge mandou
-seu único bloco a cada um. ispa lista edge entre os vizinhos a quem repassa 203.0.113.0/24, como a captura
-da próxima seção mostra, e o que chegar edge recusa duas vezes: `FROM-PROVIDER` o nega, e o caminho contém
-64500, o AS do próprio edge. **Um roteador BGP descarta qualquer rota cujo AS
-path já contenha o seu número**, e é assim que o BGP evita loops entre ASes.
+**2 recebidos e 1 enviado em cada sessão**: cada provedor mandou as duas redes de clientes, a sua e a do
+outro provedor, e edge mandou seu único bloco a cada um. ispa lista edge entre os vizinhos a quem repassa
+203.0.113.0/24, como a captura da próxima seção mostra. O que chegar, edge recusa duas vezes:
+`FROM-PROVIDER` o nega, e o caminho contém 64500, o AS do próprio edge. **Um roteador BGP descarta
+qualquer rota cujo AS path já contenha o seu número**, e é assim que o BGP evita loops entre ASes.
 
 ## Lendo a tabela de edge
 

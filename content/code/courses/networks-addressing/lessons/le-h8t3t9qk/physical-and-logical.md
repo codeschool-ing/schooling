@@ -40,7 +40,7 @@ ring and the mesh in this lesson show exactly that.
 
 The physical drawing is how you find the fault. The logical drawing is how you predict the damage.
 When the finance office says "the network is slow since this morning", the physical map tells you
-which closet and which switch; the logical map tells you whether the reception's PCs share that
+which closet and which switch. The logical map tells you whether the reception's PCs share that
 switch's traffic, whether the backup link is now carrying everything, and who else is about to
 call.
 

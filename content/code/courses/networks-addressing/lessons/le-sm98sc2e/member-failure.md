@@ -49,12 +49,12 @@ on `e1` moved to `e2`, because a hash over the members still up has only one ans
 
 There are two ways, and they catch different failures.
 
-- **The link signal.** `miimon 100` has the bond check each member's carrier every 100
+- The first is the link signal. `miimon 100` has the bond check each member's carrier every 100
   milliseconds. A cable pulled or cut, or a port on the far switch shut down, is seen within one
   check. This is what happened here.
-- **LACP itself.** A member stays in the LAG only while LACPDUs from the partner keep arriving.
+- The second is LACP itself. A member stays in the LAG only while LACPDUs from the partner keep arriving.
   With `lacp_rate fast` they come every second, and **a member that misses three in a row is taken
-  out, about three seconds, even if its link light stays on.** That is the failure the signal
+  out after about three seconds, even if its link light stays on.** That is the failure the signal
   cannot see: a media converter in the middle of the cable, or a far-end switch that has crashed
   with its ports still lit. With the slow rate the same wait is 90 seconds. A static LAG has neither
   check beyond the signal.
@@ -65,7 +65,7 @@ The LAG carries on at half its capacity, and nothing on the network has to recom
 That is also its quiet risk. **A bond with one member down looks healthy from above**: `bond0` is
 `UP`, the pings answer, and the only sign is a line in `/proc/net/bonding/bond0` or the switch's
 equivalent. The `Min links: 0` in the previous section's output is the setting that would change
-that: with `min_links 2`, the bond would declare itself down when fewer than two members were up,
+that. With `min_links 2`, the bond would declare itself down when fewer than two members were up,
 so that a design which needs both cables fails loudly instead of running slow. Whichever you choose,
 a monitoring system should be watching the member count, because nobody notices a missing half
 until the day the remaining cable is full.

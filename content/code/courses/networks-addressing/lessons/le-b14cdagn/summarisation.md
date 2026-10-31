@@ -35,7 +35,7 @@ root@r2:~# ip route get 10.20.32.250
 ```
 
 The same answer for both: towards r1. 10.20.32.250 is in the plan's unused space, so r1 has no
-subnet for it, and r1 does what any router does with an address it has no specific route for: it
+subnet for it. r1 does what any router does with an address it has no specific route for: it
 uses its default, which points back at r2. A ping from hq1 shows where that ends:
 
 ```

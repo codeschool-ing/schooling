@@ -30,13 +30,13 @@ comes as a free Community edition and a paid Professional edition.
 What both give you is fidelity: a firewall from one vendor and a router from another, each running
 its real software and configured through its real command line. What that costs:
 
-- **images**: neither tool ships with vendor software. The router and firewall images come from their
+- images: neither tool ships with vendor software. The router and firewall images come from their
   vendors, under their licences, often tied to a support contract or a training account; an image
   copied from somewhere else is software you are not licensed to run;
-- **memory and processor**: each device is a virtual machine with its own memory reserved, and a
+- memory and processor: each device is a virtual machine with its own memory reserved, and a
   current vendor image may want gigabytes, so a lab of ten such routers needs a server rather than a
   laptop;
-- **setup**: an image has to be imported and matched to the settings that boot it, which takes longer
+- setup: an image has to be imported and matched to the settings that boot it, which takes longer
   than drawing the network.
 
 Use them when the brand and the version matter: rehearsing a change on the exact firewall software the

@@ -73,7 +73,7 @@ lo               UNKNOWN        127.0.0.1/8 ::1/128
 eth0@if412       UP             10.20.10.21/24 fe80::25:70ff:febc:29c6/64 
 ```
 
-O `eth0` do pc1 é essa outra ponta, e o `@if412` dele aponta de volta, pelo cabo, para a p1. Ela tem
+O `eth0` do pc1 é essa outra ponta, e o `@if412` dele aponta de volta, pelo cabo, para a p1. Ele tem
 `10.20.10.21/24`, o endereço que o cenário do escritório lhe dá. O `02:` no começo de cada MAC do switch
 marca um endereço escolhido pelo laboratório e não por um fabricante, o que a aula 2 explica.
 
@@ -82,8 +82,8 @@ marca um endereço escolhido pelo laboratório e não por um fabricante, o que a
 ```
 
 Você o usa desde a aula 1, e os comandos são poucos. O `up` desmonta o que estiver lá e monta uma rede
-do zero, então toda aula começa do mesmo estado, e não do que a anterior deixou; o `on` roda um
+do zero, então toda aula começa do mesmo estado, e não do que a anterior deixou. O `on` roda um
 comando, ou abre um shell, num dispositivo com um usuário, que é como as transcrições destas aulas
-foram gravadas; o `down` desfaz tudo. **É o mesmo tipo de laboratório que o Mininet, então tem o mesmo
+foram gravadas. O `down` desfaz tudo. **É o mesmo tipo de laboratório que o Mininet, então tem o mesmo
 limite**: tudo nele é Linux, e quando uma aula fala da linha de comando de um fabricante, ela diz isso
 e não mostra saída nenhuma.

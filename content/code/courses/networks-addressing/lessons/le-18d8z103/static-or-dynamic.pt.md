@@ -86,7 +86,7 @@ Recebe endereço estático tudo o que outras máquinas precisam encontrar pelo n
 precisa continuar funcionando quando o servidor DHCP não funciona. Neste laboratório são o r1 em
 10.20.10.1, o gateway informado a todos os PCs, e o srv em 10.20.10.10, o próprio servidor DHCP — um
 servidor não consegue emprestar um endereço a si mesmo antes de estar rodando. Servidores de nomes
-entram no mesmo grupo. Cada um desses endereços está escrito no `dhcp.sh`, abaixo, numa linha `addr`.
+entram no mesmo grupo. Cada um desses endereços está escrito no `dhcp.sh`, acima, numa linha `addr`.
 
 Tudo o que vai e vem é dinâmico: laptops, celulares, desktops, o tablet de um visitante. Digitar os
 endereços deles à mão custa mais do que os minutos que leva. Alguém erra a digitação e duas máquinas

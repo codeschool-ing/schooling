@@ -37,11 +37,11 @@ Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down Sta
 Total number of neighbors 2
 ```
 
-**2 received and 1 sent on each session**: each provider sent its two customer networks, and edge sent its
-one block to each. ispa lists edge among the peers it passes 203.0.113.0/24 to, as the next section's
-capture shows, and whatever arrives edge refuses twice over: `FROM-PROVIDER` denies it, and the path
-contains 64500, edge's own AS. **A BGP router drops any route whose AS path already
-contains its own number**, which is how BGP avoids loops between ASes.
+**2 received and 1 sent on each session**: each provider sent both customer networks, its own and the
+other provider's, and edge sent its one block to each. ispa lists edge among the peers it passes
+203.0.113.0/24 to, as the next section's capture shows. Whatever arrives, edge refuses twice over:
+`FROM-PROVIDER` denies it, and the path contains 64500, edge's own AS. **A BGP router drops any route
+whose AS path already contains its own number**, which is how BGP avoids loops between ASes.
 
 ## Reading edge's table
 

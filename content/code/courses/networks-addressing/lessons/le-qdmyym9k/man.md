@@ -40,5 +40,5 @@ lost 19 of 30 pings when a cable was cut, and then carried on round the other si
 When a support ticket says "the link to the other building is down", the useful first question is
 the one this lesson keeps asking: **whose link is it?** If it is the company's own fibre, the fault
 is yours to find. If it is a provider's metro service, the next step is the provider's ticket
-number, and the evidence you collect — a traceroute that stops at your own router, a link light that
+number. The evidence you collect — a traceroute that stops at your own router, a link light that
 went out at a known minute — is what makes that ticket move.

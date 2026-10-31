@@ -76,8 +76,8 @@ diferença é a essência de um endereço link-local: **toda interface tem um em
 endereço sozinho não diz por qual enlace mandar o pacote**. Uma máquina com duas placas tem dois
 enlaces que, para o seu roteamento, contêm `fe80::1f:23ff:fee7:e9d5`. O `%eth0` é a **zona**, a
 interface a que o endereço pertence, e o aviso que o ping imprimiu diz exatamente isso,
-`use: address%<ifname|scope-id>`. Endereços globais nunca precisam de zona; os link-local precisam,
-sempre que um programa tem de ser informado de uma.
+`use: address%<ifname|scope-id>`. Endereços globais nunca precisam de zona.
+Um endereço link-local precisa de uma sempre que é passado a um programa.
 
 O próprio endereço link-local do r1, `fe80::1f:23ff:fee7:e9d5`, saiu do MAC `02:1f:23:e7:e9:d5` pelos
 mesmos três passos. Guarde-o: na próxima seção ele aparece como gateway padrão de todos os PCs do

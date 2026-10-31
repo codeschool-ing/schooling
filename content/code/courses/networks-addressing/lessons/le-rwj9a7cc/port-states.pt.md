@@ -13,13 +13,13 @@ leva o seu tempo para alcançá-lo.
 
 Depois que a raiz é eleita, as outras portas recebem os papéis em duas passadas.
 
-- **Porta raiz.** Cada switch, menos a raiz, escolhe a porta com o menor custo total até a raiz. É
-  por ela que esse switch alcança o resto da árvore.
-- **Porta designada.** Em cada cabo, as duas pontas comparam o que oferecem, e a ponta com o menor
-  custo até a raiz vira a porta designada: a que encaminha tráfego para aquele cabo, no sentido
+- Cada switch, menos a raiz, escolhe a porta com o menor custo total até a raiz, a sua **porta
+  raiz**. É por ela que esse switch alcança o resto da árvore.
+- Em cada cabo, as duas pontas comparam o que oferecem, e a ponta com o menor custo até a raiz vira
+  a **porta designada**: a que encaminha tráfego para aquele cabo, no sentido
   contrário ao da raiz. **Toda porta da própria raiz é designada**, porque nada está mais perto da
   raiz do que a raiz.
-- **Porta bloqueada.** Uma porta que não é nenhuma das duas fica bloqueada. Ela continua ouvindo
+- Uma porta que não é nenhuma das duas fica **bloqueada**. Ela continua ouvindo
   BPDUs, que é como vai perceber quando for necessária, e não encaminha mais nada.
 
 O kernel mostra cada porta do `sw3` com a ponta designada do cabo dela:

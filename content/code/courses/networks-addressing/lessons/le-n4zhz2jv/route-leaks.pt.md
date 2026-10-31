@@ -81,9 +81,9 @@ caminho que contém o próprio AS. E neste laboratório a rota vazada para os cl
 teria perdido para a direta `64501` pelo tamanho. **Na internet real ela não precisaria perder**: um
 provedor que dá às rotas dos clientes uma local preference maior, como a seção anterior descreveu, prefere
 uma rota vazada vinda de um cliente à correta vinda de um par, sejam quais forem os tamanhos. É assim que
-um vazamento por uma rede pequena atrai o tráfego de redes grandes por um enlace que não o suporta, e isso
-já aconteceu, mais de uma vez, com serviços que milhões de pessoas usam ficando lentos ou inalcançáveis
-por horas.
+um vazamento por uma rede pequena atrai o tráfego de redes grandes por um enlace que não o suporta. Isso
+já aconteceu mais de uma vez, e serviços que milhões de pessoas usam ficaram lentos ou inalcançáveis por
+horas.
 
 **Então há dois filtros, um de cada lado de todo enlace de cliente**, e nenhum basta sozinho:
 

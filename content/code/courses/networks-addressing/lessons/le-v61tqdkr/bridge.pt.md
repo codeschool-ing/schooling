@@ -62,7 +62,7 @@ ageing_time 30000
 ```
 
 **`ageing_time 30000` está em centésimos de segundo: 300 segundos, cinco minutos.** Uma entrada que
-nenhum quadro renovou por esse tempo é esquecida, então uma máquina desligada de p1 e ligada em p3 é
+nenhum quadro renovou por esse tempo é esquecida. Assim, uma máquina desligada de p1 e ligada em p3 é
 achada no lugar novo assim que manda um quadro, e um endereço que sumiu deixa de ocupar uma linha da
 tabela. A aula 1 pôs esse valor em 0 para o switch esquecer tudo na hora, e foi assim que ele imitou
 um hub.
