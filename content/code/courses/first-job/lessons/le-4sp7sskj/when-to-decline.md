@@ -13,7 +13,7 @@ work. A few are not, and it is worth recognising them:
 - There is no conversation first. A company that sends a large exercise before anybody has spoken to
   you is spending your time to save its own.
 
-Declining is allowed, and it can be polite: *Thank you; I'm not able to commit several days to an unpaid
+**Declining is allowed**, and it can be polite: *Thank you; I'm not able to commit several days to an unpaid
 exercise. I'd be glad to do a shorter one, or to walk you through my portfolio project in a call.* Some
 companies accept the alternative; the ones that do not have told you something useful.
 

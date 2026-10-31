@@ -3,7 +3,7 @@ title: Os últimos cinco minutos
 version: 1
 ---
 
-O fim de uma entrevista decide o que acontece na semana seguinte, e três coisas cabem nele:
+**O fim de uma entrevista decide o que acontece na semana seguinte**, e três coisas cabem nele:
 
 1. A próxima etapa e a data. *Qual é o próximo passo, e quando devo ter notícias?* É a data que o
    seguimento da aula 10 espera.
