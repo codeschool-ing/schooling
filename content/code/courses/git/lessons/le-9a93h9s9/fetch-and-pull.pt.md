@@ -66,7 +66,8 @@ eadf998 Take rye bread off until the flour arrives
 O `git fetch` copiou o commit do Bruno para o repositório da Ana e moveu o marcador dela:
 `6555c9b..eab2026 main -> origin/main`. **O `main` dela não andou, e nenhum arquivo mudou.** Agora o
 `git status` diz a verdade: *behind 'origin/main' by 1 commit, and can be fast-forwarded*. O log com
-`--all` mostra o marcador um commit à frente do branch dela.
+`--all` inclui o `eab2026`, para o qual por enquanto só o marcador aponta, um commit acima do
+`6555c9b` dela.
 
 Isso faz do fetch o jeito seguro de olhar. Ele nunca faz mal, e responde *o que os outros fizeram?*
 sem mexer em nada em que você está trabalhando.

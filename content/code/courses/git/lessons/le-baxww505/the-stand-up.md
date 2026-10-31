@@ -46,5 +46,5 @@ a conversation out of the meeting.
 
 **Problems are named in the daily and solved after it.** When two people start discussing how to fix
 something, the useful thing is to say *"let's take that after"*, and the two who need to stay, stay. Teams
-often call this the *parking lot*. A daily that routinely runs to thirty minutes is costing four people an
-hour a week each, and it is usually because it is solving problems in front of people who are not involved.
+often call this the *parking lot*. A daily that routinely runs to thirty minutes is costing four people more
+than an hour a week each, and it is usually because it is solving problems in front of people who are not involved.

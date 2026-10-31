@@ -80,7 +80,7 @@ ana@vm:~/site$ git status --short
 ana@vm:~/site$ git restore menu.html
 ```
 
-O cardápio de três commits atrás, com o pão de centeio e o preço antigo, está de volta no diretório
+O cardápio de três commits atrás, com o pão de centeio e ainda sem o pão de queijo, está de volta no diretório
 de trabalho, e o `git status` o mostra como uma modificação comum. Dava para fazer o commit dele, o
 que registraria *"o cardápio como era na quarta"* como uma mudança nova em cima do histórico. Aqui
 não se queria isso, então um `git restore` puro devolveu a versão atual.

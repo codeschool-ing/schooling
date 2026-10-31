@@ -21,8 +21,8 @@ GitLab and Bitbucket have their own formats with the same ideas:
 {"language": "yaml", "file": ".github/workflows/checks.yml", "parts": [{"code": "name: checks\n", "note": "The name the pull request page shows beside the result."}, {"code": "on: pull_request\n", "note": "When it runs: every time a pull request is opened or gets a new commit."}, {"code": "jobs:\n  links:\n    runs-on: ubuntu-latest\n", "note": "A fresh machine, created for this run and thrown away after it. Nothing of anybody's laptop is on it."}, {"code": "    steps:\n      - uses: actions/checkout@v5\n", "note": "A clone of the branch, exactly as it was pushed. The untracked picture is not in it, as it was not in /tmp/fresh."}, {"code": "      - run: ./check-links.sh\n", "note": "The check. A non-zero exit fails the run, and the pull request shows a red cross instead of a green tick."}]}
 ```
 
-With that file on `main`, Ana's first push of `34-allergens` would have come back with a red cross within a
-minute, and the log would have said `missing: images/allergens.png`. Nobody would have had to open the branch
+With that file on `main`, the pull request for `34-allergens` would have shown a red cross within a minute of
+Ana's first push, and the log would have said `missing: images/allergens.png`. Nobody would have had to open the branch
 to find out.
 
 ## Making it count

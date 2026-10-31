@@ -47,8 +47,8 @@ nome deixaria o *Try purple* sem branch nenhum. O Git diz o caminho, `-D`, e o `
 
 O que foi apagado de fato, nos dois casos, é um nome. **Apagar um branch nunca apaga um commit.** Os
 commits dos branches que entraram continuam no histórico do `main`, e o *Try purple* continua no
-repositório, alcançável pelo reflog da aula 4 por semanas, como o `Deleted branch experiment (was
-0704fcd)` fez questão de imprimir. Um `git switch -c experiment 0704fcd` o traria direto de volta.
+repositório, alcançável pelo reflog da aula 4 por semanas, e o `Deleted branch experiment (was
+0704fcd)` imprimiu o id dele. Um `git switch -c experiment 0704fcd` o traria direto de volta.
 
 É também por isso que vale usar o `-d` por padrão e o `-D` só de propósito: o `-d` confere, de graça,
 a única coisa que você ia querer conferida.

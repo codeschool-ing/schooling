@@ -47,8 +47,8 @@ purple* on no branch at all. Git names the way through, `-D`, and `-D` did it.
 
 What was actually deleted, in both cases, is a name. **Deleting a branch never deletes a commit.** The
 merged branches' commits are still in `main`'s history, and *Try purple* is still in the repository,
-reachable through the reflog of lesson 4 for weeks, as `Deleted branch experiment (was 0704fcd)` so
-helpfully printed. `git switch -c experiment 0704fcd` would bring it straight back.
+reachable through the reflog of lesson 4 for weeks, and `Deleted branch experiment (was 0704fcd)`
+printed its id. `git switch -c experiment 0704fcd` would bring it straight back.
 
 That is also why `-d` is worth using by default and `-D` only on purpose: `-d` checks, for free, the
 one thing you would want checked.

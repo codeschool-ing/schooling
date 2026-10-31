@@ -7,7 +7,7 @@ O **kanban** dispensa o sprint. Não há período fixo nem planejamento de um lo
 inteiro, e o trabalho atravessa o quadro um card de cada vez. Quando alguém termina alguma coisa, **puxa** o
 próximo card do topo do *a fazer*. Ninguém empurra trabalho para a pessoa.
 
-O que impede isso de virar bagunça é o limite de WIP da primeira seção. No kanban ele não é opcional; é o
+O que impede isso de virar bagunça é o limite de WIP de *O quadro*, duas seções atrás. No kanban ele não é opcional; é o
 mecanismo. Sem limite, um quadro sem sprint é só uma lista que cresce.
 
 ## O que ele mede em vez disso

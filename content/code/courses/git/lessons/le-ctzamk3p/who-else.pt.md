@@ -20,7 +20,7 @@ que não escrevem código e moldam quase tudo o que o código faz. Na padaria s�
 | design | *como* uma pessoa vai usar? | perguntas sobre os casos que o desenho não mostra |
 | QA | *como* isto pode quebrar? | o que mudou, e como experimentar |
 
-**Produto** decide o que é mais importante e por quê, e responde por o trabalho ter valido a pena. A Marta
+**Produto** decide o que é mais importante e por quê, e responde por saber se o trabalho valeu a pena. A Marta
 não decide como se constrói, e quem desenvolve não decide o que importa mais; cada um precisa da
 informação do outro para decidir bem.
 

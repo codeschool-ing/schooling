@@ -26,7 +26,7 @@ Date:   Fri Sep 18 08:50:00 2026 -0300
     Take rye bread off until the flour arrives
 ```
 
-Esse é o formato para ler com atenção. Para dar uma olhada geral, a forma de uma linha cabe uma
+Esse é o formato para ler com atenção. Para dar uma olhada geral, a forma de uma linha põe uma
 semana de trabalho numa tela:
 
 ```

@@ -56,7 +56,7 @@ On branch main
 nothing to commit, working tree clean
 ```
 
-Quatro linhas, e vale ler cada uma uma vez:
+Três linhas, e quatro coisas nelas que vale ler uma vez:
 
 - `[main (root-commit) 6abda31]` é o branch em que o commit entrou, o fato de ele ser o primeiro
   commit do repositório, que é o que *root* quer dizer, e o id curto dele.

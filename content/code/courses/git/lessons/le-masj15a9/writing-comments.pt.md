@@ -3,7 +3,7 @@ title: Escrevendo um comentário que vale ler
 version: 1
 ---
 
-A Ana tem três coisas a dizer sobre o #31, e elas não são igualmente graves. A primeira coisa que um bom
+Nem tudo o que a Ana tem a dizer sobre o #31 é igualmente grave. A primeira coisa que um bom
 comentário faz é **dizer de que tipo ele é**, para o Bruno saber o que tem de mudar antes do merge e o que
 fica a critério dele:
 

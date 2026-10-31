@@ -5,14 +5,14 @@ version: 2
 
 ## Review is a conversation
 
-Bruno reviews it. He asks for the notice to stand out, so Ana adds a second commit to **the same branch** and
-pushes again; the pull request updates by itself, with no new one to open. Lessons 13 and 14 are about both
+Bruno reviews it. If he asks for a change, Ana adds another commit to **the same branch** and pushes
+again; the pull request updates by itself, with no new one to open. Lessons 13 and 14 are about both
 sides of that conversation, what to comment on and how to take a comment. For the life of the task, what
 matters is that the loop can go round several times, and that each round is more commits on the branch.
 
 When Bruno approves and the checks are green, the pull request is merged with the button, and two things
 happen on the server: the merge commit lands on `main`, and ticket 23 closes. On your machine the
-button is the program from the first section:
+button is the program saved in section 02:
 
 ```bash
 bash ~/merge-button.sh 23-holiday-notice 24 ana 'Say the bakery closes on public holidays'

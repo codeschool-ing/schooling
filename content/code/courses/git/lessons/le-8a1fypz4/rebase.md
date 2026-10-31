@@ -34,7 +34,7 @@ ana@vm:~/site$ git log --oneline --graph --all -4
 | * 9677eef Open on Sundays from seven
 ```
 
-The same fork lesson 5 merged. This time, on `cheese`:
+The same shape of fork that lesson 5 merged. This time, on `cheese`:
 
 ```
 ana@vm:~/site$ git rebase main
