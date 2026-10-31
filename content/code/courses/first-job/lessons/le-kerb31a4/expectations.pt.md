@@ -13,7 +13,7 @@ A maioria das gestões tem uma resposta na cabeça e nunca a disse. Perguntar fa
 transforma um palpite numa lista: *fechar chamados da fila N1 sem escalar os comuns; conhecer a rotina de
 backup; documentar um procedimento que falta.*
 
-Depois **confira na metade**, por volta do dia 45: *esta é a lista que fizemos; é aqui que eu acho que estou;
+Depois **confira na metade**, por volta do dia 45. *Esta é a lista que fizemos; é aqui que eu acho que estou;
 é assim que parece do seu lado?* Se houver uma diferença, você fica sabendo com seis semanas para fechá-la, e
 não no último dia.
 
