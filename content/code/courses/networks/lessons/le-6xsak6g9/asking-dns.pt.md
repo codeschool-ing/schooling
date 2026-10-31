@@ -46,7 +46,7 @@ www.example.com.        300     IN      A       192.0.2.80
 
 Leia de cima para baixo:
 
-- **`status: NOERROR`**: a pergunta foi respondida. A seção 07 trata dos outros valores.
+- `status: NOERROR`: a pergunta foi respondida. A seção 07 trata dos outros valores.
 - `flags: qr rd ra`: isto é uma resposta (`qr`), recursão foi pedida (`rd`), e o servidor a oferece
   (`ra`). A seção 05 trata da flag que falta.
 - `QUESTION`: o que foi perguntado. `A` é o tipo de registro, um endereço IPv4.

@@ -29,7 +29,7 @@ back to `203.0.113.2`, it puts the laptop's address back and sends it inside. Th
 **The web server certainly does not.** Its log records every visitor, and the last line is the laptop
 fetching the page a moment before: from `203.0.113.2`. Every machine in the office appears to the
 outside as that one address. That is why a website's "block this IP" can shut out a whole office for
-one person's mistake, and why nobody outside can connect *in* to the laptop unless the router is told
+one person's mistake. It is also why nobody outside can connect *in* to the laptop unless the router is told
 to forward a port to it, which lesson 7 does for SSH.
 
 Reading and planning private ranges belongs to the networks-addressing course. For support, the sign

@@ -50,7 +50,7 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 ```
 
 **From outside, a rejecting firewall is indistinguishable from a closed port.** Port 3306 is the
-different one: nc waited the full three seconds it was given (`real 0m3.006s`), and the laptop's side
+different one: nc waited the full three seconds it was given (`real 0m3.005s`). The laptop's side
 of the wire shows why, while `nc -z -w 5 192.0.2.80 3306` runs again from a second shell:
 
 ```

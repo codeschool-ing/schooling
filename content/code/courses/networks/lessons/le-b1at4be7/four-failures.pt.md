@@ -3,8 +3,9 @@ title: Quatro jeitos de um certificado falhar
 version: 1
 ---
 
-O mesmo servidor web também responde por mais quatro nomes, cada um com um certificado quebrado. Cada
-falha tem a sua mensagem, e cada uma aponta para um lugar diferente.
+Vêm aí quatro falhas. Três são nomes pelos quais o mesmo servidor web responde, cada um com um
+certificado quebrado; a quarta é um nome para o qual ele nunca foi configurado. Cada falha tem a sua
+mensagem, e cada uma aponta para um lugar diferente.
 
 **Expirado.** As datas estão no passado:
 

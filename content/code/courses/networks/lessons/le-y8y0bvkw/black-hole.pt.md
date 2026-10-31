@@ -30,8 +30,8 @@ curl: (28) Operation timed out after 5002 milliseconds with 0 out of 186893 byte
 **A página inicial carrega e a lista de preços não.** A página inicial tem 173 bytes, e todo pacote
 daquela conexão era pequeno. A lista de preços tem 186893 bytes, e o servidor a manda em pacotes
 cheios, de 1500 bytes. Cada um chega ao roteador do provedor, não cabe na linha de 1492 bytes e é
-descartado; o ICMP que avisaria também é descartado. O curl recebeu os cabeçalhos, que eram pequenos, e
-por isso sabia o tamanho do que vinha, e depois esperou cinco segundos por bytes que nunca chegaram:
+descartado; o ICMP que avisaria também é descartado. Os cabeçalhos eram pequenos e passaram, então o
+curl sabia o tamanho do que vinha. Depois esperou cinco segundos por bytes que nunca chegaram:
 `0 out of 186893 bytes received`.
 
 Isso é um **buraco negro de PMTU**, e é uma das falhas mais confusas que o suporte encontra. Nada está

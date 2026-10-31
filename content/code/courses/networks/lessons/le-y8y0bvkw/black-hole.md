@@ -29,8 +29,8 @@ curl: (28) Operation timed out after 5002 milliseconds with 0 out of 186893 byte
 **The home page loads and the price list does not.** The home page is 173 bytes, and every packet of
 that connection was small. The price list is 186893 bytes, and the server sends it in full-sized
 1500-byte packets. Each one reaches the provider's router, cannot fit the 1492-byte line, and is
-dropped; the ICMP that would have said so is dropped too. curl got the headers, which were small, so
-it knew the size of what was coming, and then waited five seconds for bytes that never arrived: `0
+dropped; the ICMP that would have said so is dropped too. The headers were small and got through, so
+curl knew the size of what was coming. Then it waited five seconds for bytes that never arrived: `0
 out of 186893 bytes received`.
 
 This is a **PMTU black hole**, and it is one of the most confusing faults support meets. Nothing
