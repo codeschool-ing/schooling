@@ -21,8 +21,7 @@ todo mundo mais tem direito de supor.
 
 Dois deles merecem uma frase antes do resto. O `HEAD` dá só os cabeçalhos: é como se pergunta *isto
 mudou?* ou *qual o tamanho?* sem mover o arquivo. O `OPTIONS` pergunta o que um servidor permite, e
-você vai encontrá-lo de novo como a pergunta que um navegador faz antes de deixar um site chamar
-outro.
+é também a pergunta que um navegador faz antes de deixar um site chamar outro.
 
 ## Seguro, e idempotente
 

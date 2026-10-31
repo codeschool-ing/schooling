@@ -81,7 +81,7 @@ Four billion addresses and about eight billion people, most of them carrying sev
 devices. The arithmetic stopped working in the 1990s, and the last large blocks were handed out
 around 2011.
 
-Three things happened in response, and each is a section of this lesson or the next:
+Three things happened in response, and the first two are sections of this lesson:
 
 - **private addresses and NAT**, so a household needs one public address rather than twenty;
 - **IPv6**, which is a bigger number and the actual answer;

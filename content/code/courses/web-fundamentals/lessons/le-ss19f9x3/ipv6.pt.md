@@ -7,7 +7,7 @@ O IPv6 é a resposta ao IPv4 ter acabado, e a resposta é simplesmente **mais bi
 vez de 32.
 
 Isso soa como quatro vezes mais endereços. Não é. Cada bit dobra a conta, então 128 bits são 2⁹⁶
-vezes mais — um número de trinta e nove dígitos, grande o bastante para a questão de acabar não
+vezes mais — um total de trinta e nove dígitos, grande o bastante para a questão de acabar não
 voltar.
 
 ## Ler um sem pânico
@@ -60,7 +60,7 @@ mudanças valem conhecer porque aparecem na prática.
 **Uma máquina consegue se endereçar sozinha.** Uma interface IPv6 monta o próprio endereço
 link-local sem pedir a ninguém — sem servidor, sem negociação, sem modo de falha. Duas máquinas
 ligadas uma na outra falam na hora. No IPv4 esse caso precisa do `169.254` que você vai encontrar
-daqui a duas seções, que existe justamente porque o caminho comum falhou.
+daqui a três seções, que existe justamente porque o caminho comum falhou.
 
 **Roteadores não fragmentam.** O problema de MTU da aula dois é tratado só nas pontas: um roteador
 que não consegue passar um pacote o recusa e avisa, e nunca corta. Isso torna a mensagem de "grande

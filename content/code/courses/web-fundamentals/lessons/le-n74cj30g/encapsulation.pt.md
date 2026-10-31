@@ -40,8 +40,6 @@ a partir do qual você conta.
 
 ## Cada cabeçalho é endereçado ao seu correspondente
 
-Aqui está a ideia que faz o resto se encaixar.
-
 Um cabeçalho não é escrito para a camada de baixo, e não é escrito para as máquinas do caminho.
 É escrito para **a mesma camada na outra ponta**. O cabeçalho de transporte é um bilhete da camada
 de transporte da sua máquina para a camada de transporte do servidor. As camadas de baixo o levam
@@ -55,7 +53,7 @@ horizontal é a de verdade. O movimento vertical existe para torná-la possível
 
 ## O que sobrevive a um salto, e o que não
 
-Entre você e um servidor há talvez quinze roteadores, e os envelopes não sobrevivem todos à
+Entre você e um servidor há talvez catorze roteadores, e os envelopes não sobrevivem todos à
 viagem.
 
 ```schooling-figure

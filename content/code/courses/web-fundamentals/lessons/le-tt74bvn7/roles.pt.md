@@ -48,7 +48,7 @@ notícias e uma versão aproximada disto acontece:
 1. Seu navegador pede a página naquele endereço. Uma troca. Ele recebe de volta um documento —
    algumas dezenas de kilobytes de HTML, e **nenhuma imagem, nenhum estilo, nenhum código**.
 2. Lendo esse documento, o navegador descobre que precisa de uma folha de estilo, quatro scripts,
-   uma fonte e nove imagens. Ele pede cada uma delas. **Mais catorze trocas**, quase todas
+   uma fonte e oito imagens. Ele pede cada uma delas. **Mais catorze trocas**, quase todas
    começadas antes de a primeira terminar de ser lida.
 3. Um desses scripts, já rodando, pede a sua contagem de notificações. **Mais uma troca**, esta
    para uma máquina completamente diferente.
@@ -70,7 +70,7 @@ máquinas atrás dele nunca tocam o seu computador. Quando algo está lento, a c
 frequentemente numa conversa que você não consegue ver — que é exatamente por que o vocabulário
 desta aula vale a pena.
 
-## Do que cada lado é responsável
+## Pelo que cada lado é responsável
 
 A assimetria entre os dois papéis não é sobre poder ou tamanho. É sobre quem começa e quem espera.
 

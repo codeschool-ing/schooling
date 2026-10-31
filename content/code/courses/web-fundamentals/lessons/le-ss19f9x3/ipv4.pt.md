@@ -82,7 +82,7 @@ Quatro bilhões de endereços e cerca de oito bilhões de pessoas, a maioria car
 aparelhos conectados. A conta parou de fechar nos anos 1990, e os últimos blocos grandes foram
 distribuídos por volta de 2011.
 
-Três coisas aconteceram em resposta, e cada uma é uma seção desta aula ou da próxima:
+Três coisas aconteceram em resposta, e as duas primeiras são seções desta aula:
 
 - **endereços privados e NAT**, para que uma casa precise de um endereço público em vez de vinte;
 - **IPv6**, que é um número maior e a resposta de verdade;

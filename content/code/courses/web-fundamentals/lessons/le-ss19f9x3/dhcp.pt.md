@@ -43,8 +43,8 @@ O que explica uma classe inteira de confusão:
 - uma máquina que ficou uma semana desligada voltando como vizinha de outra pessoa.
 
 A resposta, onde importa, é uma **reserva**: o servidor é instruído a sempre dar a este MAC aquele
-IP. Que é a razão prática de o número da seção anterior aparecer na tela de configuração de um
-roteador.
+IP. Que é a razão prática de o número da placa, de duas seções atrás, aparecer na tela de
+configuração de um roteador.
 
 ## Chegam quatro coisas, não uma
 

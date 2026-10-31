@@ -15,7 +15,7 @@ they matter more than bandwidth by a wide margin.
 ## Jitter: the average was fine
 
 Latency is usually quoted as one number, which hides the thing that matters. Ten packets that each
-take 40 ms and ten packets that take 10, 90, 15, 80, 20, 95, 12, 75, 30 and 73 have the same
+take 40 ms and ten packets that take 10, 90, 15, 80, 20, 95, 12, 25, 30 and 23 have the same
 average and produce completely different experiences.
 
 ```schooling-figure
@@ -60,8 +60,8 @@ loss rate costs a large amount of bandwidth** — which is why "the connection i
 slow" so often means a cable that is quietly dropping packets.
 
 **For UDP, loss is a hole.** Nothing is resent, so each lost packet is twenty milliseconds of
-speech that will never exist. Codecs conceal a little of it by guessing, and at one percent you
-hear almost nothing; at five you hear a conversation made of fragments.
+speech that will never exist. Codecs conceal a little of it by guessing, and under half a percent
+you hear almost nothing; at five you hear a conversation made of fragments.
 
 ## Where it comes from, in order of likelihood
 

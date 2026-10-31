@@ -43,7 +43,7 @@ Three things decide, and mixing them up is the usual source of *why is my cookie
 
 **The name of the site.** By default, a cookie set by `codeschool.ing` goes back to
 `codeschool.ing` and to nothing else. A cookie may be widened to cover subdomains, with a `Domain`
-attribute, and it may never be widened to a site that is not yours — a rule enforced by the browser
+attribute, and it may never be widened to a site that is not yours. The browser enforces that
 against a published list of what counts as a public suffix, which is why nobody can set a cookie
 for `.com`.
 
@@ -80,8 +80,8 @@ A **first-party** cookie is set by the site you are looking at. The session that
 in, the one holding your language choice on this site — those.
 
 A **third-party** cookie is set by something *embedded* in the page and loaded from somewhere else:
-an advertisement, an analytics script, an embedded video. Its own host sets its own cookie, and
-here is the part that made it valuable: that same host is embedded on thousands of other sites, so
+an advertisement, an analytics script, an embedded video. Its own host sets its own cookie.
+Here is the part that made it valuable: that same host is embedded on thousands of other sites, so
 it sees the same browser arriving at all of them and can join the visits together into one record
 of where somebody has been.
 

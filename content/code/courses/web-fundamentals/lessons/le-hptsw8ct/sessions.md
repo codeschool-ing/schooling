@@ -36,7 +36,7 @@ systems of every size.
 
 The requirement is a long random value from a source meant for security rather than from an
 ordinary random function. In practice this is one call to whatever your language calls its secure
-random, and the reason to know the rule is to recognise the shape of a mistake: a session
+random. The reason to know the rule is to recognise the shape of a mistake: a session
 identifier that looks like a number, or looks like an email address, is a defect regardless of
 what else is right.
 

@@ -54,8 +54,8 @@ There is a second way to read a mask, and it is the one that makes the sizes obv
 memorising them.
 
 A `/24` leaves 8 bits for the host, and 8 bits count 256 values. A `/25` leaves 7, which counts
-128. A `/26` leaves 6, which counts 64. **The host bits are the exponent**, and the table in the
-last section is 2 raised to it.
+128. A `/26` leaves 6, which counts 64. **The host bits are the exponent**, and the table
+above is 2 raised to it.
 
 Which means you can answer the two questions that come up in practice without looking anything up:
 
@@ -71,7 +71,7 @@ is why that size exists at all.
 Splitting one large range into several smaller ones is called subnetting, and it is done for three
 reasons that have nothing to do with running out of addresses.
 
-**Broadcast.** Some traffic goes to everything on the wire — including the ARP you will meet two
+**Broadcast.** Some traffic goes to everything on the wire — including the ARP you will meet three
 sections from now. On a network of 65,000 machines that is a great deal of noise arriving at
 every one of them. Smaller networks mean less of it.
 
@@ -100,5 +100,5 @@ their network parts match. `/24` means 24 bits of network and 256 addresses, 254
 and every extra bit halves the range.
 
 That decision — local or not — is made on the address. But a frame does not travel by address, as
-lesson two was careful to say. It travels by the number burned into a network card, and the next
-two sections are what that number is and how a machine discovers its neighbour's.
+lesson two was careful to say. It travels by the number burned into a network card, and the two
+sections after IPv6 are what that number is and how a machine discovers its neighbour's.

@@ -82,8 +82,8 @@ A conta que todo mundo faz primeiro: 1 GB são 8.000 megabits, a 300 megabits po
 | um segmento compartilhado à noite, e umas duas retransmissões | 6 s |
 
 A maior linha isolada é **a outra ponta**, e é justamente aquela sobre a qual o seu plano não tem
-influência nenhuma. Este é o caso comum, não um dia ruim: uma transferência que chega a 70% do
-número anunciado é uma transferência saudável.
+influência nenhuma. Este é o caso comum, não um dia ruim: 8.000 megabits em 48 segundos dão cerca de 167 Mbps,
+pouco mais da metade do número anunciado, e nada aqui está quebrado.
 
 O que é também a resposta para *por que este download é mais lento que o teste de velocidade*. O
 teste mediu a sua linha até um servidor próximo com todos os truques aplicados. Isto mediu uma
@@ -107,9 +107,9 @@ inutilizável para todo o resto no mesmo instante.
 ## Onde isto te deixa
 
 Vazão é a taxa com que os dados de verdade andaram. É limitada pelo enlace mais estreito, reduzida
-pelos cabeçalhos de cada camada, travada no que a outra ponta estiver disposta a mandar e — em
-caminhos longos — limitada por quanto uma única conversa consegue manter em voo enquanto espera
-permissão.
+pelos cabeçalhos de cada camada e travada no que a outra ponta estiver disposta a mandar. Em
+caminhos longos, também é limitada por quanto uma única conversa consegue manter em voo enquanto
+espera permissão.
 
 Esse último significa que a distância te custa capacidade, e não só tempo. E o hábito de medição do
 fim desta seção é o que abre a próxima: **olhe o que acontece com a latência enquanto a linha está

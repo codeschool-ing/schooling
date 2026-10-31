@@ -40,8 +40,6 @@ are counting from.
 
 ## Every header is addressed to its opposite number
 
-Here is the idea that makes the rest fall into place.
-
 A header is not written for the layer below, and it is not written for the machines in between. It
 is written for **the same layer at the other end**. The transport header is a note from your
 machine's transport layer to the server's transport layer. The layers below carry it without
@@ -55,7 +53,7 @@ movement exists to make it possible.
 
 ## What survives a hop, and what does not
 
-Between you and a server there are perhaps fifteen routers, and the envelopes do not all survive
+Between you and a server there are perhaps fourteen routers, and the envelopes do not all survive
 the trip.
 
 ```schooling-figure

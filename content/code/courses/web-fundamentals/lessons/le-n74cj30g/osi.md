@@ -81,8 +81,8 @@ between them is a real choice with real consequences.
 ```
 
 A **layer 4** load balancer reads as far as the port. It can see a connection arriving for port
-443 and hand it to one of several machines; it cannot see what is being asked for, because the
-request is inside, and — if the traffic is encrypted — it could not read it even if it opened it.
+443 and hand it to one of several machines. It cannot see what is being asked for, because the
+request is inside, and if the traffic is encrypted it could not read it even if it opened it.
 That makes it fast, cheap, and indifferent.
 
 A **layer 7** load balancer reads the request itself. It can send `/images/` to one group of

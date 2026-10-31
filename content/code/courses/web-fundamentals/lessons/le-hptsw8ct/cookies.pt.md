@@ -44,7 +44,7 @@ enviado*.
 
 **O nome do site.** Por padrão, um cookie definido por `codeschool.ing` volta para `codeschool.ing`
 e para mais nada. Um cookie pode ser alargado para cobrir subdomínios, com um atributo `Domain`, e
-nunca pode ser alargado para um site que não é seu — uma regra que o navegador impõe contra uma
+nunca pode ser alargado para um site que não é seu. O navegador impõe essa regra contra uma
 lista publicada do que conta como sufixo público, e é por isso que ninguém consegue definir um
 cookie para `.com`.
 
@@ -80,8 +80,8 @@ Um cookie de **primeira parte** é definido pelo site que você está olhando. A
 você logado, a que guarda sua escolha de idioma neste site — esses.
 
 Um cookie de **terceira parte** é definido por algo *embutido* na página e carregado de outro
-lugar: um anúncio, um script de analytics, um vídeo embutido. O host dele define o próprio cookie,
-e aqui está a parte que tornou isso valioso: esse mesmo host está embutido em milhares de outros
+lugar: um anúncio, um script de analytics, um vídeo embutido. O host dele define o próprio cookie.
+Aqui está a parte que tornou isso valioso: esse mesmo host está embutido em milhares de outros
 sites, então ele vê o mesmo navegador chegando em todos eles e consegue juntar as visitas num único
 registro de por onde alguém andou.
 
