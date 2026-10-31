@@ -49,12 +49,12 @@ ignore_missing_imports = true
 ```
 
 Limitado à biblioteca que é o problema. Um `ignore_missing_imports = true` lá em cima silencia a
-mensagem para tudo, inclusive para a importação que você escreveu errado — que é o assunto da
-próxima seção.
+mensagem para tudo, inclusive para a importação que você escreveu errado — que é o assunto de
+duas seções adiante.
 
 ## O que não pôr nele
 
-`exclude` parece a ferramenta para um diretório para o qual você não está pronto, e é a errada: um
+`exclude` parece a ferramenta para um diretório para o qual você não está pronto, e é a errada. Um
 módulo excluído continua sendo IMPORTADO pelos módulos que você verifica, então os erros dele
 voltam pela porta da frente e você deixou o relatório confuso em vez de menor. Uma exceção com as
 flags afrouxadas o mantém verificado num nível em que ele passa.

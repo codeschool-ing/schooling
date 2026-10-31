@@ -35,7 +35,7 @@ beside the setup, in the thing being used, rather than at the bottom of whoever 
 - it `break`s or `continue`s out of a loop
 - it raises
 
-**In all five the teardown runs.** The exception then carries on upwards, unchanged — the manager
+**In every one of them the teardown runs.** The exception then carries on upwards, unchanged — the manager
 tidied up and did not interfere.
 
 ## What that buys, in one sentence
