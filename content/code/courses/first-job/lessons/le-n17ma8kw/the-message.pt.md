@@ -3,7 +3,7 @@ title: A mensagem de seguimento
 version: 1
 ---
 
-Um seguimento é mais curto que a primeira mensagem, e acrescenta uma coisa:
+Um seguimento é mais curto que a primeira mensagem, e **acrescenta uma coisa**:
 
 > Oi, Mariana, passando para dar seguimento à minha candidatura para a vaga de suporte de TI júnior (ref.
 > 2031), enviada no dia 3. Continuo muito interessada e, desde então, acrescentei uma demonstração gravada do

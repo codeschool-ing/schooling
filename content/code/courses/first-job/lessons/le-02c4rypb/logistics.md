@@ -19,5 +19,5 @@ answered on the spot. Write your answers before the first call and keep them nex
 - Availability for the next steps. When you could do a technical interview, and whether you can take an
   afternoon off for it.
 
-Honesty is cheaper here than anywhere else in the process. A salary or a shift you cannot accept, hidden
+**Honesty is cheaper here than anywhere else in the process.** A salary or a shift you cannot accept, hidden
 now, is discovered at the offer, after everybody has spent weeks.

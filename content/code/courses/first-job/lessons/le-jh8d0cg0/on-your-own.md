@@ -14,7 +14,7 @@ offer "PJ roles" that are full-time jobs in everything but the contract: fixed h
 That arrangement has no paid holiday, no *13º salário* and no *FGTS* unless they are negotiated into the
 price, and lesson 17 does the arithmetic of comparing it with a *CLT* salary.
 
-**Working for a company abroad** from Brazil is common in development and increasingly in support, and it
+**Working for a company abroad** from Brazil is common in development and increasingly in support. It
 is usually a contract of the same kind: you invoice in dollars or euros as a company, or through an
 intermediary that employs you locally. It pays in a stronger currency and it asks for two things a first
 job rarely has: **working English**, spoken as well as written, and **the ability to work without

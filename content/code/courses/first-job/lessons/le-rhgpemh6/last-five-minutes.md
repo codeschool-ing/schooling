@@ -3,7 +3,7 @@ title: The last five minutes
 version: 1
 ---
 
-The end of an interview decides what happens in the following week, and three things belong in it:
+**The end of an interview decides what happens in the following week**, and three things belong in it:
 
 1. The next step and the date. *What happens next, and when should I expect to hear?* This is the date
    lesson 10's follow-up waits for.

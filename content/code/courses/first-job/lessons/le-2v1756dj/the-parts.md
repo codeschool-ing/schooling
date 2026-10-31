@@ -19,8 +19,8 @@ Read each part, and write down what is missing:
 - Benefits. Lesson 17 compared CLT and PJ on pay alone; the next section is about what the benefits add.
 - Work. The job title, the hours, **the shift pattern** for support roles, and whether it is on-site,
   hybrid or remote, with how many days.
-- Small print. The clauses in the third section.
-- Equity. Stock options or shares, if any; rare in junior offers, and explained at the end.
+- Small print. The clauses two sections on.
+- Equity. Stock options or shares, if any; rare in junior offers, and explained at the end of the next section.
 
 An offer that exists only as a phone call or a chat message is not yet an offer. **Ask for the details in
 writing** before you resign from anything or turn down another process.

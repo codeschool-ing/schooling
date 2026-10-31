@@ -19,8 +19,8 @@ Three details make it work:
 
 If they ask first for your current salary, you can answer with the expectation instead: *what I'm looking
 for in this role is…*. And if you already have their range from the advert or the screening call (lesson
-11), you do not need to name a number at all: *the range you mentioned works for me*, or *I'd hoped for the
-upper part of it, given the project I've done.*
+11), you do not need to name a number at all. *The range you mentioned works for me* is enough, or *I'd hoped
+for the upper part of it, given the project I've done.*
 
 Never invent a competing offer to push the number up. It is easy to check, and being caught ends the
 process.

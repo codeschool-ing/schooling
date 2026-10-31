@@ -14,7 +14,7 @@ everything after it depends on it.
 Asking is how you learn it, and there is a way to ask that respects other people's time:
 
 - Try first, for a set time. Fifteen or thirty minutes on your own, depending on the task. Lesson 15's
-  weakness answer was a real rule: *after thirty minutes stuck, I ask*.
+  weakness answer was a real rule: *after thirty minutes on the same problem I ask somebody*.
 - Ask with what you tried. *I'm trying to reset a user's MFA; I found the admin page but the option is
   greyed out. Is there a permission I'm missing?* That question can be answered in a sentence.
 - **Write the answer down**, somewhere you will find it, so you ask each thing once. Many teams value a
