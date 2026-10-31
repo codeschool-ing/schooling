@@ -51,8 +51,8 @@ q21  raw h37  cosine h05  relevant h05
 
 ## Length is not meaning
 
-**The word *refund* alone has a vector of length 9.104; the title *When your refund arrives* has
-3.945, and the 40 articles range from 1.212 to 2.280.** WordLlama averages the fixed vectors of a
+**The word *refund* alone has a vector of length 9.104.** The title *When your refund arrives* has
+3.945, and the 40 articles range from 1.212 to 2.280. WordLlama averages the fixed vectors of a
 text's tokens, and an average of arrows pointing in many directions is shorter than the arrows
 themselves. One word is not averaged with anything, so it stays long. The length records how much
 the tokens of a text disagree with each other, and that is not what a search is asking about.

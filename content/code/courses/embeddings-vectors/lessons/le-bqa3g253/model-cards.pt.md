@@ -39,7 +39,7 @@ ana@lab:~/emb$ jq -c "{truncation: .truncation.max_length, padding: .padding.str
 {"truncation":128,"padding":{"Fixed":128}}
 ```
 
-**Há três comprimentos diferentes neles, e nenhum é 256.** 512 é o espaço que a arquitetura tem, o
+**Há três comprimentos neles, e nenhum é 256.** 512 é o espaço que a arquitetura tem, o
 número de posições para as quais ela guarda um vetor aprendido. 512 de novo é o que a configuração
 do tokenizador permite. 128 é o tamanho em que o `tokenizer.json` corta e preenche se ninguém mudar.
 O `minilm.py` e o Chroma mudam para 256, e o código do Chroma comenta isso: *for some reason

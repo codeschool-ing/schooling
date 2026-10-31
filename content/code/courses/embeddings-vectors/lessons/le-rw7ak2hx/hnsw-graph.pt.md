@@ -78,9 +78,9 @@ expandir pode melhorar a lista. Uma caminhada gulosa simples pararia no primeiro
 mais próximo; a lista deixa a busca passar desse beco sem saída, porque o segundo e o terceiro
 melhores ainda estão lá para expandir.
 
-Com a lista padrão do FAISS, de 16, ela chegou a 0,536, que a busca exata confirma ser a melhor
-correspondência de verdade para esta consulta, **depois de 261 comparações ao todo**, de 100.000
-vetores. Esse é o truque inteiro: as camadas de cima levam a busca até a vizinhança certa em poucos
+Com a lista padrão do FAISS, de 16, ela chegou a 0,536 **depois de 261 comparações ao todo**, de
+100.000 vetores, e a busca exata confirma que 0,536 é a melhor correspondência de verdade para esta
+consulta. Esse é o truque inteiro: as camadas de cima levam a busca até a vizinhança certa em poucos
 saltos longos, e a camada de baixo busca nessa vizinhança com cuidado.
 
 ## Construir é buscar

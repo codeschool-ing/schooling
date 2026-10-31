@@ -122,7 +122,7 @@ LIMIT 3;
 
 **Antes, três processos leram cerca de 6.667 linhas cada um e as ordenaram; depois, uma varredura de
 índice devolveu as três linhas.** As duas linhas de `Execution Time`, `15.740 ms` e `3.587 ms`, são
-desta execução, numa máquina que outras pessoas estavam usando, e a distância entre elas cresce com a
+desta execução, numa máquina que outras pessoas estavam usando. A distância entre elas cresce com a
 tabela: a varredura sequencial lê todas as linhas e a de índice não. A construção levou
 `8262.853 ms`, uma vez, e cada inserção posterior paga de novo um pouco disso para entrar no grafo.
 A aula 18 pesa o índice em disco.
@@ -266,7 +266,7 @@ ana@lab:~/emb$ python search.py "how do I get my money back"
 0.601  0.399  h22  Charged twice for one order
 ```
 
-A lição a guardar é a que o `EXPLAIN` ensinou duas vezes: **o índice que uma consulta usa é escolha
-do planejador, e um índice aproximado pode devolver menos linhas que o `LIMIT` sem avisar.** A aula
+O `EXPLAIN` ensinou a mesma lição duas vezes. **O índice que uma consulta usa é escolha do
+planejador, e um índice aproximado pode devolver menos linhas que o `LIMIT` sem avisar.** A aula
 16 encontra a versão disso no HNSW, e a aula 17 a versão que um filtro causa. As duas são achadas do
 mesmo jeito: contando as linhas que uma consulta devolve numa tabela do tamanho da de produção.

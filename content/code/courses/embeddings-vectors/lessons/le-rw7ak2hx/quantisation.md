@@ -58,7 +58,7 @@ blurs every score by more than that reorders them. The neighbourhood is still fo
 
 That is why product quantisation is rarely the last step. The usual design keeps the codes in
 memory to choose a few hundred candidates fast, and keeps the full vectors somewhere cheaper, such
-as on disk, to rescore just those. Lesson 16 measured that pattern with binary codes, the most
+as on disk, to rescore just those. Lesson 16 measures that pattern with binary codes, the most
 extreme form: one bit per number, 48 bytes for these vectors.
 
 ## Where the bytes go

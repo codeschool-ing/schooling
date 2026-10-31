@@ -71,7 +71,7 @@ achou 0,841.
 
 O 0,841 é uma média sobre 1.000 consultas, e as consultas não o dividiram por igual. 683 delas
 receberam os dez vizinhos, e 149 receberam cinco ou menos. Uma busca boa na média ainda pode ser ruim
-para a cliente cuja pergunta cai numa parte do espaço que o índice atendeu mal, e um teste com
+para a cliente cuja pergunta cai numa parte do espaço que o índice atendeu mal. Um teste com
 meia dúzia de consultas não vai encontrar essa cliente.
 
 A aula 13 rodou o mesmo `HNSW32` sobre o seu próprio conjunto de cópias com ruído e achou os dez

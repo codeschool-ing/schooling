@@ -82,5 +82,5 @@ deixam *dog* e *man* saberem de que lado de *bit* estão.
 
 Repare como essa diferença é pequena. Mesmo o modelo contextual dá a *the dog bit the man* ("o
 cachorro mordeu o homem") e *the man bit the dog* ("o homem mordeu o cachorro") quase a mesma nota,
-porque as frases dividem todas as palavras e o assunto. Um embedding mede **sobre o que um texto
-fala** muito melhor do que **o que ele afirma**, e esse é o tema da próxima seção.
+porque as frases dividem todas as palavras e o assunto. **Um embedding mede sobre o que um texto
+fala muito melhor do que o que ele afirma**, e esse é o tema da próxima seção.

@@ -74,7 +74,7 @@ differently, and nobody knows the turn.
 ## 384, 256, 1536
 
 The dimension is a choice the model's makers made. all-MiniLM-L6-v2 returns 384, WordLlama returns
-256, and OpenAI's `text-embedding-3-small` returns 1536 by default (lesson 7 calls it). More
+256, and OpenAI's `text-embedding-3-small` returns 1536 by default (lesson 7 prices it). More
 dimensions give a model more room to keep different meanings apart, and they cost in proportion:
 1536 float32 numbers are 6,144 bytes a vector against 1,536 for 384, and every comparison does four
 times the multiplications. Whether the extra room is worth it depends on your texts, which is why

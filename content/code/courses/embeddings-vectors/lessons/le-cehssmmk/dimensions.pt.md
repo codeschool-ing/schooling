@@ -75,7 +75,7 @@ girados de jeitos diferentes, e ninguém sabe qual é o giro.
 ## 384, 256, 1536
 
 A dimensão é uma escolha de quem fez o modelo. O all-MiniLM-L6-v2 devolve 384, o WordLlama devolve
-256 e o `text-embedding-3-small` da OpenAI devolve 1536 por padrão (a aula 7 o chama). Mais
+256 e o `text-embedding-3-small` da OpenAI devolve 1536 por padrão (a aula 7 calcula o seu preço). Mais
 dimensões dão ao modelo mais espaço para manter significados diferentes separados, e custam na
 mesma proporção: 1536 números float32 são 6.144 bytes por vetor contra 1.536 para 384, e cada
 comparação faz quatro vezes mais multiplicações. Se o espaço extra compensa depende dos seus

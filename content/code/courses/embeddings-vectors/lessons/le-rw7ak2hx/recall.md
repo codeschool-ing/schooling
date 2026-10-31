@@ -71,7 +71,7 @@ sections count, and found 0.841.
 
 The 0.841 is a mean over 1,000 queries, and the queries did not share it. 683 of them got all ten
 neighbours, and 149 got five or fewer. A search that is good on average can still be poor for the
-customer whose question lands in a part of the space the index served badly, and a test with a
+customer whose question lands in a part of the space the index served badly. A test with a
 handful of queries will not find that customer.
 
 Lesson 13 ran the same `HNSW32` on its own set of noisy copies and found all ten neighbours

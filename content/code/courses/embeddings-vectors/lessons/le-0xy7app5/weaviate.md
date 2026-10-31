@@ -10,9 +10,9 @@ every one of those shapes **your program is a client of a Weaviate server**, nev
 itself, which is the difference from Chroma's `PersistentClient`.
 
 None of the three ran here. The embedded mode fetches the server from GitHub, which the machine this
-course was recorded on cannot reach, and there was no server to connect to otherwise. The program below is written for the
-`weaviate-client` package and checked against the signatures of version 4.23.1 in an environment of
-its own. Nothing ever answered it, so no output is shown.
+course was recorded on cannot reach, and there was no server to connect to otherwise. The program
+below, `weav.py`, is written for the `weaviate-client` package and checked against the signatures of
+version 4.23.1 in an environment of its own. Nothing ever answered it, so no output is shown.
 
 ```python
 import json

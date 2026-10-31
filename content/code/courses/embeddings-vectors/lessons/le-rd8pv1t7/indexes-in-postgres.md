@@ -122,7 +122,7 @@ LIMIT 3;
 
 **Before, three processes read about 6,667 rows each and sorted them; after, one index scan
 returned the three rows.** The two `Execution Time` lines, `15.740 ms` and `3.587 ms`, are this
-run's, on a machine other people were using, and the gap between them grows with the table: the
+run's, on a machine other people were using. The gap between them grows with the table: the
 sequential scan reads every row and the index scan does not. The build took `8262.853 ms`, once, and
 every later insert pays a little of that again to add itself to the graph. Lesson 18 weighs the
 index on disk.
@@ -265,7 +265,7 @@ ana@lab:~/emb$ python search.py "how do I get my money back"
 0.601  0.399  h22  Charged twice for one order
 ```
 
-The lesson to keep is the one `EXPLAIN` taught twice: **the index a query uses is the planner's
-choice, and an approximate index can return fewer rows than the `LIMIT` without saying so.** Lesson
+`EXPLAIN` taught the same lesson twice. **The index a query uses is the planner's choice, and an
+approximate index can return fewer rows than the `LIMIT` without saying so.** Lesson
 16 meets the HNSW version of that, and lesson 17 the version a filter causes. Both are found the same
 way, by counting the rows a query returns on a table the size of production.

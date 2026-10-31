@@ -59,7 +59,7 @@ isso os reordena. A vizinhança ainda é achada; a ordem dentro dela, não.
 
 É por isso que a quantização por produto raramente é o último passo. O desenho comum mantém os
 códigos na memória para escolher algumas centenas de candidatos depressa, e guarda os vetores
-completos num lugar mais barato, como o disco, para dar nova nota só a esses. A aula 16 mediu esse
+completos num lugar mais barato, como o disco, para dar nova nota só a esses. A aula 16 mede esse
 padrão com códigos binários, a forma mais extrema: um bit por número, 48 bytes para estes vetores.
 
 ## Para onde vão os bytes

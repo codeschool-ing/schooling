@@ -11,7 +11,7 @@ true answers you know.
 ## A hundred thousand vectors, and what they are
 
 The obvious shortcut is to fill an index with random numbers. **Random vectors are the wrong test
-for an approximate index**, because they have no neighbourhoods: in 384 dimensions, uniformly random
+for an approximate index**, because they have no neighbourhoods. In 384 dimensions, uniformly random
 points sit at almost the same distance from one another, and an index that bets on structure has
 nothing to bet on. The IVF section measures what that does. Real embeddings are the opposite; the
 whole of lessons 3 to 6 relied on texts about the same thing landing close together.

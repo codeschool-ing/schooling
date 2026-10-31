@@ -9,7 +9,7 @@ lessons 7 and 8 used. Reading it is a quick way to see the shape of the market: 
 models, who sells models for one kind of text, and who sells somebody else's open model by the
 token.
 
-The bottom of `prices.py`, which lesson 7 ran, has the two names this lesson's title promises:
+The bottom of `prices.py`, which lesson 7 ran, has the two names this section's title promises:
 
 ```
 ana@lab:~/emb$ python prices.py
