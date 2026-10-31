@@ -29,8 +29,8 @@ ana@desk:~/desk$ python sheet.py retiring --provider openai | grep -E "  o[0-9]"
 2026-12-11  o3-2025-04-16                                      openai
 ```
 
-**o1, o3-mini and o4-mini are listed for retirement on October 23, 2026**, sixteen days after
-lesson 6 read Anthropic's page; the dated o3 snapshot follows in December. A line of models introduced as a
+**o1, o3-mini and o4-mini are listed for retirement on October 23, 2026**, and the dated o3
+snapshot follows in December. A line of models introduced as a
 category of its own is ending as a set of entries in a deprecation list.
 
 ## Where it went
