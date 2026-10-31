@@ -46,8 +46,8 @@ pergunta é que linha produziu o `None`, e não o que fazer com esta.
 ## `ZeroDivisionError`, e uma nota sobre o resto
 
 Existem dezenas mais e você não as aprende de uma lista. Você as aprende lendo as que recebe: a
-classe diz que tipo, a mensagem diz qual, e a última linha do traceback diz onde.
+classe diz que tipo, a mensagem diz qual, e o traceback acima delas diz onde.
 
 **Ler um traceback de BAIXO para cima é a habilidade.** A última linha é o erro; a linha acima dela
-é onde aconteceu; tudo acima disso é como você chegou lá — e a primeira linha sua nessa lista é onde
+é onde aconteceu; tudo acima disso é como você chegou lá. A primeira linha sua nessa lista é onde
 olhar.

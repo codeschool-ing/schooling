@@ -23,7 +23,7 @@ list(islice(naturals(), 5))       # [0, 1, 2, 3, 4]
 
 - **Memória**: um valor por vez, por mais que sejam.
 - **Tempo**: o trabalho do valor seiscentos nunca acontece se você parar no cinco.
-- **Composição**: uma cadeia de geradores continua sendo um valor por vez, que é a próxima seção.
+- **Composição**: uma cadeia de geradores continua sendo um valor por vez, que fica duas seções adiante.
 - **O impossível**: um fluxo sem fim — um log sendo escrito, uma sequência, uma sondagem.
 
 ## Onde ela acaba

@@ -47,9 +47,9 @@ question is which line produced the `None`, not what to do about this one.
 ## `ZeroDivisionError`, and a note on the rest
 
 There are dozens more and you do not learn them from a list. You learn them by reading the ones
-you get: the class says what kind, the message says which, and the last line of the traceback
-says where.
+you get: the class says what kind, the message says which, and the traceback above them says
+where.
 
 **Reading a traceback from the BOTTOM up is the skill.** The last line is the error; the line
-above it is where it happened; everything above that is how you got there — and the first line
-of yours in that list is where to look.
+above it is where it happened; everything above that is how you got there. The first line of
+yours in that list is where to look.

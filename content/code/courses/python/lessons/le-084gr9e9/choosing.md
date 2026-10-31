@@ -35,8 +35,8 @@ for name in names:            # 100_000 names
 ```
 
 That is five hundred million comparisons. Change `banned` to a set and it is a hundred thousand
-steps, and the line of code does not otherwise change. Lesson 20 measures exactly this and the
-answer is eleven seconds against forty milliseconds.
+steps, and the line of code does not otherwise change. Lesson 20 measures the same question: at a
+hundred thousand items, one `in` on a set is about twenty-five thousand times faster than on a list.
 
 **The rule of thumb:** if `in` is inside a loop, the thing on the right should be a set or a
 dictionary.

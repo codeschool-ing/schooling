@@ -25,11 +25,28 @@ off-by-one.
 
 ## Changing it
 
-```python
-langs[1] = "rust"          # replace in place
-langs.append("c")          # one item on the end
-langs.extend(["zig", "r"]) # several on the end
-langs.insert(0, "bash")    # at a position; everything after shifts
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "langs[1] = \"rust\"\n",
+      "note": "Assigning to a position replaces the item there, in place."
+    },
+    {
+      "code": "langs.append(\"c\")\n",
+      "note": "`append` puts one item on the end."
+    },
+    {
+      "code": "langs.extend([\"zig\", \"r\"])\n",
+      "note": "`extend` puts several on the end."
+    },
+    {
+      "code": "langs.insert(0, \"bash\")",
+      "note": "`insert` puts one at a position, and everything after it shifts along."
+    }
+  ]
+}
 ```
 
 **`append` takes one item, `extend` takes an iterable.** `langs.append(["a", "b"])` puts a *list*
@@ -49,11 +66,27 @@ inside the list, which is legal and almost never what you meant.
 
 ## Sorting
 
-```python
-langs.sort()             # in place, returns None
-best = sorted(langs)     # a new list, leaves the original alone
-langs.sort(reverse=True)
-langs.sort(key=len)      # by a computed value
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "langs.sort()\n",
+      "note": "`sort` works in place and returns `None`."
+    },
+    {
+      "code": "best = sorted(langs)\n",
+      "note": "`sorted` makes a new list and leaves the original alone."
+    },
+    {
+      "code": "langs.sort(reverse=True)\n"
+    },
+    {
+      "code": "langs.sort(key=len)",
+      "note": "`key` sorts by a computed value."
+    }
+  ]
+}
 ```
 
 **`sort` returns `None`**, which is lesson 2's `names = names.sort()` trap. When you want a value

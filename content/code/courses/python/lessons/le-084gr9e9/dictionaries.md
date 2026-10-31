@@ -24,16 +24,32 @@ None
 ```
 
 **`[]` raises and `get` does not.** Use `[]` when a missing key is a bug you want to hear about,
-and `get` when it is a case you are handling — which for anything that came out of a JSON file is
+and `get` when it is a case you are handling. For anything that came out of a JSON file, that is
 most of the time.
 
 ## Writing
 
-```python
-person["email"] = "ada@example.com"   # add or replace
-person.setdefault("city", "Paris")    # only if absent
-del person["email"]
-value = person.pop("city", None)      # remove and return, with a fallback
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "person[\"email\"] = \"ada@example.com\"\n",
+      "note": "Assigning to a key adds it, or replaces its value if it is already there."
+    },
+    {
+      "code": "person.setdefault(\"city\", \"Paris\")\n",
+      "note": "`setdefault` writes the value only if the key is absent."
+    },
+    {
+      "code": "del person[\"email\"]\n"
+    },
+    {
+      "code": "value = person.pop(\"city\", None)",
+      "note": "`pop` removes the key and returns its value, with a fallback for when it is not there."
+    }
+  ]
+}
 ```
 
 `update` merges another dictionary in, and `a | b` does the same as a new dictionary.

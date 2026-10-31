@@ -34,8 +34,8 @@ for name in names:            # 100_000 names
 ```
 
 São quinhentos milhões de comparações. Troque `banned` por um conjunto e são cem mil passos, e a
-linha de código não muda em mais nada. A aula 20 mede exatamente isso e a resposta é onze segundos
-contra quarenta milissegundos.
+linha de código não muda em mais nada. A aula 20 mede a mesma pergunta: com cem mil itens, um `in`
+num conjunto é umas vinte e cinco mil vezes mais rápido que numa lista.
 
 **A regra prática:** se o `in` está dentro de um laço, a coisa à direita deveria ser um conjunto ou
 um dicionário.

@@ -25,11 +25,28 @@ um a mais.
 
 ## Mudando
 
-```python
-langs[1] = "rust"          # replace in place
-langs.append("c")          # one item on the end
-langs.extend(["zig", "r"]) # several on the end
-langs.insert(0, "bash")    # at a position; everything after shifts
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "langs[1] = \"rust\"\n",
+      "note": "Atribuir a uma posição substitui o item que está ali, no lugar."
+    },
+    {
+      "code": "langs.append(\"c\")\n",
+      "note": "O `append` põe um item no fim."
+    },
+    {
+      "code": "langs.extend([\"zig\", \"r\"])\n",
+      "note": "O `extend` põe vários no fim."
+    },
+    {
+      "code": "langs.insert(0, \"bash\")",
+      "note": "O `insert` põe um numa posição, e tudo o que vem depois dela se desloca."
+    }
+  ]
+}
 ```
 
 **O `append` recebe um item, o `extend` recebe um iterável.** `langs.append(["a", "b"])` põe uma
@@ -49,11 +66,27 @@ langs.insert(0, "bash")    # at a position; everything after shifts
 
 ## Ordenando
 
-```python
-langs.sort()             # in place, returns None
-best = sorted(langs)     # a new list, leaves the original alone
-langs.sort(reverse=True)
-langs.sort(key=len)      # by a computed value
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "langs.sort()\n",
+      "note": "O `sort` trabalha no lugar e devolve `None`."
+    },
+    {
+      "code": "best = sorted(langs)\n",
+      "note": "O `sorted` faz uma lista nova e deixa a original em paz."
+    },
+    {
+      "code": "langs.sort(reverse=True)\n"
+    },
+    {
+      "code": "langs.sort(key=len)",
+      "note": "O `key` ordena por um valor calculado."
+    }
+  ]
+}
 ```
 
 **O `sort` devolve `None`**, que é a armadilha `names = names.sort()` da aula 2. Quando você quer um
