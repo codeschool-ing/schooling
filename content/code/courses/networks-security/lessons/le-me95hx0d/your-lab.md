@@ -24,8 +24,8 @@ the computer trusts. In a virtual machine all of that goes away with the machine
 right only for a computer you can wipe afterwards.
 
 Any other hypervisor works in place of Multipass, with an Ubuntu Server 24.04 LTS image and the same
-2 processors, 2 GB and 10 GB: **VirtualBox** on Windows, Linux or an Intel Mac, **UTM** on an
-Apple-silicon Mac, **Hyper-V** on Windows, **GNOME Boxes** or **virt-manager** on Linux. They cost
+2 processors, 2 GB and 10 GB. **VirtualBox** runs on Windows, Linux or an Intel Mac, **UTM** on an
+Apple-silicon Mac, **Hyper-V** on Windows, and **GNOME Boxes** or **virt-manager** on Linux. They cost
 half an hour of installer screens that Multipass skips. **Online** is any provider that rents an
 Ubuntu 24.04 machine with root access. A free tier will do if you have one, but nothing in the course
 depends on it. Nothing the lab starts listens on the machine's public address; every service runs

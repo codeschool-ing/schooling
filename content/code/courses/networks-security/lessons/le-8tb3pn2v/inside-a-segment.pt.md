@@ -31,7 +31,7 @@ exatamente o caminho que a aula 9 mostra o ransomware seguindo: da primeira máq
 infectou, para os lados, até todo compartilhamento que ele consiga abrir. Um segmento só é tão
 confiável quanto o seu membro menos cuidadoso.
 
-Há três respostas, e aulas posteriores tratam de cada uma:
+Há três respostas, e a última coluna diz onde cada uma é tratada:
 
 | resposta | o que ela faz | aula |
 |---|---|---|

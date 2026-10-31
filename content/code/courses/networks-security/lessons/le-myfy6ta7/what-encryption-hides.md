@@ -16,7 +16,7 @@ root@fw:~# jq -c "select(.event_type==\"http\") | .http | {hostname, url, http_u
 **From plain HTTP the inspector read everything**: the host, the path, the program making the
 request, the server's answer. From TLS 1.3 it read one thing, the **SNI**, the server name the
 client puts in its first message so the server knows which certificate to present. The certificate's
-`subject` and `issuer` are `null`, because TLS 1.3 encrypts the certificate too. In TLS 1.2 the
+`subject` and `issuerdn` are `null`, because TLS 1.3 encrypts the certificate too. In TLS 1.2 the
 certificate crossed the wire in clear, and older inspection products depended on reading it.
 
 ```

@@ -58,7 +58,7 @@ root@branch:~# nft -f acl-standard.nft
 
 Two details a router ACL hides and Linux makes visible. **`policy drop` is the implicit deny.** And the
 `arp` line exists because a filter this early sees every frame, and denying ARP would stop the machines
-on the segment from finding the router at all; a router's IP ACL never sees ARP, so it never needs the
+on the segment from finding the router at all. A router's IP ACL never sees ARP, so it never needs the
 line. Then the two computers again:
 
 ```

@@ -44,5 +44,5 @@ i: suricata: This is Suricata version 7.0.3 RELEASE running in SYSTEM mode
 ```
 
 **Write rules against a buffer, never against the raw packet, whenever a buffer exists.** A `content`
-without one searches the whole payload: the same five letters in a header, a cookie or a product
-description all match, and the false positives that follow are the reason people stop reading alerts.
+without one searches the whole payload, so the same five letters in a header, a cookie or a product
+description all match. The false positives that follow are the reason people stop reading alerts.

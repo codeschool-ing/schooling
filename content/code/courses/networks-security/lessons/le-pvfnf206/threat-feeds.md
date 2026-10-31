@@ -27,7 +27,7 @@ root@admin:~# grep -v '^#' feed.txt | while read a; do jq -r --arg a $a 'select(
       6 203.0.113.50
 ```
 
-Six records from `203.0.113.50`: the two flows and four drops from earlier. The other two addresses
+Six records from `203.0.113.50`: its two flows, its three probes and the later try on port 23. The other two addresses
 never appeared. That look back, run over months of flow records, is often how an intrusion is found:
 an address named today in somebody else's report turns out to have visited in July.
 

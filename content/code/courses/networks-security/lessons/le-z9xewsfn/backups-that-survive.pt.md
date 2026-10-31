@@ -16,9 +16,9 @@ O desenho de rede que vem daí é uma questão de **direção**:
 | o servidor de backup busca nos clientes | o servidor de backup | não pela rede: nada de dentro pode abrir uma conexão com ele |
 | o backup também é copiado offline ou para um armazenamento imutável | um processo à parte, com agendamento | não: a cópia não pode ser alterada por um período definido, por ninguém |
 
-Nos termos da matriz da aula 4, o servidor de backup tem uma **linha** (pode alcançar as máquinas de
-que faz backup, na única porta que o agente dele usa) e uma **coluna vazia** (nada pode iniciar uma
-conversa com ele, exceto a administração a partir do segmento de gestão). É o mesmo formato da DMZ,
+Nos termos da matriz da aula 4, o servidor de backup tem uma **linha**: pode alcançar as máquinas de
+que faz backup, na única porta que o agente dele usa. A sua coluna é **vazia**: nada pode iniciar uma
+conversa com ele, exceto a administração a partir do segmento de gestão. É o mesmo formato da DMZ,
 desenhado pelo motivo oposto: lá as células vazias protegem o lado de dentro da DMZ, aqui protegem o
 backup do lado de dentro.
 

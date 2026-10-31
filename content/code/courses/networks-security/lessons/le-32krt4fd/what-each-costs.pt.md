@@ -35,7 +35,7 @@ X25519**. Lado a lado:
 | acordo de chaves X25519 | 29.568,7 | uma vez por conexão, para combinar a chave |
 | assinatura RSA-2048 | 3.313 | uma vez por conexão, pelo servidor, para provar sua identidade |
 
-Cifrar um bloco de 16 KiB é umas vinte e cinco vezes mais rápido que um acordo X25519, e há milhares de
+Cifrar um bloco de 16 KiB é umas vinte e seis vezes mais rápido que um acordo X25519, e há milhares de
 blocos numa conexão contra um único acordo. **Esse é o projeto de todo protocolo seguro numa tabela
 só**: as operações lentas rodam uma vez, no começo, e a rápida carrega os dados.
 

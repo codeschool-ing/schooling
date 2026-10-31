@@ -13,8 +13,8 @@ the same afternoon read like this:
 | configuration change | nothing | AIDE: `sites-enabled/shop` changed, 602 bytes to 744 |
 | new listener | nothing, until somebody connects | port 8081, owned by `socat` |
 
-**The host saw more, and the network saw it independently.** If `www` were compromised, its access log
-and its AIDE reports could be edited to hide all four rows; the network sensor's record of request 1
+**The host saw more, and the network saw it independently.** If `www` were compromised, everything it
+recorded about itself could be edited to hide all four rows. The network sensor's record of request 1
 and of the TLS connection could not, because the intruder never touched `sensor`. That is the argument
 for running both and for sending the host's records off the host.
 

@@ -34,7 +34,7 @@ Put side by side:
 | X25519 key agreement | 29,568.7 | once per connection, to agree the key |
 | RSA-2048 signature | 3,313 | once per connection, by the server, to prove its identity |
 
-Encrypting a 16 KiB block is some twenty-five times faster than one X25519 agreement, and there are
+Encrypting a 16 KiB block is some twenty-six times faster than one X25519 agreement, and there are
 thousands of blocks in a connection against one agreement. **That is the design of every secure
 protocol in one table**: the slow operations run once, at the start, and the fast one carries the data.
 

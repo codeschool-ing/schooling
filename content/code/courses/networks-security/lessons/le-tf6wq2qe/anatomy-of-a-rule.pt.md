@@ -44,5 +44,6 @@ i: suricata: This is Suricata version 7.0.3 RELEASE running in SYSTEM mode
 ```
 
 **Escreva regras contra um buffer, nunca contra o pacote bruto, sempre que existir um buffer.** Um `content`
-sem buffer procura no payload inteiro: as mesmas cinco letras em um cabeçalho, um cookie ou uma descrição
-de produto, todas casam, e os falsos positivos que vêm depois são o motivo de as pessoas pararem de ler alertas.
+sem buffer procura no payload inteiro, então as mesmas cinco letras em um cabeçalho, um cookie ou uma
+descrição de produto, todas casam. Os falsos positivos que vêm depois são o motivo de as pessoas pararem
+de ler alertas.

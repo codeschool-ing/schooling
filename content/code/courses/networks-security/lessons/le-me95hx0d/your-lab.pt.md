@@ -25,8 +25,8 @@ de autoridades em que o computador confia. Numa máquina virtual, tudo isso vai 
 máquina. **Instalado** só é a escolha certa num computador que você pode apagar depois.
 
 Qualquer outro hipervisor serve no lugar do Multipass, com uma imagem do Ubuntu Server 24.04 LTS e os
-mesmos 2 processadores, 2 GB e 10 GB: **VirtualBox** no Windows, no Linux ou num Mac com Intel,
-**UTM** num Mac com Apple silicon, **Hyper-V** no Windows, **GNOME Boxes** ou **virt-manager** no
+mesmos 2 processadores, 2 GB e 10 GB. O **VirtualBox** roda no Windows, no Linux ou num Mac com Intel,
+o **UTM** num Mac com Apple silicon, o **Hyper-V** no Windows, e o **GNOME Boxes** ou o **virt-manager** no
 Linux. Eles custam meia hora de telas de instalação que o Multipass pula. **Online** é qualquer
 provedor que alugue uma máquina Ubuntu 24.04 com acesso de root. Um plano gratuito serve, se você
 tiver um, mas nada no curso depende dele. Nada do que o laboratório sobe escuta no endereço público

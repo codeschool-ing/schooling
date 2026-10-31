@@ -26,9 +26,9 @@ Received 4 response(s)
 ```
 
 **Two different MACs answered for one address.** `52:54:00:0A:77:21` answered once, the printer;
-`52:54:00:A8:0A:15`, `desk`, answered every probe. Whether this is a printer set up in a hurry or a
-machine lying about the gateway, the defender's response starts the same way: find both MACs in the
-switch's address table, go to the ports, and find out which one should not be saying that.
+`52:54:00:A8:0A:15`, `desk`, answered every probe. It could be a printer set up in a hurry or a
+machine lying about the gateway. Either way, the defender's response starts the same: find both MACs
+in the switch's address table, go to the ports, and find out which one should not be saying that.
 
 ## Asking before taking an address
 

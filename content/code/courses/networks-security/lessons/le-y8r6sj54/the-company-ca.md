@@ -3,7 +3,7 @@ title: The company's own authority, field by field
 version: 1
 ---
 
-The lab has had a CA since lesson 2: a **root**, which signs an **issuing CA**, which signs the
+The lab has had a CA since lesson 1: a **root**, which signs an **issuing CA**, which signs the
 servers. `nslab.sh` builds it in `/lab/ca` on your own computer, with fixed dates, every time the lab
 comes up. In your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's policy
 loaded on `fw` by `nft -f baseline.nft`, and then the CA is copied to `admin` and told where it now

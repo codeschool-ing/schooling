@@ -21,7 +21,7 @@ por 432.000 segundos, cinco dias, depois do último pacote**, porque o conntrack
 se uma conexão quieta morreu ou só está descansando. Um fluxo UDP é esquecido depois de 30 segundos,
 ou depois de 120 quando vira um stream, com pacotes indo e voltando mais de uma vez.
 
-Duas consequências decorrem disso, e as duas voltam mais adiante no curso:
+Duas consequências decorrem disso:
 
 - **A tabela pode ser enchida.** Toda conversa que alguém inicia custa uma entrada, mesmo uma que
   nunca se completa. Enchê-la de propósito é uma forma de negação de serviço, e a aula 6 mede as

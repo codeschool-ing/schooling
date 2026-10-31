@@ -69,5 +69,5 @@ exit 255
 administrative access to leak, and this one is useless anywhere but the jump host.
 
 The jump host itself then becomes the thing to protect best: multi-factor authentication for the
-people who log in to it, its own logs shipped elsewhere as lesson 16 asked, nothing else installed on
-it, and no way to reach it from the staff LAN, which the matrix of lesson 4 already guarantees.
+people who log in to it, its own logs shipped elsewhere as lesson 16 asked, and nothing else installed
+on it. Nothing on the staff LAN can reach it, which the matrix of lesson 4 already guarantees.

@@ -85,6 +85,6 @@ comportar de um jeito estranho, `reset`: custa quatro segundos e devolve todas a
 em que o `nslab.sh` as monta.
 
 **E quando nada mais funcionar**, apague a máquina virtual e monte-a de novo. Com o Multipass, é
-`multipass delete --purge nslab` seguido dos comandos da primeira seção. Parece desistir. É o que
+`multipass delete --purge nslab` seguido dos dois comandos da seção 02, *O seu laboratório, montado por você*. Parece desistir. É o que
 profissionais fazem com uma máquina cujo estado ninguém mais consegue explicar, e é por isso que este
 curso monta tudo a partir de um script que você pode ler.

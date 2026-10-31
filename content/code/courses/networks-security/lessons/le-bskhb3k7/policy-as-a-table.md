@@ -46,7 +46,7 @@ table inet host {
 }
 ```
 
-The same rules lesson 19 wrote by hand for `db`, now derived. For `app`, the accept lines only:
+The same input rules lesson 19 wrote by hand for `db`, now derived. For `app`, the accept lines only:
 
 ```
 root@admin:~# python3 segment.py app | grep accept

@@ -22,5 +22,5 @@ no laboratório, e depois as duas juntas num túnel entre a matriz e a filial.
 
 Uma última palavra sobre tamanhos, porque eles são comparados o tempo todo, e mal: **tamanhos de chave
 só se comparam dentro de uma família**. Uma chave AES de 256 bits e uma chave de curva elíptica de 256
-bits são ambas consideradas fortes; uma chave RSA de 2048 bits é mais ou menos tão forte quanto uma
+bits são ambas consideradas fortes. Uma chave RSA de 2048 bits é mais ou menos tão forte quanto uma
 chave simétrica de 112 bits, e não oito vezes mais forte que o AES.

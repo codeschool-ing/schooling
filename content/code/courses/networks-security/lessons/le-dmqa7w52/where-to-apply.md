@@ -18,7 +18,7 @@ The classic rule of thumb for placement follows from what each kind can see:
 | **extended** | close to the **source** | it knows the destination and port, so it can drop unwanted traffic early without affecting anything else |
 
 The lab showed the reason for the first row. Had the aim been to keep `guest` away from one server at
-head office, the standard ACL on `branch` would have been the wrong tool in the wrong place: it cut
+head office, the standard ACL on `branch` would have been the wrong tool in the wrong place. It cut
 `guest` off from **the whole internet**, because a standard ACL cannot say "only towards that server".
 
 ```schooling-figure
@@ -27,5 +27,5 @@ head office, the standard ACL on `branch` would have been the wrong tool in the 
 
 One more habit, learned the hard way on every remote router: **apply an ACL to the interface you are
 connected through only with a way back ready.** Lesson 5's scheduled rollback is the Linux version of
-that habit; on IOS it is `reload in 5` before the change, cancelled with `reload cancel` once the
+that habit. On IOS it is `reload in 5` before the change, cancelled with `reload cancel` once the
 change has been tested.

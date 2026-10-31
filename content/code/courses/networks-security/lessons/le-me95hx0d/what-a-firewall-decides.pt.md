@@ -16,8 +16,8 @@ interfaces de rede e, atrás de cada uma, um segmento que merece um grau de conf
 ```
 
 Cada máquina é um namespace de rede com suas próprias interfaces, rotas e firewall, e por isso se
-comporta como uma máquina à parte. Os endereços vêm das faixas reservadas para documentação, e nada no laboratório alcança a
-internet de verdade.
+comporta como uma máquina à parte. Os endereços públicos são os reservados para documentação, os
+segmentos internos usam endereços privados, e nada no laboratório alcança a internet de verdade.
 
 **Quando o laboratório sobe, o `fw` roteia tudo e não filtra nada.** Muita rede funciona
 assim, e vale a pena ver isso uma vez. `remote` é um desconhecido no segmento da internet;

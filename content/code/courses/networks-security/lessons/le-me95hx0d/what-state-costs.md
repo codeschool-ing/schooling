@@ -21,7 +21,7 @@ for 432,000 seconds, five days, after its last packet**, because conntrack canno
 quiet connection is dead or only resting. A UDP flow is forgotten after 30 seconds, or after 120 once it has
 become a stream, with packets going back and forth more than once.
 
-Two consequences follow, and both come back later in the course:
+Two consequences follow:
 
 - **The table can be filled.** Every conversation somebody starts costs an entry, even one that
   never completes. Filling it on purpose is one form of denial of service, and lesson 6 measures the
