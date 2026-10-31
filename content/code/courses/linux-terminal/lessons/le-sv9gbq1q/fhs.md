@@ -33,8 +33,8 @@ drwxr-xr-x 11 root root  4096 Feb 17  2026 /var
 
 Before the table, two things that listing just told you for free.
 
-**Four of them are arrows.** `/bin`, `/lib`, `/sbin` and `/lib64` are not directories at all —
-they are symlinks pointing into `/usr`. That is the *usr merge*, finished across every mainstream
+**Three of them are arrows.** `/bin`, `/lib` and `/sbin` are not directories at all — they are
+symlinks pointing into `/usr`, and so is `/lib64`, which this listing did not ask for. That is the *usr merge*, finished across every mainstream
 distribution between 2012 and 2023, and section 11 explains what a symlink is. For now: `/bin/ls`
 and `/usr/bin/ls` are the same file reached by two names.
 

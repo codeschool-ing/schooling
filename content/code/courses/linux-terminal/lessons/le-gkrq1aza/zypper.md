@@ -200,7 +200,7 @@ distribution replaces whole sets of packages at once, and `up` refuses the vendo
 changes that requires. Running `up` on Tumbleweed for a few months produces a machine that is
 half-upgraded in a way nothing else in this lesson can produce.
 
-That is the single most SUSE-specific fact in this section, and it is the one people get wrong.
+That is the most SUSE-specific fact in this section, and the one people get wrong.
 
 ## The rest
 

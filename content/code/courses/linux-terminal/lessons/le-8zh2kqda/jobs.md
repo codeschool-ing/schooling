@@ -7,7 +7,7 @@ One terminal, several things running. **A job is the shell's word for one comman
 possibly a pipeline, possibly a script with children, and always a process group, which is why
 section 09's `kill %1` reached all of it.
 
-The whole of job control is three keys and four commands, and it is all in this one transcript:
+The whole of job control is three keys and four commands, and most of it is in this one transcript:
 
 ```
 ana@vm:~/work$ sleep 300

@@ -109,7 +109,7 @@ ana@vm:/tmp/q2$ echo {web,db}0{1..2}
 web01 web02 db01 db02
 ```
 
-O primeiro laço rodou **uma vez**, sobre os oito caracteres literais `{1..4}` — o `$n` foi
+O primeiro laço rodou **uma vez**, sobre os seis caracteres literais `{1..4}` — o `$n` foi
 substituído, mas tarde demais para ajudar. Esse é o único motivo comum para pegar o `for (( ))`
 estilo C.
 
@@ -189,15 +189,13 @@ arquivo a cada iteração; esta abre uma vez. Em três arquivos não faz diferen
 
 ## Quando não escrever laço nenhum
 
-Esta é a parte que separa um script de shell de um programa escrito em shell.
-
 ```sh
 for f in *.log; do gzip "$f"; done      # a loop
 gzip *.log                              # the same thing, one process
 ```
 
 **A maioria dos comandos já recebe muitos argumentos.** Um laço que chama `mv`, `rm`, `chmod` ou
-`gzip` uma vez por arquivo geralmente é um laço que não precisava existir — e o `xargs` da aula 8
+`gzip` uma vez por arquivo geralmente é um laço que não precisava existir. O `xargs` da aula 8
 seção 16 cobre o caso em que a lista é longa demais ou vem de outro lugar.
 
 Escreva o laço quando cada iteração precisar *fazer* algo diferente: montar um nome, conferir uma

@@ -108,7 +108,7 @@ ana@vm:/tmp/q2$ echo {web,db}0{1..2}
 web01 web02 db01 db02
 ```
 
-The first loop ran **once**, over the literal eight characters `{1..4}` — the `$n` was substituted
+The first loop ran **once**, over the literal six characters `{1..4}` — the `$n` was substituted
 but far too late to help. That is the one common reason to reach for the C-style `for (( ))`.
 
 The third line is brace expansion doing what it is good at, and it is worth knowing outside loops
@@ -189,15 +189,13 @@ not matter. On thirty thousand it does.
 
 ## When not to write a loop at all
 
-This is the part that separates a shell script from a program written in the shell.
-
 ```sh
 for f in *.log; do gzip "$f"; done      # a loop
 gzip *.log                              # the same thing, one process
 ```
 
 **Most commands already take many arguments.** A loop that calls `mv`, `rm`, `chmod` or `gzip` once
-per file is usually a loop that did not need to exist — and lesson 8 section 16's `xargs` covers
+per file is usually a loop that did not need to exist. Lesson 8 section 16's `xargs` covers
 the case where the list is too long or comes from somewhere else.
 
 Write the loop when each iteration needs to *do* something different: build a name, check a

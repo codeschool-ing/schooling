@@ -34,7 +34,7 @@ bash: ana: command not found
 ```
 
 **As duas são shell válido — só não querem dizer o que você queria.** O shell divide uma linha em
-palavras e roda a primeira como comando, então `name = ana` é "rode o comando `name` com os
+palavras e roda a primeira como comando. Então `name = ana` é "rode o comando `name` com os
 argumentos `=` e `ana`", e `name= ana` é "rode o `ana` com `name` definido como vazio".
 
 Essa segunda é um recurso de verdade, e ela volta mais adiante nesta seção. Por ora, lembre:
@@ -48,7 +48,7 @@ ana@vm:~/work/scripts$ echo $count+1
 3+1
 ```
 
-Não existe tipo numérico. O `count` guarda os dois caracteres `3`, e `$count+1` é a string `3+1`.
+Não existe tipo numérico. O `count` guarda o caractere `3`, e `$count+1` é a string `3+1`.
 Aritmética precisa do `$(( ))`, que é a seção 14.
 
 Aspas são só para o shell — elas nunca acabam dentro do valor:

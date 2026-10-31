@@ -43,7 +43,7 @@ Note who is speaking: `bash:`, not `cd:`. **`cd` is not a program** — it canno
 program changing its own directory would not change the shell's. It is built into the shell, which
 is why `man cd` finds nothing and `help cd` finds everything. Lesson 1 section 16 drew that line.
 
-## `ls`, and the seven options that matter
+## `ls`, and the ten options that matter
 
 Plain `ls` gives you names, in columns, alphabetically, hiding anything that starts with a dot:
 
@@ -167,7 +167,7 @@ drwxr-xr-x 2 root root 36864 Mar 31 13:31 /bin/
 ```
 
 `/bin` is a symlink to `usr/bin`. With `-l`, `ls` shows you **the link**. Add a trailing slash and
-it follows it and shows you **the directory**. Same seven characters typed, two different
+it follows it and shows you **the directory**. Nearly the same line typed, two different
 questions asked.
 
 Section 11 is about links. The habit to take from here is smaller and immediately useful: **a

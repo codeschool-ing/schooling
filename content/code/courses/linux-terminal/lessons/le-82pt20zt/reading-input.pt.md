@@ -209,7 +209,7 @@ O `[[ $answer == [Yy]* ]]` é a correspondência de glob da seção 08, e aceita
 `Yes` tratando uma resposta vazia — alguém só apertando enter — como não. **Padrão não** em
 qualquer coisa destrutiva.
 
-Mais uma coisa a saber: um `read` dentro de um laço que já está lendo um arquivo vai comer a próxima
+Um `read` dentro de um laço que já está lendo um arquivo vai comer a próxima
 linha do arquivo em vez de esperar o usuário — use `read -u 3` com um descritor explícito, ou
 reestruture.
 

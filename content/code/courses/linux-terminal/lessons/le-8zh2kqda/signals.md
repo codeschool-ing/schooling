@@ -88,7 +88,7 @@ jobs
 ```
 
 **Read the interleaving before the result, because it is real and it looks broken.** A background
-job prints whenever it likes, and what you type is echoed wherever the cursor happens to be — so
+job prints whenever it likes, and what you type is echoed wherever the cursor happens to be. So
 `kill -TERM $PID` appears with no prompt in front of it, on the line after the job's output. The
 terminal is not confused; it is showing two things sharing one screen. Section 10 is about keeping
 them apart.
@@ -186,8 +186,6 @@ it is not mine; it does not exist. **The two failures have different messages an
 status**, which matters — a script that only checks `$?` cannot tell "gone" from "not allowed", and
 those call for opposite responses.
 
-That is also your first look at the refusal. PID 1 belongs to `root` and `ana` may not touch it;
-section 09 is the rest of that rule.
-
-Section 09 is the rest of `kill`: which process, how to reach a whole group, and what the refusal
+That is also your first look at the refusal: PID 1 belongs to `root` and `ana` may not touch it.
+Section 09 is the rest of `kill` — which process, how to reach a whole group, and what the refusal
 looks like when the process is not yours.

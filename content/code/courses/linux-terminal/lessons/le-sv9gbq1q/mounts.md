@@ -182,8 +182,7 @@ root@vm:~# cat /etc/fstab
 
 Empty, on the machine these transcripts were captured on, because its root filesystem was mounted
 by the thing that started it rather than from a table. On the machine you installed in lesson 1 it
-has a line for each filesystem the installer made. On a normal installation it has a line per
-filesystem, six fields each:
+has a line for each filesystem the installer made, six fields each:
 
 | field | is | example |
 |---|---|---|

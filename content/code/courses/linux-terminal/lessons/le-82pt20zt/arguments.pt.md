@@ -81,7 +81,7 @@ count: 10
 first: a   second: b   tenth: j
 ```
 
-E o `$2` não imprimiu nada na primeira execução, porque não havia segundo argumento — a mesma
+E o `${10}` não imprimiu nada na primeira execução, porque não havia décimo argumento — a mesma
 expansão vazia e silenciosa de qualquer outra variável não definida.
 
 ## `"$@"` versus `$@` versus `"$*"`

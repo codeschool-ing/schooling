@@ -32,7 +32,7 @@ a.txt b.txt
 four words** on its way to the command. This is called *globbing*, and it happens to every command
 you type, always, whether that command knows about files or not.
 
-## The four patterns
+## The five patterns
 
 | | matches |
 |---|---|
@@ -134,7 +134,7 @@ cp config.yml{,.bak}
 ```
 
 The second one is worth staring at: `config.yml{,.bak}` expands to `config.yml config.yml.bak`,
-which is a copy-to-backup in eleven characters. It is the one brace trick everybody eventually
+which is a copy-to-backup without typing the name twice. It is the one brace trick everybody eventually
 learns.
 
 ## Where the "shell expands it first" rule pays off

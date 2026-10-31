@@ -200,7 +200,7 @@ distribuição rolling substitui conjuntos inteiros de pacotes de uma vez, e o `
 de vendor e arquitetura que isso exige. Rodar o `up` no Tumbleweed por alguns meses produz uma
 máquina meio atualizada de um jeito que nada mais nesta aula consegue produzir.
 
-Esse é o fato mais específico de SUSE desta seção, e é o que as pessoas erram.
+Esse é o fato mais específico de SUSE desta seção, e o que as pessoas erram.
 
 ## O resto
 

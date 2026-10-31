@@ -23,7 +23,7 @@ total 4
 722950 -rw-r--r-- 1 ana ana 13 Oct  7 11:09 report.txt
 ```
 
-`573516` is what the filesystem calls this data. `report.txt` is what the directory calls it. The
+`722950` is what the filesystem calls this data. `report.txt` is what the directory calls it. The
 inode holds everything `ls -l` showed you — permissions, owner, size, timestamps, and where the
 bytes are. **The name is not in the inode.** The name is in the directory.
 
@@ -83,7 +83,7 @@ total 4
 
 Three differences from a hard link, and each one matters:
 
-- **its own inode**, `573519` — it is a separate thing on disk;
+- **its own inode**, `722952` — it is a separate thing on disk;
 - **type `l`** in the first column — section 06's field 1, earning its keep;
 - **size 10**, which is the length of the string `report.txt`. That is all a symlink is: a tiny
   file whose contents are a path.
