@@ -7,15 +7,28 @@ A name is resolved by looking in four places, always in this order:
 
 **L**ocal → **E**nclosing → **G**lobal → **B**uilt-in.
 
-```python
-total = 0                 # global (module level)
-
-def outer():
-    count = 1             # enclosing, from inner's point of view
-    def inner():
-        n = 2             # local
-        print(n, count, total, len)     # one from each
-    inner()
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "total = 0\n",
+      "note": "`total` is set at module level, so it is **global**."
+    },
+    {
+      "code": "def outer():\n    count = 1",
+      "note": "`count` belongs to `outer`. From `inner`'s point of view it is **enclosing**."
+    },
+    {
+      "code": "    def inner():\n        n = 2",
+      "note": "`n` is **local** to `inner`."
+    },
+    {
+      "code": "        print(n, count, total, len)\n    inner()",
+      "note": "The `print` reads one name from each place: `n`, `count`, `total`, and `len` from the built-ins."
+    }
+  ]
+}
 ```
 
 The first place that has the name wins, and Python never asks which one you meant.

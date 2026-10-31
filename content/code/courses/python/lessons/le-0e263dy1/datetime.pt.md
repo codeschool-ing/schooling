@@ -20,7 +20,7 @@ duração.
 ```
 
 **Essa é a razão inteira de não fazer isto à mão.** Trinta dias a partir de 15 de fevereiro é uma
-pergunta cuja resposta certa depende do ano, e ninguém erra a regra do bissexto duas vezes — erra
+pergunta cuja resposta certa depende do ano. Ninguém erra a regra do bissexto duas vezes — erra
 uma, em produção, em fevereiro.
 
 ## Analisar e formatar
@@ -46,7 +46,8 @@ datetime.now(timezone.utc)        # aware
 ```
 
 Um `datetime` sem fuso se chama INGÊNUO, e é o padrão. Ele quer dizer "esta hora, em algum lugar" —
-e comparar um ingênuo com um consciente levanta erro, que é o Python se recusando a chutar.
+e perguntar se um ingênuo vem antes de um consciente levanta erro, que é o Python se recusando a
+chutar.
 
 **A regra que sobrevive ao contato com a realidade: guarde e calcule em UTC, converta na borda.** O
 carimbo de tempo no banco é UTC; a tela mostra a hora de quem lê. Qualquer outra coisa é um defeito

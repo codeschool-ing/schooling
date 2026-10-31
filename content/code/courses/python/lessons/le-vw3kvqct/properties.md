@@ -27,7 +27,7 @@ have to remember which of `r.width` and `r.area()` needs parentheses when both a
 about the rectangle.
 
 **And it is a change you can make later.** An attribute that starts as plain data can become a
-property without one call site changing — which is exactly why Python has no getters and setters
+property without one call site changing. That is exactly why Python has no getters and setters
 everywhere: you add them on the day you need them.
 
 ## The setter, which is where validation goes

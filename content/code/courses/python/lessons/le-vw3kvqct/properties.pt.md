@@ -26,7 +26,7 @@ lembrar qual entre `r.width` e `r.area()` precisa de parênteses quando os dois 
 o retângulo.
 
 **E é uma mudança que dá para fazer depois.** Um atributo que começa como dado puro dá para virar
-uma property sem nenhuma chamada mudar — que é exatamente por que o Python não tem getters e
+uma property sem nenhuma chamada mudar. É exatamente por isso que o Python não tem getters e
 setters por toda parte: você os acrescenta no dia em que precisa.
 
 ## O setter, que é onde a validação vai

@@ -7,15 +7,28 @@ Um nome é resolvido olhando em quatro lugares, sempre nesta ordem:
 
 **L**ocal → **E**nvolvente → **G**lobal → em**B**utido.
 
-```python
-total = 0                 # global (module level)
-
-def outer():
-    count = 1             # enclosing, from inner's point of view
-    def inner():
-        n = 2             # local
-        print(n, count, total, len)     # one from each
-    inner()
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "total = 0\n",
+      "note": "`total` é definido no nível do módulo, então é **global**."
+    },
+    {
+      "code": "def outer():\n    count = 1",
+      "note": "`count` pertence a `outer`. Do ponto de vista de `inner`, ele é **envolvente**."
+    },
+    {
+      "code": "    def inner():\n        n = 2",
+      "note": "`n` é **local** de `inner`."
+    },
+    {
+      "code": "        print(n, count, total, len)\n    inner()",
+      "note": "O `print` lê um nome de cada lugar: `n`, `count`, `total`, e `len` dos embutidos."
+    }
+  ]
+}
 ```
 
 O primeiro lugar que tem o nome vence, e o Python nunca pergunta qual deles você queria.

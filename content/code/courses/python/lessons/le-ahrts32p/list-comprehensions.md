@@ -7,7 +7,7 @@ version: 2
 discounted = [price * 0.9 for price in prices if price > 100]
 ```
 
-Six lines of loop in one, and the first thing it says is **what is being built**.
+Four lines of loop in one, and the first thing it says is **what is being built**.
 
 ## Reading it
 

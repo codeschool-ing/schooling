@@ -58,7 +58,7 @@ essa é a declaração inteira.
 ## As anotações não são conferidas
 
 `name: str` é documentação em tempo de execução — nada impede `Student(3, 4)`. Um verificador de
-tipos a lê e reclama, que é a aula 17. A dataclass só usa a anotação para saber que o campo
+tipos a lê e reclama, que é a aula 15. A dataclass só usa a anotação para saber que o campo
 EXISTE.
 
 ## Quando não
