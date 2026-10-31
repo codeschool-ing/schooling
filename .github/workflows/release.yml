@@ -165,7 +165,16 @@ jobs:
   Deploy:
     needs: Publish
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # AN HOUR, BECAUSE THAT IS HOW LONG THE CREDENTIALS LAST. Twenty minutes
+    # held while the catalogue loaded in under ten. At v0.54.0 the load alone
+    # took longer than that: 120 courses, a row per statement, every statement a
+    # round trip to Cloud SQL. The third attempt was cancelled here at minute
+    # twenty, mid-load, which is the worst moment to stop: `gcloud ... --wait`
+    # dies and the execution it was waiting on carries on without a witness.
+    # Past sixty minutes the federated token below expires and the steps after
+    # the load cannot authenticate, so a longer limit would buy nothing. The
+    # load job's own limit, in `infra/run.tf`, is the same hour.
+    timeout-minutes: 60
 
     # ONE DEPLOY AT A TIME, AND THE SECOND ONE WAITS RATHER THAN CANCELLING.
     #
