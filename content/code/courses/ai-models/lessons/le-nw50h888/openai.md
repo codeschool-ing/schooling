@@ -37,8 +37,8 @@ Ollama    3 models, among them llama3.2:3b: other.
 LM Studio nothing is listening at http://127.0.0.1:1234/v1
 ```
 
-**Same path, two ports**, and on the machine this course was recorded on only one of them answered:
-there was no LM Studio there, and the program says so instead of stopping, because
+**Same path, two ports**, and on the machine this course was recorded on only one of them answered.
+There was no LM Studio there, and the program says so instead of stopping, because
 `APIConnectionError` is what the library raises when nobody is listening. With LM Studio running
 and its server switched on, the second line is a sorted case too.
 

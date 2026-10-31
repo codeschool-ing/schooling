@@ -4,7 +4,7 @@ version: 1
 ---
 
 Lesson 8 section 05 called Chat Completions the shape most of the industry copied, and lessons 9,
-14, 15 and 19 kept meeting it: Mistral, Ollama, LM Studio, OpenRouter and Hugging Face's router all
+14, 15 and 19 kept meeting it. Mistral, Ollama, LM Studio, OpenRouter and Hugging Face's router all
 accept a request written for OpenAI's library. Anthropic and Google offer the same, as a separate
 endpoint beside their own APIs. `compat.py` sends ten of ana's cases to eight providers through one
 client, and changes three things per provider:

@@ -85,7 +85,7 @@ que o objeto foi mandado. O OpenRouter o lê, e a documentação dele diz o que 
 
 Então, no OpenRouter, a mesma requisição vai para a DeepInfra, ou para a Together se a DeepInfra não
 puder atendê-la, e **falha em vez de seguir adiante** com `allow_fallbacks: false`. Qual dos dois a
-ana quer depende da decisão da seção 10 da aula 5: se a avaliação rodou contra o serviço de um
+ana quer depende da decisão da seção 10 da aula 5. Se a avaliação rodou contra o serviço de um
 provedor para o modelo, um provedor diferente é um candidato diferente, e falhar pode ser o
 resultado honesto.
 

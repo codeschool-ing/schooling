@@ -70,11 +70,11 @@ browser could not provide; the runtime ran on WebAssembly, the `.wasm` file in t
 
 **Nine requests, one host.** The e-mail in the box never left the browser: there is no request
 after the click. That is the property no API in lessons 6 to 9 can offer, and on a site where the
-text is a customer's own message it can be the whole argument. lesson 2 section 07's question,
+text is a customer's own message it can be the whole argument. Lesson 2 section 07's question,
 *where does the data go*, has the shortest possible answer.
 
-The price is in the other column. The page fetched **27,507,633 bytes**, and the model was 9,668 of
-them. The runtime's `.wasm` alone was 26,861,777. Every visitor downloads the runtime and the model
+The price is in the other column. The page fetched **27,507,633 bytes**, and the model's four files
+came to 9,668. The runtime's `.wasm` alone was 26,861,777. Every visitor downloads the runtime and the model
 before the first answer, and then runs them on whatever device they have. With ana's model that is
 nothing; with a real one, the model file is as large as lesson 3 section 03 computes, and it is
 paid by the visitor's connection and the visitor's memory, not by a bill.

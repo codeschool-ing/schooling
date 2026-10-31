@@ -39,8 +39,8 @@ setting at all. And a server that does not know the field ignores it without a w
 as Ollama did with `provider` in section 03, so **a privacy field is checked against the service it
 is sent to**, never assumed from the request.
 
-The same documentation lists stricter controls beside it: `zdr`, to use only endpoints with zero
-data retention, `only` and `ignore`, to name providers, and `quantizations`, to refuse a host
+The same documentation lists stricter controls beside it. `zdr` uses only endpoints with zero
+data retention, `only` and `ignore` name providers, and `quantizations` refuses a host
 serving the model at a lower precision than the one evaluated. Each is a line in the request, and
 each turns a question from lessons 2 and 10 into something a program enforces instead of a
 person remembering.

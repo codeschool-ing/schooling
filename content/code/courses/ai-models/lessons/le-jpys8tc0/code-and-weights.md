@@ -31,7 +31,7 @@ that one does set conditions. Its preamble says what kind:
 ```
 
 So a team that reads "MIT" in the repository and stops there has read the wrong licence. The use-
-based restrictions are in an attachment to the Model License, and the paragraph above says they
+based restrictions are in an attachment to the Model License, and the paragraph that follows the one above says they
 travel with every derivative.
 
 ## A model built from another model

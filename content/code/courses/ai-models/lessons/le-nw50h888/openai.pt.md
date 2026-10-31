@@ -38,7 +38,7 @@ Ollama    3 models, among them llama3.2:3b: other.
 LM Studio nothing is listening at http://127.0.0.1:1234/v1
 ```
 
-**O mesmo caminho, duas portas**, e na máquina em que este curso foi gravado só uma respondeu: não
+**O mesmo caminho, duas portas**, e na máquina em que este curso foi gravado só uma respondeu. Não
 havia LM Studio lá, e o programa diz isso em vez de parar, porque `APIConnectionError` é o que a
 biblioteca levanta quando ninguém está escutando. Com o LM Studio rodando e o servidor dele ligado,
 a segunda linha também é um caso classificado.

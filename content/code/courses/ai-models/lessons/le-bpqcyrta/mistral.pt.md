@@ -4,7 +4,7 @@ version: 1
 ---
 
 A Mistral é a única empresa deste diretório que vende modelos fechados por API e também publica
-pesos abertos de muitos dos modelos dela, e fica na França, o que importa para alguns compradores
+pesos abertos de muitos dos modelos dela. Ela fica na França, o que importa para alguns compradores
 pelo motivo da aula 2 seção 07. As entradas atuais dela na tabela, mais ou menos em ordem de
 tamanho:
 

@@ -34,8 +34,8 @@ The **flex** and **priority** lines are the sheet's record of Google selling the
 different levels of service. The sheet records prices and not promises, so what each level
 guarantees is something to read on the provider's page before relying on it. Where they are a
 choice per request rather than per account, they turn into a latency trade-off of exactly lesson 4
-section 06's kind: background sorting could run on flex at
-half price, a draft for a waiting agent could pay for priority at its p95.
+section 06's kind. Background sorting could run on flex at half price, and a draft for a waiting
+agent could pay for priority at its p95.
 
 ## The price that changes with the prompt
 

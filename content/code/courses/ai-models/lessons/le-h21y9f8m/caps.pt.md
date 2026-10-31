@@ -18,7 +18,7 @@ Provedores definem um e deixam a conta definir um mais baixo. O da Anthropic, na
 Um teto por nível, escolhido pelo provedor, e um limite de gasto abaixo dele, escolhido pela ana.
 Passando de qualquer um, a API recusa com uma mensagem que diz isso e diz quando o acesso volta. O
 teto existe para proteger o provedor e o saldo da conta; **o limite de gasto é o que a ana define
-para se proteger**, e o valor certo dele é a estimativa mensal da aula 4 com folga para uma semana
+para se proteger**. O valor certo dele é a estimativa mensal da aula 4 com folga para uma semana
 ruim, não o teto do nível.
 
 Um roteador acrescenta um mais estreito. A documentação do OpenRouter lista três fontes de limites

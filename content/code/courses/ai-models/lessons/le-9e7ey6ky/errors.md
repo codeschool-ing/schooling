@@ -16,7 +16,7 @@ and its documentation says what the library does about it:
 ```
 
 `retries.py` sorts one case with a given number of retries and times it. Ollama is never too busy
-in that way, so the relay plays the busy API: stop it in the second terminal with Ctrl-C and start
+in that way, so the relay plays the busy API. Stop it in the second terminal with Ctrl-C and start
 it again with `--fail`, which answers the next two requests with a 529 instead of passing them on:
 
 ```
@@ -71,7 +71,7 @@ ana@desk:~/desk$ python retries.py 0
 OverloadedError 529 after 0.0 s
 ```
 
-Both are reasonable defaults, and the point is to know which one is running:
+Both are reasonable settings, and the point is to know which one is running:
 
 - **The retries count against the rate limit.** Lesson 21 sets a limit on requests per minute, and
   a program that makes 50 calls in a busy minute may send 150.

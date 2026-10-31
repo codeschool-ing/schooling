@@ -9,7 +9,7 @@ próximo de uma ficha técnica que um modelo tem, e a maioria das pessoas pula o
 para a tabela de benchmarks. A tabela é a parte menos útil para decidir sobre a sua tarefa, porque
 mede a tarefa de outra pessoa.
 
-O cartão da Llama 3.1 passa de mil linhas. Dois parágrafos dele respondem a perguntas que a ana
+O cartão da Llama 3.1 tem quase mil linhas. Dois parágrafos dele respondem a perguntas que a ana
 precisa fazer sobre qualquer modelo antes de a Lantern Books depender dele:
 
 ```
@@ -28,8 +28,8 @@ precisa fazer sobre qualquer modelo antes de a Lantern Books depender dele:
 
 **Idiomas.** *Suportado* quer dizer que os autores testaram e respondem pelos resultados. O
 português está na lista da Llama 3.1, o que importa para uma loja cujos clientes escrevem em
-português. O mesmo cartão diz, algumas centenas de linhas adiante, que o modelo foi treinado em
-mais idiomas do que esses oito, e "desencoraja fortemente" usá-lo para conversar nos outros sem
+português. O mesmo cartão diz, poucas linhas adiante, que o modelo foi treinado em
+mais idiomas do que esses oito. Perto do fim, "desencoraja fortemente" usá-lo para conversar nos outros sem
 trabalho adicional. Um idioma que funciona num teste rápido e não está na lista é um idioma que
 ninguém mediu.
 

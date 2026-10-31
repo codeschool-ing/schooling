@@ -31,7 +31,7 @@ ana@desk:~/desk$ python sheet.py pick --needs response_schema --min-window 32000
 
 From 2,990 priced chat entries, the two thresholds leave **1,617**: structured output and a window
 of 32,000 rule out almost half. The third command adds a ceiling of $1 a million input tokens,
-which is not one of her thresholds and is there to show what happens when a preference is used as
+which is not one of her thresholds. It is there to show what happens when a preference is used as
 a filter: **893**, and the cheapest on that list are entries she has never heard of, at prices that
 look like mistakes.
 

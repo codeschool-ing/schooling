@@ -14,7 +14,7 @@ starts it with the computer, and adds the `ollama` command to the terminal. Neit
 course, which was recorded on Linux.
 
 **Linux,** and the virtual machine and online paths: Ollama's own script. It needs `zstd` to
-unpack what it downloads, and a minimal Ubuntu may not have it, so install that first; on a machine
+unpack what it downloads, and a minimal Ubuntu may not have it, so install that first. On a machine
 that already has it, the line changes nothing:
 
 ```

@@ -16,8 +16,8 @@ repository describes it in one sentence:
 
 "Based on Gemini research and technology", and published as weights. The terms Gemma is released
 under are on Google's own site, which the machine this course was recorded on could not reach, so
-this lesson does not quote them. That is exactly lesson 2 section 04's warning in practice: the
-repository above is the code, and its licence file is the code's.
+this lesson does not quote them. That is exactly lesson 2 section 04's warning in practice: **the
+repository above is the code, and its licence file is the code's**.
 
 ## Reading Gemma's names
 

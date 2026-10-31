@@ -68,7 +68,8 @@ Three readings:
   candidates (lesson 5).
 - **Output is a small share here**, 5% to 25%. That is a property of this workload, long prompt
   and short reply. Reverse it, a short question and a long answer, and the output price dominates;
-  it is four to eight times the input price at five of the six providers above.
+  it is from four to just over eight times the input price at five of the six providers
+above.
 
 None of these numbers says which model to choose. They say what each would cost **for this
 workload**, which is the only cost that means anything. Note that `batch` is blank for two rows: the

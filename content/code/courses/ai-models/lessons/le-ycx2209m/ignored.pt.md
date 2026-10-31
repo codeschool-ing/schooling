@@ -122,7 +122,7 @@ Então a regra para um programa que fala com vários provedores por um formato s
   limite, o texto de um erro.
 - **A avaliação também é por provedor**, feita pelo caminho que o programa vai de fato usar. Os
   números da aula 5 para um modelo pela API própria não dizem nada certo sobre o mesmo modelo por um
-  endpoint compatível que ignora metade da requisição.
+  endpoint compatível que ignora parte da requisição.
 
 O formato é o jeito mais barato de *comparar* provedores, que é para o que a Anthropic diz que o
 endpoint dela serve. Se vale *ficar* nele é a troca que a aula 16 pôs diante da API mais nova da

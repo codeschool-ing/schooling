@@ -30,8 +30,8 @@ ana@desk:~/desk$ python sheet.py retiring --provider openai | grep -E "  o[0-9]"
 2026-12-11  o3-2025-04-16                                      openai
 ```
 
-**o1, o3-mini e o4-mini estão listados para aposentadoria em 23 de outubro de 2026**, dezoito dias
-depois do dia em que isto foi gravado; a versão datada do o3 vem em dezembro. Uma linha de modelos
+**o1, o3-mini e o4-mini estão listados para aposentadoria em 23 de outubro de 2026**, dezesseis dias
+depois de a aula 6 ler a página da Anthropic; a versão datada do o3 vem em dezembro. Uma linha de modelos
 lançada como categoria própria está terminando como um conjunto de entradas numa lista de
 descontinuação.
 

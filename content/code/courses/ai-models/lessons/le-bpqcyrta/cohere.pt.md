@@ -50,7 +50,7 @@ lida no dia, vale mais que qualquer cópia.
 
 ## Onde o Command entra na lista da ana
 
-Um Command A a US$ 2,50 de entrada fica entre o Claude Sonnet e o GPT-5.4 no preço, com janela de
-256.000 tokens e chamada de função mas, segundo a tabela, sem `S`: saída estruturada não está
-registrada. Isso o tira da extração até ser conferido, como a DeepSeek na aula 4, e o deixa
+Um Command A a US$ 2,50 e US$ 10 tem o preço de entrada do GPT-5.4 e o de saída do Claude Sonnet,
+com janela de 256.000 tokens e chamada de função mas, segundo a tabela, sem `S`: saída estruturada
+não está registrada. Isso o tira da extração até ser conferido, como a DeepSeek na aula 4, e o deixa
 candidato para classificar e rascunhar como qualquer outra linha.

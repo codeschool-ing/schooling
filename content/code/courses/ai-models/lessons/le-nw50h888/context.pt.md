@@ -14,7 +14,7 @@ local acrescenta um segundo número, a janela que **ele** dá ao modelo, e essa 
 Quatro mil tokens, seja qual for o tamanho para o qual o modelo foi treinado. Uma conversa maior que
 isso não falha. O `context.py` manda o prompt de triagem, trinta e nove casos da ana como
 exemplos resolvidos (cada e-mail e o rótulo que uma pessoa deu a ele) e o quadragésimo como
-pergunta, três vezes, com três valores de `num_ctx`:
+pergunta. Manda isso três vezes, com três valores de `num_ctx`:
 
 ```python
 import json

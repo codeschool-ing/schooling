@@ -41,7 +41,7 @@ previous lesson's, where the cheapest model had a fifth of the window.
 Two features of the names will catch anybody choosing from a list:
 
 - **The tiers do not share a version.** At this commit Flash and Flash-Lite are at 3.5 while Pro is
-  at 3.1, and still a `preview`. "The newest Gemini" is three different numbers.
+  at 3.1, and still a `preview`. "The newest Gemini" is 3.5 or 3.1, depending on the tier.
 - **The `-latest` names are aliases**, lesson 2 section 06's moving kind, and they do not point
   where the numbers suggest. `gemini-flash-latest` is priced at $0.75 and $3.75, the price of a
   different Flash entry from `gemini-3.5-flash` at $1.50 and $9. An alias called "latest" is

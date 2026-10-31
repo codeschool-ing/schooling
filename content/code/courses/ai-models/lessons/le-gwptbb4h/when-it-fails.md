@@ -112,6 +112,6 @@ model's name. Lesson 5 shows what it costs in quality, measured.
 ## Anything else
 
 **Read the last line of what it printed before you search for it.** An installer that fails prints a
-page, and Python prints a traceback; the cause is the line that says `ERROR`, `Error` or the
+page, and Python prints a traceback. The cause is the line that says `ERROR`, `Error` or the
 exception's name, and the lines around it are where it happened. A message that names a package or a
 command to run, like the first one here, means exactly that.
