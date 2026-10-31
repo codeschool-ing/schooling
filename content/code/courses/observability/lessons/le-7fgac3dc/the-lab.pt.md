@@ -31,7 +31,7 @@ dia se já roda Docker nele: nada aqui instala coisa alguma fora do Docker, e to
 só para o próprio computador. No Windows ou no macOS, o Docker Desktop roda o Linux numa máquina
 virtual escondida, só dele. Ele pode muito bem rodar o laboratório inteiro, mas o curso não foi
 gravado nele, e quando algo difere você está depurando uma máquina que não consegue ver. O caminho
-recomendado evita essa pergunta. **Online** também funciona, e as menores máquinas de toda nuvem são
+recomendado evita essa pergunta. **Online** também funciona, mas as menores máquinas de toda nuvem são
 pequenas demais para este laboratório; uma com quatro processadores e 8 GB custa dinheiro de verdade
 por hora, então apague-a quando parar em vez de deixá-la ligada. O curso `cloud`, que este exige, é
 onde se ensina a criar uma. Qualquer outro hipervisor também funciona no lugar do Multipass:

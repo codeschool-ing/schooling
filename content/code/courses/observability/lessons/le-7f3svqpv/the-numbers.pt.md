@@ -33,7 +33,7 @@ Cada intervalo aponta para uma correção diferente:
 
 **A média engana, pelo mesmo motivo que a aula 7 deu para a latência.** Durações de incidentes são
 assimétricas: a maioria é curta, e algumas duram uma noite inteira. Uma equipe com nove incidentes de
-vinte minutos e um de nove horas tem uma média de cerca de uma hora e quinze, que não descreve nenhum
+vinte minutos e um de nove horas tem uma média de 72 minutos, que não descreve nenhum
 deles. A mediana e o incidente mais longo do trimestre dizem mais, e a própria lista de incidentes diz
 mais ainda.
 

@@ -13,7 +13,7 @@ ana@obs:~/shop$ docker compose logs --no-log-prefix --since 60s storefront order
 260212
 ```
 
-**1065 linhas e 260 KB num minuto**, cerca de 245 bytes por linha. Mantido, isso dá uns 375 MB por
+**1065 linhas e 260 KB num minuto**, cerca de 244 bytes por linha. Mantido, isso dá uns 375 MB por
 dia, para uma loja que caberia num canto de uma real. E quase tudo são os mesmos quatro eventos:
 
 ```

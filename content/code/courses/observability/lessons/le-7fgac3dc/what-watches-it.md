@@ -13,9 +13,10 @@ is the configuration that tells each one what to do.
 ## The file that starts everything
 
 `compose.yaml` names every container, the image it runs, the files it reads and the ports it
-publishes. Three services near the end carry a `profiles` line and do not start with the rest:
-Elasticsearch and Graylog belong to lesson 9 and Envoy to lesson 19, and each of those lessons says
-how to start them.
+publishes. A service with a `profiles` line does not start with the rest. The three near the top are
+programs the lessons run by hand. The five near the end belong to two lessons: Elasticsearch, and
+Graylog with the MongoDB and OpenSearch it needs, to lesson 9, and Envoy to lesson 19. Each of
+those lessons says how to start them.
 
 `~/shop/compose.yaml`
 

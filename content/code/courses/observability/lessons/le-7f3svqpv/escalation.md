@@ -9,7 +9,7 @@ few minutes, the next person is paged, and then the next.
 
 An acknowledgement is the person saying *I have this*; it stops the escalation and tells everybody
 else that somebody is looking. Alertmanager has no idea of it. It sends, groups and repeats, but it
-does not know whether a human read the message, which is why the lab's pager is a log and why real
+does not know whether a human read the message. That is why the lab's pager is a log, and why real
 teams put a paging service between Alertmanager and the phone: PagerDuty, Opsgenie, Grafana OnCall,
 or the paging feature of their chat tool. Those keep the rota, take the acknowledgement and run the
 escalation policy:

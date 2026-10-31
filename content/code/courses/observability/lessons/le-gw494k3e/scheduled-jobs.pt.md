@@ -28,4 +28,4 @@ lançado assim pode precisar das duas linhas escritas à mão.
 O que o rastro de uma tarefa agendada não consegue é dizer **que a tarefa não rodou**. Um rastro só
 existe para trabalho que aconteceu; a noite em que o agendador falhou não deixa span nenhum. Essa
 pergunta é de uma métrica, *tempo desde a última execução bem-sucedida*, e de um alerta sobre ela,
-que as aulas 5 e 16 constroem.
+que a aula 5 constrói.

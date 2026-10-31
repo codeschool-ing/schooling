@@ -29,7 +29,7 @@ Desenhadas em escala, as mesmas nove linhas:
 ```
 
 **A resposta está numa linha**: `wait for the card network`, dentro do `payments`, 1500 dos 1533
-milissegundos. Todo span acima dela durou o que durou porque esperava por ela. O `orders` mandou
+milissegundos. Todo span que a contém durou o que durou porque esperava por ela. O `orders` mandou
 `POST` ao payments e esperou 1505 ms pela resposta; o `POST /orders` esperou por isso; o
 `POST /checkout` da vitrine esperou por tudo. As chamadas ao banco, `INSERT` e `UPDATE`, levaram
 dois milissegundos cada e não são o problema, o que vale saber antes que alguém comece a otimizar
@@ -39,10 +39,10 @@ Três coisas neste rastro merecem atenção agora, porque aulas seguintes se apo
 
 - **Alguns spans foram escritos à mão e outros não.** O `storefront` e o `payments` abrem seus spans
   no próprio código, e `wait for the card network` só existe porque alguém envolveu aquela espera num
-  span. O `orders` não tem código OpenTelemetry próprio: seus `POST /orders`, `INSERT`, `POST` e
+  span. O `orders` não abre nenhum span no próprio código: seus `POST /orders`, `INSERT`, `POST` e
   `UPDATE` vêm de bibliotecas instrumentadas automaticamente. As aulas 2 e 3 são esses dois jeitos.
-- **Os spans do mailer começam depois que os da vitrine terminaram**, em 1532 ms, e ainda pertencem
-  ao mesmo rastro. A confirmação passou por uma fila do RabbitMQ, e o id do rastro foi junto com a
+- **Os spans do mailer começam por último**, em 1532 ms, depois que o `orders` pôs o pedido pago
+  na fila, e ainda pertencem ao mesmo rastro. A confirmação passou por uma fila do RabbitMQ, e o id do rastro foi junto com a
   mensagem. A aula 4 é como, e o que acontece quando ninguém o leva.
 - **Este rastro foi guardado porque o laboratório guarda todos.** Com tráfego real isso é caro, e a
   aula 12 trata de guardar os que importam.

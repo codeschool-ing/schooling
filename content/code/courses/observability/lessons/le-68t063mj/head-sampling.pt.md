@@ -71,8 +71,8 @@ services:
 
 `parentbased_traceidratio` são duas regras: **se chegou um pai, faça o que ele diz; se este é a raiz,
 guarde a fração dada.** Os outros serviços ficam com o padrão, `parentbased_always_on`, que segue um
-pai e guarda tudo quando não há nenhum. Então a vitrine decide e todos os outros obedecem. Um minuto
-depois, o que chega ao Collector:
+pai e guarda tudo quando não há nenhum. Então a vitrine decide e todos os outros obedecem. Com a
+mudança em vigor, o que chega ao Collector:
 
 ```
 ana@obs:~/shop$ ./promq 'sum(rate(otelcol_receiver_accepted_spans[1m]))'

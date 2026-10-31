@@ -167,7 +167,7 @@ docker compose up -d storefront orders otel-collector prometheus
 sleep 150
 ```
 
-Depois de dois minutos, as métricas do próprio Collector dizem o que cada política guardou:
+Dois minutos e meio depois, as métricas do próprio Collector dizem o que cada política guardou:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (policy) (increase(otelcol_processor_tail_sampling_count_traces_sampled{decision="sampled"}[2m]))'

@@ -91,8 +91,8 @@ ana@obs:~/shop$ curl -s localhost:9093/api/v2/alerts | jq -c '.[] | {alertname: 
 {"alertname":"CheckoutBudgetBurningFast","severity":"page","state":"active","inhibitedBy":[],"silencedBy":[]}
 ```
 
-**The page is active**, and the ticket is `suppressed`, which the next section explains. Each alert
-reached the pager once:
+**The page is active**, and the ticket is `suppressed`, which *Routing* explains, two sections on.
+The pager's log shows what reached it:
 
 ```
 ana@obs:~/shop$ docker compose logs --no-log-prefix pager | grep -E '"(PAGE|TICKET)"' | jq -c '{message, status, alertname, severity}'

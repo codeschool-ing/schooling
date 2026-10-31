@@ -91,8 +91,8 @@ ana@obs:~/shop$ curl -s localhost:9093/api/v2/alerts | jq -c '.[] | {alertname: 
 {"alertname":"CheckoutBudgetBurningFast","severity":"page","state":"active","inhibitedBy":[],"silencedBy":[]}
 ```
 
-**O page está ativo**, e o ticket está `suppressed`, o que a próxima seção explica. Cada alerta chegou ao
-pager:
+**O page está ativo**, e o ticket está `suppressed`, o que *Roteamento* explica, duas seções adiante.
+O log do pager mostra o que chegou a ele:
 
 ```
 ana@obs:~/shop$ docker compose logs --no-log-prefix pager | grep -E '"(PAGE|TICKET)"' | jq -c '{message, status, alertname, severity}'

@@ -13,7 +13,7 @@ ana@obs:~/shop$ docker compose logs --no-log-prefix --since 60s storefront order
 260212
 ```
 
-**1065 lines and 260 KB in a minute**, about 245 bytes a line. Kept up, that is some 375 MB a day,
+**1065 lines and 260 KB in a minute**, about 244 bytes a line. Kept up, that is some 375 MB a day,
 for a shop that would fit in a corner of a real one. And almost all of it is the same four events:
 
 ```

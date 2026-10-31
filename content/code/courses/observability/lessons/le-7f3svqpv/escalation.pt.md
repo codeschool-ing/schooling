@@ -9,7 +9,7 @@ próxima pessoa é acionada, e depois a próxima.
 
 Um reconhecimento (acknowledgement) é a pessoa dizendo *estou com isto*; ele para o escalonamento e diz
 a todos os outros que alguém está olhando. O Alertmanager não tem essa ideia. Ele manda, agrupa e
-repete, mas não sabe se um humano leu a mensagem, e é por isso que o pager do laboratório é um log e que
+repete, mas não sabe se um humano leu a mensagem. É por isso que o pager do laboratório é um log, e que
 equipes reais põem um serviço de acionamento entre o Alertmanager e o telefone: PagerDuty, Opsgenie,
 Grafana OnCall, ou o recurso de acionamento da ferramenta de chat delas. Esses guardam a escala, recebem
 o reconhecimento e rodam a política de escalonamento:

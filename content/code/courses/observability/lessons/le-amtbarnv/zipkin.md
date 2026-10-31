@@ -40,7 +40,7 @@ storefront	orders	452	0
 ```
 
 The map of the shop drawn from traffic alone: the storefront calls orders, orders calls payments,
-450 to 470 times in five minutes, with no errors. Nobody wrote it down, so it cannot be out of
+452 and 472 times in five minutes, with no errors. Nobody wrote it down, so it cannot be out of
 date, and it is what a newcomer reads to learn how a system is put together.
 
 **The mailer is missing**, although it is in every trace above. The graph is built from pairs of

@@ -55,7 +55,7 @@ ana@obs:~/shop$ jq -c 'select(.duration_ms >= 150)' scratch/json.log | wc -l
 ```
 
 **Forty-nine both ways**, so the regular expression is right, this time. It is also wrong the day
-somebody changes the sentence to *in 0.217 s*, matches nothing if a line says *in 1200 ms* with a
+somebody changes the sentence to *in 0.217 s*, and it matches nothing if a line says *in 1200 ms* with a
 space. And the next person cannot read it without a minute's thought. The field survives all of
 that, and it composes: the next question, *the slow ones that were paid, with their order ids*,
 is one more condition:

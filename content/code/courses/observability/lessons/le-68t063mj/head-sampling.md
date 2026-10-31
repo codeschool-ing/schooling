@@ -72,7 +72,7 @@ services:
 `parentbased_traceidratio` is two rules: **if a parent arrived, do what it says; if this is the
 root, keep the given fraction.** The other services keep their default, `parentbased_always_on`,
 which follows a parent and keeps everything when there is none. So the storefront decides and
-everybody else obeys. A minute later, what reaches the Collector:
+everybody else obeys. With the change in place, what reaches the Collector:
 
 ```
 ana@obs:~/shop$ ./promq 'sum(rate(otelcol_receiver_accepted_spans[1m]))'

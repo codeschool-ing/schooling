@@ -41,7 +41,7 @@ ConnectionResetError: [Errno 104] Connection reset by peer
 command terminated with exit code 1
 ```
 
-A conexão foi reiniciada: o proxy do servidor pediu um certificado que a sonda não tinha, e fechou a conexão antes de qualquer HTTP ser trocado. E o cliente dentro do mesh, que vinha fazendo requisições ao servidor duas vezes por segundo o
+A conexão foi derrubada: o proxy do servidor pediu um certificado que a sonda não tinha, e fechou a conexão antes de qualquer HTTP ser trocado. E o cliente dentro do mesh, que vinha fazendo requisições ao servidor duas vezes por segundo o
 tempo todo, não registrou nada nos últimos vinte segundos:
 
 ```
@@ -54,6 +54,6 @@ ana@obs:~/shop$ kubectl -n shop-mesh logs deploy/client -c client --since=20s | 
 Duas observações de observabilidade. **A identidade vira um rótulo**: `source_principal` diz qual carga
 fez uma requisição, verificada por um certificado em vez de declarada num cabeçalho, que é o que uma
 auditoria de quem chamou um serviço de pagamentos quer. E **uma conexão recusada não tem status HTTP**: a
-requisição do pod de fora nunca chegou a ser uma requisição, então ela não aparece em nenhum contador de
-requisições, só como uma conexão reiniciada nas estatísticas do proxy e no log de erro do próprio
+requisição do pod de fora nunca chegou a ser uma requisição. Ela não aparece em nenhum contador de
+requisições, só como uma conexão derrubada nas estatísticas do proxy e no log de erro do próprio
 chamador.

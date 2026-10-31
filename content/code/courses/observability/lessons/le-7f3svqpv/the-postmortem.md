@@ -15,7 +15,7 @@ after the release, and the incident was closed nine minutes after it began.
 
 | | |
 |---|---|
-| users | about one checkout in nine failed with a 502 for four minutes |
+| users | about one checkout in eight failed with a 502 for four minutes |
 | services | payments, and through it orders and the storefront |
 | error budget | a five-minute burn rate of about 15 to 19; the thirty-minute rate peaked above 12 |
 | data | none lost; failed charges were not taken, so nobody was charged for a failed order |

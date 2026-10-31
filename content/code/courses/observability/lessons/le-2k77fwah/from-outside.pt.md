@@ -23,7 +23,7 @@ ana@obs:~/shop$ sed -n '/^  checkout:/,$p' blackbox.yml
       valid_status_codes: [201]
 ```
 
-Perguntado à mão pelo exporter, com o banco ainda parado desde a seção anterior:
+Perguntado à mão pelo exporter, com o banco ainda parado desde a seção do Docker:
 
 ```
 ana@obs:~/shop$ docker compose exec prometheus wget -qO- 'http://blackbox-exporter:9115/probe?module=checkout&target=http://storefront:8080/checkout' | grep -E '^probe_(success|http_status_code) '
@@ -56,8 +56,8 @@ partir de vários países ao mesmo tempo. É a melhor verificação de fora que 
   um meio de pagamento que não cobra ninguém.
 - **Ela testa um caminho.** Um checkout de uma chaleira não diz nada sobre a página de busca ou a de
   conta; cada caminho que vale vigiar precisa da própria verificação.
-- **Ainda é uma amostra.** Uma sonda a cada quinze segundos são quatro por minuto contra os trezentos
-  checkouts reais da loja, então a taxa de erros da aula 5 vê uma queda parcial que a sonda pode
+- **Ainda é uma amostra.** Uma sonda a cada quinze segundos são quatro por minuto contra os duzentos e
+  setenta checkouts reais da loja, então a taxa de erros da aula 5 vê uma queda parcial que a sonda pode
   perder.
 
 Usadas juntas, uma cobre a outra: **a sonda percebe uma queda quando não há tráfego**, às três da manhã,

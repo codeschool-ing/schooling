@@ -50,8 +50,7 @@ ana@obs:~/shop$ ./promq 'sum(http_server_requests_total{job="storefront"})'
 ```
 
 **O contador foi de 339 para 123.** Um processo reiniciado começa todo contador do zero, e um
-ingênuo *valor agora menos valor um minuto atrás* diria que a vitrine respondeu menos duzentas
-requisições. O `rate()` e o `increase()` sabem que um contador só pode crescer, então qualquer queda
+ingênuo *valor depois menos valor antes* diria que a vitrine respondeu menos 216 requisições. O `rate()` e o `increase()` sabem que um contador só pode crescer, então qualquer queda
 é tratada como reinício e a contagem simplesmente continua a partir do zero:
 
 ```

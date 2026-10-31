@@ -54,5 +54,5 @@ ana@obs:~/shop$ kubectl -n shop-mesh logs deploy/client -c client --since=20s | 
 Two observability notes. **Identity becomes a label**: `source_principal` says which workload made a
 request, verified by a certificate rather than claimed in a header, which is what an audit of who
 called a payments service wants. And **a refused connection has no HTTP status**: the outside pod's
-request never became a request, so it appears in no request counter, only as a connection reset in the
+request never became a request. It appears in no request counter, only as a connection reset in the
 proxy's statistics and in the caller's own error log.
