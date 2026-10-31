@@ -19,7 +19,7 @@ ana@laptop:~/loanbook$ git log --oneline main..
 `grep -c` conta as linhas que casam, e a resposta agora é `0`. O branch tem um commit, cujo diff é o estado
 vazio e nada mais. Ninguém lendo o pull request vai saber que houve um `console.log`, e ninguém precisa.
 
-O problema de injeção é diferente, e a diferença importa. Ele **não é um deslize desta mudança**: já estava
+O problema de injeção é diferente. Ele **não é um deslize desta mudança**: já estava
 no código que esta mudança tocou. O movimento honesto não é alargar este pull request numa reescrita da
 página, e sim **abrir um cartão para ele**, aula 8, e corrigi-lo numa mudança própria, onde quem revisa o
 vê como a decisão que é. Um pull request que conserta em silêncio três coisas sem relação é mais difícil de

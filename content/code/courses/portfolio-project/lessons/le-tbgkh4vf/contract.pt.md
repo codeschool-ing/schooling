@@ -3,8 +3,9 @@ title: Erros como parte do contrato
 version: 1
 ---
 
-O passo 8, *Answer every error as JSON*, fez cada linha da tabela responder. Aqui estão todas, uma depois da
-outra:
+O passo 8, *Answer every error as JSON*, deu resposta às seis primeiras linhas da tabela. Só os espaços da
+quarta linha esperaram, pelo passo 13 e pela aula 12. Aqui estão as seis, uma depois da outra, com um
+empréstimo e uma devolução que dão certo:
 
 ```
 ana@laptop:~/loanbook$ curl -s -i localhost:8000/api/nothing

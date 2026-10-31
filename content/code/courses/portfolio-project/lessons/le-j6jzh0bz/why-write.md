@@ -11,7 +11,7 @@ comparison, the next estimate is as wrong as this one was, for the same reason.
 
 **A reviewer.** Lesson 1's three proofs were *you can finish*, *you can decide* and *you can explain*. A
 retrospective adds a fourth that no other file in the repository can show: **you can learn from your own
-work.** A candidate who writes *the rules took five days where I estimated three and a half, because I
+work.** A candidate who writes *the rules milestone took five days where I estimated three and a half, because I
 had not counted the error handling* has shown a habit teams value more than any single technology.
 
 **The interview.** *What would you do differently?* is asked in almost every one, lesson 20. A written

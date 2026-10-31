@@ -35,6 +35,6 @@ index on loans* repete o diff. *Um índice único parcial permite um empréstimo
 banco recusa o segundo mesmo quando as duas requisições chegam juntas* diz por que ele está ali e por que
 ali, e ninguém lendo só o diff conseguiria reconstruir isso.
 
-Nem todo commit precisa de corpo. *Fit the table on a phone* tem duas linhas e não precisa de mais. O corpo
+Nem todo commit precisa de corpo. *Take an item back* é só um assunto e não precisa de mais. O corpo
 é para os commits em que quem lê de outro modo perguntaria *por quê?*, e são justamente esses que quem
 avalia abre.

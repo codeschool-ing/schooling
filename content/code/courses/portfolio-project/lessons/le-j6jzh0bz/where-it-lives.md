@@ -17,6 +17,6 @@ seconds; the two minutes are rehearsed; the questions are expected; the retrospe
 next. There will always be a next feature, and it belongs to *not yet*, not to *not finished*. Decide
 whether you will keep improving it or archive it, lesson 18, and say so.
 
-The course ends here, and the next one begins where this one leaves the project: **first-job** takes the
-finished work to the people who will read it, through the CV, the applications and the interviews that
-this course has been preparing for since its first lesson.
+The course ends here. The next one, **first-job**, begins where this one leaves the project: it takes the
+finished work to the people who will read it, through the CV, the applications and the interviews this
+course has been preparing for since its first lesson.

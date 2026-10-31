@@ -150,6 +150,6 @@ git version 2.43.0
 Python 3.12.3
 ```
 
-Cada ponto é um segundo de espera, e `done` quer dizer que cada linha do srv.yaml foi cumprida. O srv agora
+Os pontos são o cloud-init esperando, e `done` quer dizer que cada linha do srv.yaml foi cumprida. O srv agora
 tem tudo o que o resto desta aula usa. Se algum passo aqui saiu diferente, a próxima seção é exatamente
 sobre isso.

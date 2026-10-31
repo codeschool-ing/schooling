@@ -71,7 +71,7 @@ ana@laptop:~$ curl -sS https://loans.lab/api/items | python3 -m json.tool | head
             "lent_on": "2026-10-06",
 ```
 
-`openssl` shows what is being trusted before trusting it: Caddy's local root, valid for ten years.
+`openssl` shows what is being trusted before trusting it: Caddy's local root, valid until 2036.
 `update-ca-certificates` adds it to the system's list, and from then on the same request succeeds, over
 HTTPS, with the seeded data. Those two commands are Ubuntu's. On macOS the same file goes into the
 System keychain, through Keychain Access, marked *Always Trust*; on Windows, into *Trusted Root

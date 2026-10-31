@@ -30,6 +30,6 @@ funciona**. Quem para depois de *What it does* ainda aprendeu o escopo do projet
 it* ainda consegue experimentar.
 
 Mantenha cada seção no que a pergunta dela pede. *Run it* são quatro comandos, não um tutorial de como
-instalar Python. *Deploy* cita os dois arquivos em `deploy/` e os cinco comandos, não um guia de systemd. Um
+instalar Python. *Deploy* cita os dois arquivos em `deploy/` e os seis comandos, não um guia de systemd. Um
 README é um mapa, e o detalhe pertence aos arquivos para onde ele aponta, onde é mantido em dia com o
 código.

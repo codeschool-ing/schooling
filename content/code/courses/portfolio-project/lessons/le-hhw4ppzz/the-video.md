@@ -18,7 +18,7 @@ sense muted. Plan it as a script before recording anything:
 ```
 
 Every beat shows **something happening**, not something existing: a loan, a refusal, a return. The
-refusal gets the most time because it is the project's point, lesson 5. The terminal gets fifteen seconds,
+refusal gets fifteen seconds of its own, as long as any beat, because it is the project's point, lesson 5. The terminal gets fifteen seconds,
 enough to show evidence and not enough to lose the viewer.
 
 Three practical rules. **Record with the seed data**, so the video is reproducible and shows nobody real.

@@ -13,7 +13,7 @@ cobrem a maior parte do que quem avalia, ou um usuário de verdade, vai encontra
 | tudo funciona **pelo teclado**, com foco visível | o Tab chega a todo campo e botão, e dá para ver onde se está |
 | o texto tem **contraste** de pelo menos 4,5:1 | o cinza sobre o branco é escuro o bastante para ler num corredor |
 | **títulos e marcos** indicam a estrutura | um `h1`, o conteúdo dentro de `main`, os cabeçalhos da tabela marcados como tal |
-| as mudanças são **anunciadas** | *emprestado até o dia 13* é lido em voz alta, não só desenhado |
+| as mudanças são **anunciadas** | *… lent to … until …* é lido em voz alta, não só desenhado |
 | funciona em **320 pixels** sem rolagem lateral | a tabela vira uma lista num celular pequeno |
 | os alvos de toque têm pelo menos **24 pixels** | um dedo aperta *Return* sem apertar o vizinho |
 

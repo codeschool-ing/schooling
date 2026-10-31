@@ -35,6 +35,6 @@ why.** *Add unique index on loans* repeats the diff. *A partial unique index all
 item, so the database refuses the second one even when both requests arrive together* says why it is
 there and why there, and nobody reading the diff alone could reconstruct it.
 
-Not every commit needs a body. *Fit the table on a phone* has two lines and needs no more. A body is
+Not every commit needs a body. *Take an item back* is a subject alone and needs no more. A body is
 for the commits where a reader would otherwise ask *why?*, and those are exactly the ones a reviewer
 opens.

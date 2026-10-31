@@ -29,7 +29,7 @@ ca4540f Build and run in a container
 c40ef55 License under MIT
 ```
 
-Leia só os assuntos e o projeto se explica. Disse para que servia, serviu uma página vazia, listou,
+**Leia só os assuntos e o projeto se explica.** Disse para que servia, serviu uma página vazia, listou,
 emprestou, recebeu de volta. Depois encontrou o problema da aula 5 e recusou um segundo empréstimo, testou
 a regra, arrumou os erros, tratou a lista vazia, marcou os atrasos. Depois acessibilidade, o celular, um
 bug encontrado por um teste, configuração para o container, um health check, o container, o deploy.
