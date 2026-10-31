@@ -16,7 +16,7 @@ was renamed, twice, in a way that made older names apply to newer things.
 | **Micro-B** | the small trapezoid. Phones before about 2018, and still on cheap devices |
 | **USB-C** | the small oval, and the only one that goes in either way up |
 
-Five shapes, and one of them is being replaced by another. **USB-C is winning and it is a shape,
+Four shapes, and one of them is being replaced by another. **USB-C is winning and it is a shape,
 not a speed** — which is the confusion the rest of this section exists to clear up.
 
 ## The names, which describe the same wires three times

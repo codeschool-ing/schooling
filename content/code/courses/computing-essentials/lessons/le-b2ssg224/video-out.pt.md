@@ -15,7 +15,7 @@ já morreu e continua montado em monitores vendidos hoje.
 
 ## HDMI ou DisplayPort, quando um monitor tem os dois
 
-Pegue **DisplayPort**, e a razão não é lealdade de marca:
+Pegue **DisplayPort**, por três razões:
 
 - ele leva mais, versão por versão, então roda resolução alta com taxa de atualização alta onde
   um HDMI da mesma idade não roda;

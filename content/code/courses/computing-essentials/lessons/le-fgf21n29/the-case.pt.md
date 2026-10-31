@@ -31,5 +31,6 @@ Um gabinete não deixa máquina nenhuma mais rápida. O que ele pode fazer é de
 silenciosa — um gabinete maior com ventoinhas maiores e mais lentas move o mesmo ar com menos
 barulho, porque o ruído sobe muito com a rotação e pouco com o tamanho.
 
-Que é a última peça da corrente desta aula: **a placa de vídeo decide os watts, os watts decidem o calor, o calor decide a refrigeração, e a refrigeração decide o
+Que é a última peça da corrente desta aula: **a placa de vídeo decide os watts, os watts
+decidem o calor, o calor decide a refrigeração, e a refrigeração decide o
 barulho.** Quatro componentes, uma decisão na frente deles.

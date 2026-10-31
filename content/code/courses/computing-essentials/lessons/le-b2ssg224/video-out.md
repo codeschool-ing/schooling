@@ -15,7 +15,7 @@ already dead and still fitted to monitors being sold today.
 
 ## HDMI or DisplayPort, when a monitor has both
 
-Take **DisplayPort**, and the reason is not brand loyalty:
+Take **DisplayPort**, for three reasons:
 
 - it carries more, version for version, so it runs a high resolution at a high refresh rate
   where HDMI of the same age will not;
