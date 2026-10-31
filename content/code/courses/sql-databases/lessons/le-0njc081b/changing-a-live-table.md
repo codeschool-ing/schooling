@@ -36,19 +36,19 @@ The trick is that PostgreSQL will trust a `CHECK` constraint it has already vali
   "language": "sql",
   "parts": [
     {
-      "code": "ALTER TABLE invoices\n    ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;\n\n",
+      "code": "ALTER TABLE invoices\n    ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;\n",
       "note": "**Add the rule, `NOT VALID`.** It is instant, it scans nothing, and it applies to new rows only."
     },
     {
-      "code": "UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;\n\n",
+      "code": "UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;\n",
       "note": "**Backfill the existing nulls**, in batches, at your own pace — and repeat until none is left."
     },
     {
-      "code": "ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;\n\n",
+      "code": "ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;\n",
       "note": "**Validate.** This one scans, but it takes only a `SHARE UPDATE EXCLUSIVE` lock, so reads and writes continue."
     },
     {
-      "code": "ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;\nALTER TABLE invoices DROP CONSTRAINT invoices_status_present;\n",
+      "code": "ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;\nALTER TABLE invoices DROP CONSTRAINT invoices_status_present;",
       "note": "**Now `SET NOT NULL` is instant**, because the proof already exists, and the helper constraint can go."
     }
   ]

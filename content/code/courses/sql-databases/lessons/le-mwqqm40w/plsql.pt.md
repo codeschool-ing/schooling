@@ -20,18 +20,18 @@ para o que a linguagem serve:
   "language": "sql",
   "parts": [
     {
-      "code": "CREATE OR REPLACE PROCEDURE cancel_order (p_order_id IN NUMBER) IS\n  v_status  orders.status%TYPE;\n",
+      "code": "CREATE OR REPLACE PROCEDURE cancel_order (p_order_id IN NUMBER) IS\n  v_status  orders.status%TYPE;",
       "note": "**`orders.status%TYPE`** declara a variável como sendo do tipo que a coluna tiver. Mude a coluna e o procedimento acompanha, que é o oposto do descolamento que a aula 11 descreveu entre uma classe e uma tabela."
     },
     {
-      "code": "BEGIN\n  SELECT status INTO v_status FROM orders WHERE id = p_order_id FOR UPDATE;\n\n",
+      "code": "BEGIN\n  SELECT status INTO v_status FROM orders WHERE id = p_order_id FOR UPDATE;\n",
       "note": "**`SELECT … INTO`** põe uma única linha em variáveis, e levanta `NO_DATA_FOUND` se não houver nenhuma e `TOO_MANY_ROWS` se houver mais de uma. Uma classe inteira de erro silencioso vira uma exceção aqui."
     },
     {
-      "code": "  IF v_status = 'shipped' THEN\n    RAISE_APPLICATION_ERROR(-20001, 'a shipped order cannot be cancelled');\n  END IF;\n\n"
+      "code": "  IF v_status = 'shipped' THEN\n    RAISE_APPLICATION_ERROR(-20001, 'a shipped order cannot be cancelled');\n  END IF;\n"
     },
     {
-      "code": "  UPDATE orders SET status = 'cancelled' WHERE id = p_order_id;\n  INSERT INTO order_events (order_id, kind) VALUES (p_order_id, 'cancelled');\n  COMMIT;\nEND;\n",
+      "code": "  UPDATE orders SET status = 'cancelled' WHERE id = p_order_id;\n  INSERT INTO order_events (order_id, kind) VALUES (p_order_id, 'cancelled');\n  COMMIT;\nEND;",
       "note": "**A transação é do procedimento.** O `UPDATE` e o `INSERT` são uma transação, e a garantia da aula 8 vale sobre o par. Nada atravessa uma rede entre os dois."
     }
   ]

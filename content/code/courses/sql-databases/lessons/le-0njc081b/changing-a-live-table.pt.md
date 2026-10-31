@@ -36,19 +36,19 @@ O truque é que o PostgreSQL confia num `CHECK` que ele já validou.
   "language": "sql",
   "parts": [
     {
-      "code": "ALTER TABLE invoices\n    ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;\n\n",
+      "code": "ALTER TABLE invoices\n    ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;\n",
       "note": "**Acrescente a regra, `NOT VALID`.** É instantâneo, não varre nada e vale só para linhas novas."
     },
     {
-      "code": "UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;\n\n",
+      "code": "UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;\n",
       "note": "**Preencha os nulos existentes**, em lotes, no seu ritmo — e repita até não sobrar nenhum."
     },
     {
-      "code": "ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;\n\n",
+      "code": "ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;\n",
       "note": "**Valide.** Este varre, mas pega só um lock `SHARE UPDATE EXCLUSIVE`, então leituras e escritas continuam."
     },
     {
-      "code": "ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;\nALTER TABLE invoices DROP CONSTRAINT invoices_status_present;\n",
+      "code": "ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;\nALTER TABLE invoices DROP CONSTRAINT invoices_status_present;",
       "note": "**Agora o `SET NOT NULL` é instantâneo**, porque a prova já existe, e a restrição auxiliar pode sair."
     }
   ]
