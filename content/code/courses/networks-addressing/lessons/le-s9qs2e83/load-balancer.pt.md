@@ -29,7 +29,7 @@ table ip lb {
 ```
 
 A regra de `prerouting` se lê como uma frase: um pacote para `192.0.2.80`, porta TCP `80`, tem o
-destino reescrito (`dnat`) para um de dois endereços, escolhido por `numgen inc mod 2`, um contador
+destino reescrito (`dnat`) para um de dois endereços, escolhido por `numgen inc mod 2`. É um contador
 que sobe um a cada conexão nova e é tomado módulo 2. Contador 0 é o web1, em 10.99.0.11; contador 1
 é o web2, em 10.99.0.18. **Usar os servidores na sua vez, assim, se chama round robin.** A regra de
 `postrouting` reescreve também a origem, de modo que os servidores web respondem ao balanceador e o
@@ -72,8 +72,7 @@ cada conexão, e precisando das chaves para decifrar o HTTPS.
 responde.** Esta regra não tem essa verificação. Se o web2 fosse desligado, uma conexão em cada duas
 iria para uma máquina que não está lá, e metade dos visitantes esperaria por uma página que nunca
 chega. Sem verificação de saúde (*health check*), dois servidores não são mais confiáveis do que um;
-são duas chances de falhar, e a verificação é o que a regra de uma linha do laboratório deixa de
-fora.
+são duas chances de falhar.
 
 Há mais uma troca na regra de `masquerade`. Como o lb reescreve a origem, o log do web1 mostra o
 endereço do lb em cada pedido, e não o do visitante. Um balanceador de camada 7 contorna isso

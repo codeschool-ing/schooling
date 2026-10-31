@@ -298,7 +298,7 @@ for n in pc1 pc2 pc3 srv r1; do
 done
 ```
 
-Cada linha se lê como o desenho no topo: quatro PCs e um servidor nas portas do sw1, o roteador r1
+Cada linha se lê como o desenho no topo: três PCs e um servidor nas portas do sw1, o roteador r1
 com o provedor atrás dele, e o outro lado do provedor levando ao balanceador de carga e aos dois
 servidores web dele. Os dois blocos `nft` são o firewall e o NAT no r1 e a regra do balanceador no lb,
 que as últimas seções desta aula desmontam. Monte a rede:
@@ -333,8 +333,8 @@ muda para dizer isso. É assim que se lê toda transcrição deste curso:
 `exit` sai do shell de um dispositivo, e `sudo bash ~/netlab/netlab.sh down` desfaz a rede.
 
 Alguns passos acontecem entre uma transcrição e outra, e o texto diz quando. Para **puxar um cabo**,
-derrube uma ponta dele num prompt de root daquele dispositivo, `ip link set p1 down`, e
-`ip link set p1 up` o liga de volta: a outra ponta vê o sinal sumir e voltar, exatamente como com um
+derrube uma ponta dele num prompt de root daquele dispositivo com `ip link set p1 down`;
+`ip link set p1 up` o liga de volta. A outra ponta vê o sinal sumir e voltar, exatamente como com um
 cabo de verdade. Para **observar um dispositivo enquanto outro faz alguma coisa**, abra um segundo
 terminal na máquina e um segundo `on` nele. E para **esvaziar o que um dispositivo aprendeu**,
 `ip neigh flush all` limpa a tabela de vizinhos e, num switch, `bridge fdb flush dev br0 dynamic`

@@ -5,9 +5,9 @@ version: 1
 
 Every transcript in this course was printed by a real network, and you build that network yourself,
 on your own computer. It is not a rack of equipment. **It is one Linux machine running Ubuntu 24.04,
-on which one script builds each network the course needs out of pieces of the Linux kernel**: a
-network namespace for each device, a virtual cable between two of them, a bridge inside a namespace
-for each switch, and FRR, the open-source routing suite, for the routers. A whole office with its
+on which one script builds each network the course needs out of pieces of the Linux kernel.** Each
+device is a network namespace, a cable is a virtual pair between two of them, each switch is a bridge
+inside a namespace, and the routers run FRR, the open-source routing suite. A whole office with its
 switch, router and provider fits in one machine, and none of it touches the network your computer is
 really on.
 
