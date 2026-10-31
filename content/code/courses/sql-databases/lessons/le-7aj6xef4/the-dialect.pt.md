@@ -115,7 +115,7 @@ verdade.
 
 ## `RETURNING`, que três dos quatro têm
 
-A aula 11 usou `RETURNING` para receber de volta uma chave gerada na mesma ida e volta do insert:
+A aula 8 usou `RETURNING` para receber de volta uma chave gerada na mesma ida e volta do insert:
 
 ```
 shop=# INSERT INTO customers (name, email, city) VALUES ('Felipe Nunes', 'felipe@example.com', 'Recife') RETURNING id;

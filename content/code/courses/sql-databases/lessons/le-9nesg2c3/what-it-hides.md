@@ -105,4 +105,4 @@ for the same reason.
 Each of the five is the mapper doing exactly what it documents, and each is visible in one place:
 the statement the server received. Every column, `NULL` where a default was expected, no `ORDER
 BY`, a `BEGIN` with no `COMMIT` for two seconds, a fetch that never arrived. The log shows all
-five, which is why the second section said to leave it on.
+five, which is why the section on what it emits said to leave it on.

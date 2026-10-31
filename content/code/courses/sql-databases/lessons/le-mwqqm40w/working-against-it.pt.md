@@ -75,7 +75,7 @@ A lista é maior do que parece na primeira semana:
 - **as fronteiras da transação**: o que está numa, e por quanto tempo ela fica aberta
 - **as restrições no seu próprio esquema**, que a aula 3 defendeu e que nenhuma licença afeta
 - **confirmar o que você começou** numa janela de cliente, que é o chamado de suporte da seção
-  anterior
+  sobre transações
 - **não pôr uma função sobre uma coluna indexada** num `WHERE`, que é a aula 9 e é de graça
 
 Nada disso precisa de um privilégio, de uma licença ou de uma reunião.

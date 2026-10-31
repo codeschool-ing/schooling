@@ -58,7 +58,7 @@ as tabelas — dados migram — é tudo que cresceu em volta delas.
 | **os pacotes PL/SQL** | reescritos, na linguagem do destino ou na aplicação. Isto é o projeto |
 | a prática operacional | os backups, o standby, o monitoramento e as pessoas, todos substituídos |
 
-As duas linhas do meio são a resposta honesta a "quanto tempo". Um sistema com mil pacotes é um
+As duas linhas em negrito são a resposta honesta a "quanto tempo". Um sistema com mil pacotes é um
 sistema cuja lógica de negócio tem que ser reescrita e testada de novo, e não há ferramenta que faça
 isso por você — os tradutores produzem algo que roda e que ninguém vai assinar embaixo.
 

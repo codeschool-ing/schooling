@@ -77,8 +77,8 @@ volta no texto. A saída de emergência também aceita parâmetros, em todo ORM,
 > confia.**
 
 Nem para um inteiro que você validou, nem para um valor da sua própria configuração, nem para um
-nome de coluna — um nome de coluna não pode ser parâmetro, e um nome de coluna que vem de um
-usuário passa por uma lista dos nomes que você aceita, nunca para dentro do texto.
+nome de coluna. Um nome de coluna não pode ser parâmetro, e um que vem de um usuário passa por uma
+lista dos nomes que você aceita, nunca para dentro do texto.
 
 ## A única coisa que um parâmetro não pode ser
 

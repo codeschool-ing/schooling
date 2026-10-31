@@ -48,8 +48,8 @@ Um ORM não é um jeito de evitar saber SQL, e esta é a frase sobre a qual a au
 
 Um `ORDER BY` que falta falta seja um método que o deixou de fora ou você. Uma junção sem índice é
 uma varredura esteja o laço no seu código ou no de uma biblioteca. O problema N+1, que é a seção
-depois da próxima, é o caso mais claro: uma página que parece dez linhas de código comum roda
-cinquenta e uma instruções, e nada nessas dez linhas diz isso.
+depois da próxima, é o caso mais claro: uma página que parece quatro linhas de código comum roda
+cinquenta e uma instruções, e nada nessas quatro linhas diz isso.
 
 Então a habilidade que esta aula ensina não é a API do ORM, que cada ORM documenta. É o hábito de
 **saber o que ele emitiu**, e os três ou quatro lugares em que o que ele emite não é o que quem lê
@@ -76,8 +76,8 @@ das três é a camada certa.
 
 ## A moldura do resto
 
-Duas metades. As seções dois a seis são sobre **ler** o que o ORM faz — ver o SQL dele, o N+1,
-carregar de uma vez, parâmetros, e as coisas que ele esconde. As seções sete a nove são sobre
+Duas metades. As cinco seções seguintes são sobre **ler** o que o ORM faz — ver o SQL dele, o N+1,
+carregar de uma vez, parâmetros, e as coisas que ele esconde. As três depois delas são sobre
 **escrever** o esquema por ele — migrações, quem é dono do esquema, e onde o ORM cabe afinal. As
 duas metades se apoiam na mesma regra, e a aula 10 é onde olhar quando a regra é quebrada: meça o
 que ele emitiu.

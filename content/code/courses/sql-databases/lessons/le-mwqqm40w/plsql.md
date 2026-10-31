@@ -12,36 +12,31 @@ it is not a mistake somebody made. It is PL/SQL, and there were reasons.
 
 A procedural programming language that runs inside the database server. It has variables, loops,
 conditionals, exceptions and procedures, and SQL statements are part of its syntax rather than
-strings passed to a driver:
+strings passed to a driver. Three things in this procedure are worth naming, because they are
+what the language is for:
 
-```sql
-CREATE OR REPLACE PROCEDURE cancel_order (p_order_id IN NUMBER) IS
-  v_status  orders.status%TYPE;
-BEGIN
-  SELECT status INTO v_status FROM orders WHERE id = p_order_id FOR UPDATE;
-
-  IF v_status = 'shipped' THEN
-    RAISE_APPLICATION_ERROR(-20001, 'a shipped order cannot be cancelled');
-  END IF;
-
-  UPDATE orders SET status = 'cancelled' WHERE id = p_order_id;
-  INSERT INTO order_events (order_id, kind) VALUES (p_order_id, 'cancelled');
-  COMMIT;
-END;
+```schooling-example
+{
+  "language": "sql",
+  "parts": [
+    {
+      "code": "CREATE OR REPLACE PROCEDURE cancel_order (p_order_id IN NUMBER) IS\n  v_status  orders.status%TYPE;\n",
+      "note": "**`orders.status%TYPE`** declares the variable as whatever the column's type is. Change the column and the procedure follows, which is the opposite of the drift lesson 11 described between a class and a table."
+    },
+    {
+      "code": "BEGIN\n  SELECT status INTO v_status FROM orders WHERE id = p_order_id FOR UPDATE;\n\n",
+      "note": "**`SELECT … INTO`** puts a single row into variables, and raises `NO_DATA_FOUND` if there is none and `TOO_MANY_ROWS` if there is more than one. A whole class of silent wrongness is an exception here."
+    },
+    {
+      "code": "  IF v_status = 'shipped' THEN\n    RAISE_APPLICATION_ERROR(-20001, 'a shipped order cannot be cancelled');\n  END IF;\n\n"
+    },
+    {
+      "code": "  UPDATE orders SET status = 'cancelled' WHERE id = p_order_id;\n  INSERT INTO order_events (order_id, kind) VALUES (p_order_id, 'cancelled');\n  COMMIT;\nEND;\n",
+      "note": "**The transaction is the procedure's.** The `UPDATE` and the `INSERT` are one transaction, and lesson 8's guarantee holds over the pair. Nothing crosses a network between them."
+    }
+  ]
+}
 ```
-
-Three things in that block are worth naming, because they are what the language is for.
-
-**`orders.status%TYPE`** declares the variable as whatever the column's type is. Change the column
-and the procedure follows, which is the opposite of the drift lesson 11 described between a class
-and a table.
-
-**`SELECT … INTO`** puts a single row into variables, and raises `NO_DATA_FOUND` if there is none
-and `TOO_MANY_ROWS` if there is more than one. A whole class of silent wrongness is an exception
-here.
-
-**The transaction is the procedure's.** The `UPDATE` and the `INSERT` are one transaction, and
-lesson 8's guarantee holds over the pair. Nothing crosses a network between them.
 
 ## Packages, which are the unit that matters
 

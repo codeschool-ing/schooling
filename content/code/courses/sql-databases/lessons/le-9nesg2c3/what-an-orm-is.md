@@ -47,8 +47,8 @@ An ORM is not a way to avoid knowing SQL, and this is the sentence the lesson is
 
 An `ORDER BY` that is missing is missing whether a method left it out or you did. A join with no
 index is a scan whether the loop is in your code or in a library's. The N+1 problem, which is the
-next section but one, is the clearest case: a page that looks like ten lines of ordinary code runs
-fifty-one statements, and nothing in those ten lines says so.
+next section but one, is the clearest case: a page that looks like four lines of ordinary code runs
+fifty-one statements, and nothing in those four lines says so.
 
 So the skill this lesson teaches is not the ORM's API, which every ORM documents. It is the habit
 of **knowing what it emitted**, and the three or four places where what it emits is not what a
@@ -75,8 +75,8 @@ three is the right layer.
 
 ## The frame for the rest
 
-Two halves. Sections two to six are about **reading** what the ORM does — seeing its SQL, the
-N+1, loading in one go, parameters, and the things it hides. Sections seven to nine are about
+Two halves. The next five sections are about **reading** what the ORM does — seeing its SQL, the
+N+1, loading in one go, parameters, and the things it hides. The three after them are about
 **writing** the schema through it — migrations, who owns the schema, and where the ORM belongs at
 all. Both halves rest on the same rule, and lesson 10 is where to look when the rule is broken:
 measure what it emitted.

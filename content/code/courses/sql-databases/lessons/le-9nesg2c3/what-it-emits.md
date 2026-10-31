@@ -106,9 +106,9 @@ questions are worth asking first, because they are where a mapper's output diffe
 person would have written:
 
 **Which columns did it ask for?** Almost every ORM selects every column of the table by default,
-because it is building an object and the object has every field. Lesson 10 showed what that costs
-when an index could have covered three of them, and the section on what the ORM hides has the
-mechanism.
+because it is building an object and the object has every field. Lesson 10 put a price on it: an
+application that needs three columns and asks for twenty pays for the seventeen in pages read. The
+section on what the ORM hides has the mechanism.
 
 **How many times?** A statement is cheap once and expensive in a loop, and the loop is in the
 application rather than in the statement. `calls` in `pg_stat_statements` is the only place the
