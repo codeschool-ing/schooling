@@ -46,8 +46,7 @@ POST /orders
 ```
 
 **Quatro spans falhos, da cobrança até o checkout**, a mesma cadeia que a aula 1 leu para uma
-requisição lenta. Os logs dizem o que cada serviço decidiu; o rastro diz como a falha viajou. A aula
-11 liga os dois dentro do Grafana, para que o id seja clicado em vez de copiado.
+requisição lenta. Os logs dizem o que cada serviço decidiu; o rastro diz como a falha viajou.
 
 O preço de manter três armazenamentos se vê de fora:
 

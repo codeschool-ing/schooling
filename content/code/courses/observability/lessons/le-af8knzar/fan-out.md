@@ -8,7 +8,7 @@ the middle it is one exporter more.** The services keep sending OTLP to the Coll
 Collector sends each trace to as many places as it has exporters.
 
 The lab has no account with any vendor and should not, so the place is a stand-in: `standin.py`, a
-twenty-line program in the sandbox that accepts OTLP over HTTP the way a hosted intake does and
+twenty-six-line program in the sandbox that accepts OTLP over HTTP the way a hosted intake does and
 prints who sent what:
 
 `~/shop/scratch/standin.py`
@@ -181,7 +181,7 @@ from, measured here before anybody has quoted a price.
 
 **And when the vendor is down?** Each exporter has its own queue and its own retries, so one
 destination failing should not touch the others. The stand-in is stopped and the Collector given a
-minute:
+minute and a quarter:
 
 ```
 ana@obs:~/shop$ docker stop vendor

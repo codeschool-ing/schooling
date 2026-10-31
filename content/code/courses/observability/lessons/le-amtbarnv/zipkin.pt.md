@@ -40,7 +40,7 @@ storefront	orders	452	0
 ```
 
 O mapa da loja desenhado só a partir do tráfego: a vitrine chama o orders, o orders chama o payments,
-de 450 a 470 vezes em cinco minutos, sem erros. Ninguém o escreveu, então ele não tem como estar
+452 e 472 vezes em cinco minutos, sem erros. Ninguém o escreveu, então ele não tem como estar
 desatualizado, e é o que alguém recém-chegado lê para aprender como um sistema é montado.
 
 **O mailer está faltando**, embora esteja em todo rastro acima. O grafo é construído a partir de pares de

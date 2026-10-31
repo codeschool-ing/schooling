@@ -4,7 +4,7 @@ version: 2
 ---
 
 LogQL, Loki's query language, is a stream selector followed by a pipeline of stages separated by
-`|`. Payments fails one charge in twenty since the start of the lesson, so there is something to find. The simplest stage
+`|`. Payments has been failing one charge in twenty since the start of the lesson, so there is something to find. The simplest stage
 is a **line filter**, `|= "text"`, which keeps lines containing the text, like `grep`:
 
 ```

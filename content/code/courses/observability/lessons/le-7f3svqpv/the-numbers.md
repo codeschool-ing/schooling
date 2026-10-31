@@ -31,7 +31,7 @@ Each interval points at a different fix:
 
 **The mean misleads, for the same reason lesson 7 gave for latency.** Incident durations are skewed: most
 are short, and a few last a whole night. A team with nine twenty-minute incidents and one of nine hours
-has a mean of about an hour and a quarter, which describes none of them. The median and the longest
+has a mean of 72 minutes, which describes none of them. The median and the longest
 incident of the quarter say more, and the list of incidents itself says most.
 
 And a falling MTTR is not always good news. It falls when a team gets faster, and it also falls when

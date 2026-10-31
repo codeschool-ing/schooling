@@ -23,7 +23,7 @@ ana@obs:~/shop$ sed -n '/^  checkout:/,$p' blackbox.yml
       valid_status_codes: [201]
 ```
 
-Asked by hand through the exporter, with the database still stopped from the previous section:
+Asked by hand through the exporter, with the database still stopped since the Docker section:
 
 ```
 ana@obs:~/shop$ docker compose exec prometheus wget -qO- 'http://blackbox-exporter:9115/probe?module=checkout&target=http://storefront:8080/checkout' | grep -E '^probe_(success|http_status_code) '
@@ -56,7 +56,7 @@ countries at once. It is the best outside check there is, and it has costs that 
 - **It tests one path.** A checkout of a kettle says nothing about the search page or the account
   page; each path worth watching needs its own check.
 - **It is still a sample.** One probe every fifteen seconds is four a minute against the shop's
-  three hundred real checkouts, so the error ratio of lesson 5 sees a partial outage the probe can
+  two hundred and seventy real checkouts, so the error ratio of lesson 5 sees a partial outage the probe can
   miss.
 
 Used together they cover each other: **the probe notices an outage when there is no traffic**, at

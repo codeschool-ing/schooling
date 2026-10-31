@@ -26,6 +26,6 @@ culprit has a name**: the metric, the label, and from the series' own labels, th
 
 The same view exists in Prometheus's web interface under *Status*, *TSDB Status*. A habit worth
 having is to look at it before trouble, so the normal numbers are known: in this lab, a few
-thousand series and no label above a few hundred values. A team that knows its normal sees a jump
+thousand series and, apart from the metric names themselves, no label above a few hundred values. A team that knows its normal sees a jump
 the day it happens; a team that does not, sees it the day Prometheus is killed for running out of
 memory.

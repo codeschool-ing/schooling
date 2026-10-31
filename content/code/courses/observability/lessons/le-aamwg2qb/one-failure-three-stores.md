@@ -46,8 +46,7 @@ POST /orders
 ```
 
 **Four failed spans, from the charge up to the checkout**, the same chain lesson 1 read for a slow
-request. The logs say what each service decided; the trace says how the failure travelled. Lesson 11
-links the two inside Grafana, so the id is clicked rather than copied.
+request. The logs say what each service decided; the trace says how the failure travelled.
 
 The price of keeping three stores is visible from the outside:
 

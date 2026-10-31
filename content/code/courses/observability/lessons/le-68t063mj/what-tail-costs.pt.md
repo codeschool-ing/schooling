@@ -14,9 +14,10 @@ ana@obs:~/shop$ ./promq 'otelcol_processor_tail_sampling_sampling_traces_on_memo
 __name__=otelcol_processor_tail_sampling_sampling_traces_on_memory instance=otel-collector:8888 job=otel-collector  707
 ```
 
-707 rastros seguros neste momento, a cinco checkouts por segundo. O número cresce com o tráfego
-vezes a espera, e o `num_traces` é o teto dele. Quando chegam mais rastros do que ele permite, os
-mais antigos são descartados antes de qualquer decisão, e contados em
+707 rastros seguros neste momento. Dez segundos de checkouts a uns quatro e meio por segundo dão
+uns 45 rastros, então o processador guarda bem mais do que os rastros ainda à espera de uma
+decisão. O `num_traces` é o teto. Quando chegam mais rastros do que ele permite, os mais antigos
+saem, e um que sai antes da decisão é descartado e contado em
 `otelcol_processor_tail_sampling_sampling_trace_dropped_too_early`. Uma espera curta demais decide
 antes de os rastros lentos terminarem; uma longa demais segura mais na memória. **A espera deve ser
 um pouco maior que a sua requisição normal mais lenta**, um número que as span metrics da seção

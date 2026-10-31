@@ -24,4 +24,4 @@ need the two lines written by hand.
 
 What a scheduled job's trace cannot do is say **that the job did not run**. A trace exists only for
 work that happened; the night the scheduler failed leaves no span at all. That question belongs to a
-metric, *time since the last successful run*, and an alert on it, which lessons 5 and 16 build.
+metric, *time since the last successful run*, and an alert on it, which lesson 5 builds.

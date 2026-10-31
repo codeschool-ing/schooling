@@ -18,8 +18,8 @@ ana@obs:~/shop$ curl -s localhost:16686/api/traces/09839a6961d8e8d4b0f0c10ba65e3
 otel.scope.name otel.scope.version http.flavor http.host http.method http.route http.scheme http.server_name http.status_code http.target http.user_agent net.host.name net.host.port net.peer.ip net.peer.port span.kind
 ```
 
-Dezesseis chaves, e fora o nome e a versão do próprio tracer todas falam de HTTP e de rede: o método, a rota, o host, a porta, o endereço do
-cliente. Nada diz que pedido era, que produto, quanto, nem se foi pago. O Flask não tem como saber:
+Dezesseis chaves, e fora o nome e a versão do próprio tracer e o tipo do span todas falam de HTTP
+e de rede: o método, a rota, o host, a porta, o endereço do cliente. Nada diz que pedido era, que produto, quanto, nem se foi pago. O Flask não tem como saber:
 um pedido é uma ideia da loja, não do framework web. Então *"mostre os rastros de pedidos de
 chaleira"* não tem resposta neste serviço, e a vitrine só conseguia responder porque alguém
 escreveu `shop.sku` à mão.

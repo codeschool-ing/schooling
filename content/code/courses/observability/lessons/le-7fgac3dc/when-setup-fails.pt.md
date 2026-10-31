@@ -29,11 +29,11 @@ permission denied while trying to connect to the docker API at unix:///var/run/d
 O seu usuário ainda não está no grupo `docker`, ou está e este shell começou antes disso. O
 `usermod` da primeira seção só vale a partir do próximo login: `exit`, abra o shell de novo, e `id`
 deve listar `docker` entre os seus grupos. Pôr `sudo` na frente de todo comando também funciona, e
-aí todo arquivo que o Docker cria em `~/shop` pertence ao root, o que a próxima falha mostra ser um
-problema à parte.
+aí todo arquivo que o Docker cria em `~/shop` pertence ao root, o que a falha do Grafana, mais
+abaixo, mostra ser um problema à parte.
 
 **O download para com `429 Too Many Requests`.** O Docker Hub limita quantas imagens um endereço
-pode baixar anonimamente em algumas horas, e o primeiro `docker compose up` pede quinze. Aconteceu
+pode baixar anonimamente em algumas horas, e o primeiro `docker compose up` pede catorze. Aconteceu
 enquanto este laboratório era montado, no `prom/node-exporter`. O limite se renova com o tempo:
 espere um quarto de hora e rode o mesmo comando de novo, e o Docker guarda o que já baixou. Entrar
 com `docker login` aumenta o limite, se você tiver uma conta no Docker; o curso não precisa de uma.

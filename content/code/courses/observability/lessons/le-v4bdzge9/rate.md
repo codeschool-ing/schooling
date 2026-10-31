@@ -51,8 +51,7 @@ ana@obs:~/shop$ ./promq 'sum(http_server_requests_total{job="storefront"})'
 ```
 
 **The counter went from 339 to 123.** A restarted process starts every counter from zero, and a
-naive *value now minus value a minute ago* would say the storefront answered minus two hundred
-requests. `rate()` and `increase()` know a counter can only grow, so any drop is treated as a reset
+naive *value after minus value before* would say the storefront answered minus 216 requests. `rate()` and `increase()` know a counter can only grow, so any drop is treated as a reset
 and the count simply continues from zero:
 
 ```

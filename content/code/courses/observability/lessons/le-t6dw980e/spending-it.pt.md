@@ -56,7 +56,7 @@ hora foram em quatro minutos.**
 Há duas lições nesses números. **Um SLI de 99,7% ainda pode significar problema**: o objetivo foi
 cumprido, e resta um terço do orçamento para o resto da janela. Outro incidente como este o
 descumpriria. E **a janela decide quão dramático um incidente parece**: as mesmas 55 falhas contra
-um orçamento de 28 dias de uns cinquenta mil seriam cerca de um décimo de um por cento dele. A
+um orçamento de 28 dias de uns cinquenta e quatro mil seriam cerca de um décimo de um por cento dele. A
 janela de uma hora do laboratório faz todo incidente parecer grande de propósito, para uma aula
 poder ver o orçamento se mexer. Uma equipe real vê isso como uma pequena queda numa linha longa, e a
 política da próxima seção decide o que essa queda significa.

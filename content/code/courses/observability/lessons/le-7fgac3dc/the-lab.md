@@ -29,7 +29,7 @@ already run Docker on it: nothing here installs anything outside Docker, and eve
 published only to that computer itself. On Windows or macOS, Docker Desktop runs Linux in a hidden
 virtual machine of its own. It may well run the whole lab, but the course was not recorded on it,
 and when something differs you are debugging a machine you cannot see. The recommended path avoids
-that question. **Online** works too, and every cloud's smallest machines are too small for
+that question. **Online** works too, but every cloud's smallest machines are too small for
 this lab; one with four processors and 8 GB costs real money per hour, so delete it when you stop
 rather than leaving it running. The `cloud` course, which this one requires, is where creating
 one is taught. Any other hypervisor works in place of Multipass as well: VirtualBox, UTM on an

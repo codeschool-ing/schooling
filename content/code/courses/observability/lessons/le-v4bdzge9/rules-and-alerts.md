@@ -52,7 +52,7 @@ for every series that comes back, holds an alert. `PaymentsFailing` is the ratio
 this lesson, written over the recording rule. `ReportNotRun` is the Pushgateway's timestamp with
 twenty-six hours on it: a day, plus slack for a run that started late.
 
-The file is checked with `promtool`, from Prometheus's own image, and Prometheus is told to reload:
+Check the file with `promtool`, from Prometheus's own image, and tell Prometheus to reload:
 
 ```
 ana@obs:~/shop$ docker run --rm -v ./prometheus:/etc/prometheus --entrypoint promtool prom/prometheus:v3.15.0 check rules /etc/prometheus/rules/shop.yml

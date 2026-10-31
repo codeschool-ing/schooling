@@ -7,14 +7,14 @@ An objective of 99.5% says something that a target of *as reliable as possible* 
 checkouts may fail, and that is fine.** That half per cent is the **error budget**, and treating it as
 a budget, something to spend, is the idea that makes SLOs change how a team works.
 
-Fifty-five minutes after the customers started, the one-hour window of `slo.yml` is full:
+Fifty-five minutes after the customers started, the one-hour window of `slo.yml` is nearly full:
 
 ```
 ana@obs:~/shop$ ./promq 'sum(increase(http_server_requests_total{job="storefront",route="/checkout"}[1h]))'
   14849.60561599319
 ```
 
-About fifteen thousand checkouts in the hour. At 99.5%, **seventy-four of them may fail** before the
+About fifteen thousand checkouts in those fifty-five minutes. At 99.5%, **seventy-four of them may fail** before the
 objective is missed. The recorded series say where things stand:
 
 ```
@@ -25,7 +25,7 @@ __name__=checkout:error_budget_remaining:ratio_1h  1
 ```
 
 Every checkout succeeded and was answered within half a second, so the budget is untouched: 1, all of
-it. Over 28 days at the same pace, the budget would be some fifty thousand failed checkouts, or 3 hours
+it. Over 28 days at the same pace, the budget would be some fifty-four thousand failed checkouts, or 3 hours
 and 22 minutes of everything failing.
 
 **What is the budget for?** For everything that risks a failure and is worth doing anyway:

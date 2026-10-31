@@ -52,9 +52,9 @@ burst once the mailer came back.
 Two things about reading this in a trace store:
 
 - **The trace's length is not what anybody waited.** A trace store measures a trace from its first
-  span's start to its last span's end, so these checkouts list as twenty-odd seconds long. The
-  customer waited about 430 ms, the root span's duration. Search on the root span when the question
-  is about the customer, and on the trace when it is about the order.
+  span's start to its last span's end, so the three delayed checkouts list as fourteen to
+  twenty-seven seconds long. The customer waited about 430 ms, the root span's duration. Search on
+  the root span when the question is about the customer, and on the trace when it is about the order.
 - **The wait has no span of its own.** It is the gap between a span in one service and a span in
   another, measured on two machines' clocks. In the lab both clocks are the same host's; between
   real hosts a few milliseconds of clock skew can make a short wait look negative, which is noise,

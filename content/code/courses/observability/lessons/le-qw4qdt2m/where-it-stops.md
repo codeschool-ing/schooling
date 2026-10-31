@@ -18,9 +18,8 @@ ana@obs:~/shop$ curl -s localhost:16686/api/traces/09839a6961d8e8d4b0f0c10ba65e3
 otel.scope.name otel.scope.version http.flavor http.host http.method http.route http.scheme http.server_name http.status_code http.target http.user_agent net.host.name net.host.port net.peer.ip net.peer.port span.kind
 ```
 
-Sixteen keys, and apart from the tracer's own name and version they are all about HTTP and the
-network: the method, the route, the host,
-the port, the client's address. Nothing says which order this was, which product, how much, or
+Sixteen keys, and apart from the tracer's own name and version and the span's kind they are all
+about HTTP and the network: the method, the route, the host, the port, the client's address. Nothing says which order this was, which product, how much, or
 whether it was paid. Flask cannot know: an order is the shop's idea, not the web framework's. So
 *"show me the traces of orders for kettles"* has no answer in this service, and the storefront
 could answer it only because somebody wrote `shop.sku` by hand.

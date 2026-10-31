@@ -8,7 +8,7 @@ no meio, é um exportador a mais.** Os serviços continuam mandando OTLP ao Coll
 manda cada rastro a tantos lugares quantos exportadores ele tiver.
 
 O laboratório não tem conta em fornecedor nenhum e nem deve ter, então o lugar é um substituto: o
-`standin.py`, um programa de vinte linhas na sandbox que aceita OTLP por HTTP do jeito que uma
+`standin.py`, um programa de vinte e seis linhas na sandbox que aceita OTLP por HTTP do jeito que uma
 entrada hospedada aceita e imprime quem mandou o quê:
 
 `~/shop/scratch/standin.py`
@@ -180,7 +180,8 @@ hospedado, medido aqui antes de alguém citar um preço.
 ```
 
 **E quando o fornecedor cai?** Cada exportador tem a própria fila e as próprias novas tentativas, então
-um destino falhando não deveria afetar os outros. O substituto é parado e o Collector ganha um minuto:
+um destino falhando não deveria afetar os outros. O substituto é parado e o Collector ganha um minuto e quinze
+segundos:
 
 ```
 ana@obs:~/shop$ docker stop vendor

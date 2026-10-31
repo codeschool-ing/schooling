@@ -40,9 +40,9 @@ opentelemetry-instrumentation-wsgi       0.66b0
 
 Flask for the requests that arrive, `requests` for the calls that leave, psycopg for the database.
 The `wsgi` and `dbapi` packages are the generic layers the first and the last are built on. The
-image installed them because its requirements named them. Instead, `opentelemetry-bootstrap`, which comes
-with the launcher, can read what a program has installed and print the instrumentation
-packages that match.
+image installed them because its requirements named them. A project with no such list can ask
+`opentelemetry-bootstrap`, which comes with the launcher: it reads what a program has installed and
+prints the instrumentation packages that match.
 
 **Everything else comes from the environment**, the same SDK lesson 2 built by hand, described by
 variables instead of code:

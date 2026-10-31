@@ -51,8 +51,8 @@ __name__=checkout:burn_rate:5m  14.946663312584985
 __name__=checkout:burn_rate:30m  12.473343961001747
 ```
 
-24,8 em um minuto, 14,9 em cinco, 12,5 em trinta: os checkouts estão falhando a umas treze vezes a taxa
-que o mês aguenta, e isso ainda está acontecendo agora. É um SEV-2 pela tabela da loja: uma parte
+24,8 em um minuto, 14,9 em cinco, 12,5 em trinta: nos últimos cinco minutos os checkouts falharam a
+14,9 vezes a taxa que o mês aguenta, e a janela de um minuto diz que isso ainda está acontecendo agora. É um SEV-2 pela tabela da loja: uma parte
 grande dos clientes não consegue comprar. **O primeiro ato é dizer isso**, onde todos possam ver, com o
 nome de quem comanda:
 
@@ -73,8 +73,8 @@ job=payments  0.12473572938689217
 job=orders  0.125
 ```
 
-11% das requisições da vitrine, 12,5% das do orders e das do payments. O payments falha mais, e todo
-serviço acima dele falha na mesma proporção. É a mesma coluna de vermelho que a aula 11 leu num único
+11% das requisições da vitrine, 12,5% das do orders e das do payments. O payments, o mais fundo dos
+três, falha tanto quanto o orders, e a vitrine acima deles falha quase tanto. É a mesma coluna de vermelho que a aula 11 leu num único
 rastro, aqui em três números.
 
 **E a pergunta que resolve a maioria dos incidentes: o que mudou?** As marcas da última meia hora:

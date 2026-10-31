@@ -17,7 +17,7 @@ every service writes. The shop's, in `services/common/redact.py`:
     },
     {
       "code": "CARD = re.compile(r\"\\b(?:\\d[ -]?){12,15}(\\d{4})\\b\")\nSECRET_KEYS = {\"authorization\", \"cookie\", \"password\", \"token\", \"card\"}\n\n\n",
-      "note": "**Two lists, written once.** A card number is thirteen to nineteen digits with optional spaces or hyphens, and the last four are kept so a support person can still say *the card ending 1111*. A field whose name is a secret is removed whatever it holds."
+      "note": "**Two lists, written once.** A card number here is sixteen to nineteen digits with optional spaces or hyphens, and the last four are kept so a support person can still say *the card ending 1111*. A field whose name is a secret is removed whatever it holds."
     },
     {
       "code": "def clean(value):\n    if isinstance(value, dict):\n        return {k: \"[removed]\" if k.lower() in SECRET_KEYS else clean(v) for k, v in value.items()}\n    if isinstance(value, str):\n        return CARD.sub(r\"**** \\1\", value)\n    return value\n\n\n",

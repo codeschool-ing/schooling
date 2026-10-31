@@ -29,7 +29,7 @@ Drawn to scale, the same nine lines:
 ```
 
 **The answer is on one line**: `wait for the card network`, inside `payments`, 1500 of the 1533
-milliseconds. Every span above it lasted as long as it did because it was waiting for that one.
+milliseconds. Every span that contains it lasted as long as it did because it was waiting for that one.
 `orders` sent `POST` to payments and waited 1505 ms for the answer; `POST /orders` waited for that;
 the storefront's `POST /checkout` waited for everything. The database calls, `INSERT` and
 `UPDATE`, took two milliseconds each and are not the problem, which is worth knowing before
@@ -39,10 +39,10 @@ Three things in this trace are worth noticing now, because later lessons are bui
 
 - **Some spans were written by hand and some were not.** `storefront` and `payments` open their
   spans in their own code, and `wait for the card network` exists only because somebody wrapped that
-  wait in a span. `orders` has no OpenTelemetry code of its own: its `POST /orders`, `INSERT`, `POST`
-  and `UPDATE` come from libraries instrumented automatically. Lessons 2 and 3 are those two ways.
-- **The mailer's spans start after the storefront's ended**, at 1532 ms, and still belong to the same
-  trace. The confirmation went through a RabbitMQ queue, and the trace id went with the message.
+  wait in a span. `orders` opens no span in its own code: its `POST /orders`, `INSERT`, `POST` and
+  `UPDATE` come from libraries instrumented automatically. Lessons 2 and 3 are those two ways.
+- **The mailer's spans start last**, at 1532 ms, after `orders` put the paid order on the queue,
+  and still belong to the same trace. The confirmation went through a RabbitMQ queue, and the trace id went with the message.
   Lesson 4 is how, and what happens when nobody carries it.
 - **This trace was kept because the lab keeps every trace.** At real traffic that is expensive, and
   lesson 12 is about keeping the ones that matter.

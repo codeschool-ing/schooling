@@ -9,14 +9,14 @@ tratá-lo como orçamento, algo a ser gasto, é a ideia que faz os SLOs mudarem 
 trabalhar.
 
 Cinquenta e cinco minutos depois de os clientes começarem, a janela de uma hora do `slo.yml` está
-cheia:
+quase cheia:
 
 ```
 ana@obs:~/shop$ ./promq 'sum(increase(http_server_requests_total{job="storefront",route="/checkout"}[1h]))'
   14849.60561599319
 ```
 
-Uns quinze mil checkouts na hora. A 99,5%, **setenta e quatro deles podem falhar** antes de o objetivo
+Uns quinze mil checkouts nesses cinquenta e cinco minutos. A 99,5%, **setenta e quatro deles podem falhar** antes de o objetivo
 ser descumprido. As séries gravadas dizem onde as coisas estão:
 
 ```
@@ -27,7 +27,7 @@ __name__=checkout:error_budget_remaining:ratio_1h  1
 ```
 
 Todo checkout deu certo e foi respondido em até meio segundo, então o orçamento está intacto: 1, ele
-inteiro. Em 28 dias no mesmo ritmo, o orçamento seria de uns cinquenta mil checkouts com falha, ou 3
+inteiro. Em 28 dias no mesmo ritmo, o orçamento seria de uns cinquenta e quatro mil checkouts com falha, ou 3
 horas e 22 minutos de tudo falhando.
 
 **Para que serve o orçamento?** Para tudo que arrisca uma falha e vale a pena fazer mesmo assim:

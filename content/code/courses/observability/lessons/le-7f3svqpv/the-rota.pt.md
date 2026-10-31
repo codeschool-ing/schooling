@@ -31,7 +31,7 @@ Duas coisas tornam o turno justo, e as duas são decisões, não ferramentas:
 - **Ficar de plantão é pago ou devolvido em tempo.** Uma noite num incidente é seguida de uma entrada
   mais tarde; uma semana de plantão é compensada. No Brasil, a Justiça do Trabalho trata as horas em
   que o empregado precisa ficar alcançável e pronto para agir como *sobreaviso*, pagas a um terço do
-  valor da hora normal.
+  valor da hora normal. Uma escala que depende de boa vontade acaba com ela.
 
 A passagem é curta e tem sempre as mesmas três partes: **o que aconteceu** no turno, **o que ainda está
 aberto**, e **o que vem por aí**, como uma migração na quinta ou uma promoção na sexta.

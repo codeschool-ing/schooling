@@ -53,8 +53,8 @@ que volta, mantém um alerta. `PaymentsFailing` é a proporção do começo dest
 regra de gravação. `ReportNotRun` é o timestamp do Pushgateway com vinte e seis horas em cima: um
 dia, mais uma folga para uma execução que começou tarde.
 
-O arquivo é verificado com o `promtool`, da própria imagem do Prometheus, e o Prometheus é avisado
-para recarregar:
+Verifique o arquivo com o `promtool`, da própria imagem do Prometheus, e avise o Prometheus para
+recarregar:
 
 ```
 ana@obs:~/shop$ docker run --rm -v ./prometheus:/etc/prometheus --entrypoint promtool prom/prometheus:v3.15.0 check rules /etc/prometheus/rules/shop.yml
