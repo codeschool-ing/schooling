@@ -39,7 +39,7 @@ srv  update_slots: all slots are idle
 
 **Ollama stopped too.** `cancel task` is the server noticing the closed connection, and
 `n_tokens = 47` is how far it got, counting the question and its template as well as the few
-tokens of reply behind the forty characters the script kept. A provider behaves the same way from the outside.
+tokens of reply behind the 42 characters the script kept. A provider behaves the same way from the outside.
 Whether the tokens it wrote before noticing are billed is in its terms; plan as if they are.
 
 ## What Stop has to mean

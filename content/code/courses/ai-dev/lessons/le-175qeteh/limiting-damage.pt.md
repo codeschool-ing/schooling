@@ -84,8 +84,8 @@ ok to send
 ```
 
 **O primeiro rascunho fica segurado para uma pessoa; o segundo passa.** A verificação não entende um
-rascunho; ela procura promessas que só um resultado de ferramenta poderia sustentar, em qualquer
-ordem, *refund processed* ou *processed your refund*, e erra para o lado de segurar, o que custa um
+rascunho. Ela procura promessas que só um resultado de ferramenta poderia sustentar, em qualquer
+ordem, *refund processed* ou *processed your refund*. Ela erra para o lado de segurar, o que custa um
 minuto de uma pessoa e não custa nada à loja. Ela deixou passar o segundo rascunho, que não promete
 nada e continua errado sobre as canecas. **Uma verificação de um tipo de erro fica calada sobre todos
 os outros tipos**, e é por isso que a próxima defesa é uma pessoa.

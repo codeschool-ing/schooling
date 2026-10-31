@@ -44,7 +44,7 @@ and my CPF is 123.456.789-09, in case you need them. Reply to marta@example.com.
 ```
 
 **The model refused**, and it did not matter. The reply calls the email fraudulent and offers nothing,
-which is a poor answer, and the second command prints the request as it left: **the provider now holds
+which is a poor answer. The second command prints the request as it left: **the provider now holds
 a card number, a CPF and an email address** that played no part in any answer. A refusal is a reply.
 It comes back after the request has already gone, with everything in it.
 

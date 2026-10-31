@@ -5,9 +5,9 @@ version: 2
 
 Lesson 2 read the price lists. This section uses them to compare providers on one workload: **the
 shop's support assistant, 2,000 questions a day, each with 1,500 tokens of prompt and 300 of
-reply**. The prices are the ones lesson 2 section 04 listed, read on 2 October 2026: Anthropic's from
-its own pricing page, OpenAI's and Google's from LiteLLM's copy at a pinned commit, because their own pages could
-not be reached from the machine the course was recorded on.
+reply**. The prices are the ones lesson 2 section 04 listed, read on 2 October 2026. Anthropic's come
+from its own pricing page; OpenAI's and Google's come from LiteLLM's copy at a pinned commit, because
+their own pages could not be reached from the machine the course was recorded on.
 
 ```python
 """What one workload costs a month at each model's list price."""

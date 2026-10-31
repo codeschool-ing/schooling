@@ -20,7 +20,7 @@ ERROR: This version requires zstd for extraction. Please install zstd and try ag
 ```
 
 Ollama is downloaded compressed with `zstd`, and a minimal Ubuntu does not have it. The message
-says the fix: `sudo apt install zstd`, then run the installer again. Section 03's first command
+says the fix: `sudo apt install zstd`, then run the installer again. Section 03's first block
 installs it before you get here.
 
 ## Ollama is installed and nothing answers

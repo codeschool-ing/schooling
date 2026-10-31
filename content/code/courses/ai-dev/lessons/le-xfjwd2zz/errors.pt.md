@@ -66,7 +66,7 @@ palavras chegaram, a resposta não. Dois jeitos errados de lidar com isso são c
 - **Deixar o texto parcial como se fosse a resposta.** Ele parece uma resposta, e para no meio de
   uma frase. Marque-o, ou substitua-o.
 - **Repetir e acrescentar.** Uma segunda requisição começa a resposta de novo pela primeira palavra.
-  Acrescentada ao que está na tela, ela repete uma frase e meia. Uma repetição substitui.
+  Acrescentada ao que está na tela, ela repete o que a pessoa já leu. Uma repetição substitui.
 
 ## Repetindo um stream
 

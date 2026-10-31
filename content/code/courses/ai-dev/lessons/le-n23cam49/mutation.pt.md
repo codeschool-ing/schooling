@@ -6,8 +6,8 @@ version: 2
 Uma suíte de testes pode estar verde e testar quase nada. A aula 3 seção 06 mostrou isso: oito
 testes passando, e uma mudança que não fazia o que foi pedido passou direto, como passaria a que
 mudava o que o cliente paga, que o mesmo pedido produziu em outra execução. A cobertura, a
-fração de linhas que os testes executam, teria contado toda linha do `shipping()` como coberta, porque todo
-teste a executa. **Executar uma linha não é o mesmo que conferir o que ela faz.**
+fração de linhas que os testes executam, teria contado toda linha do `shipping()` como coberta, porque os testes
+chegam aos seus dois `return`. **Executar uma linha não é o mesmo que conferir o que ela faz.**
 
 O **teste de mutação** faz a pergunta direta. Mude o código de propósito, uma mudança pequena por
 vez (um `>=` vira `>`, um `-` vira `+`), e rode os testes depois de cada uma. Uma mudança que os

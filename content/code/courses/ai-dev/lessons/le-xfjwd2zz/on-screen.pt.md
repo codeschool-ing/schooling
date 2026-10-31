@@ -42,7 +42,7 @@ after 120 pieces, bold closed: 'r competitive.\n*   **Practicality**:'
 at the end, 172 pieces and 884 characters
 ```
 
-**Cinco trechos em negrito, e cada uma fica aberta por três ou quatro pedaços**: depois de 16
+**Cinco trechos em negrito, e cada um fica aberto por três ou quatro pedaços**: depois de 16
 pedaços o texto termina em `**`, um marcador de abertura sem fechamento, e `**Rounding**` só fica
 completo no pedaço 19. Renderizado assim, a página mostra dois asteriscos; uma página que espera o
 fechamento ainda não mostra nada; uma página que adivinha mostra um negrito que vira texto comum, ou o

@@ -10,8 +10,8 @@ the code, and the code includes its bugs.
 
 ## Asking for tests
 
-ana asks for tests for `apply_coupon`, with the buggy version of lesson 4 section 02 still in place,
-and asks for the imports, because a test file that cannot import what it tests is the most common
+ana asks for tests for `apply_coupon`, with the buggy version of lesson 4 section 02 still in place.
+She asks for the imports too, because a test file that cannot import what it tests is the most common
 failure of a generated one. `--write` puts the block of code from the reply straight into
 `tests/test_generated.py`. Then she lists what it tests, and every line that mentions the coupon's
 last day, before running it:

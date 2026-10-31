@@ -4,7 +4,7 @@ version: 2
 ---
 
 An example-based test checks the inputs you thought of. A **property-based test** states something
-that must be true for every input, and a library generates hundreds of inputs looking for one where
+that must be true for every input, and a library generates many inputs looking for one where
 it is false. In Python that library is **hypothesis**. When it finds a failure, it shrinks it to the
 simplest input that still fails, which makes the report readable.
 

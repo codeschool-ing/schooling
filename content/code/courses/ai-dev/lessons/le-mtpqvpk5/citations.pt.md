@@ -5,9 +5,8 @@ version: 2
 
 Uma resposta com citações parece confiável, e isso é um risco próprio. Uma citação é uma afirmação
 sobre de onde veio uma frase, e **um modelo pode produzir uma citação do mesmo jeito que produz
-qualquer outro texto**: o id com cara de provável, depois da frase com cara de provável. A boa notícia
-é que essa afirmação, ao contrário da maior parte do que um modelo diz, pode ser conferida por um
-programa.
+qualquer outro texto**: o id com cara de provável, depois da frase com cara de provável. Ao contrário
+da maior parte do que um modelo diz, essa afirmação pode ser conferida por um programa.
 
 ## Três checagens que um programa consegue fazer
 
@@ -86,8 +85,8 @@ citations: cites nothing: "Note: The warranty information does not mention re"
 A primeira frase copia o `returns.md#3` com fidelidade e o cita, e não responde à pergunta: diz como
 um reembolso é pago, não se este cliente recebe um. A nota depois dela não cita nada e é marcada. A
 resposta de verdade do manual, que uma quebra no transporte é uma entrega danificada e não uma
-devolução, está no `returns.md#1`, que a busca não trouxe para a palavra *broken*, e a aula 6, seção
-09, mede quantas vezes isso acontece.
+devolução, está no `returns.md#1`, que a busca não trouxe para a palavra *broken*, e a aula 6 seção
+09 mede quantas vezes isso acontece.
 
 **Em todas as rodadas feitas para esta aula, o `llama3.2:3b` nunca citou um trecho que não tinha
 recebido e nunca pôs entre aspas uma expressão que o trecho dela não continha.** As duas checagens

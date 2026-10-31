@@ -3,8 +3,8 @@ title: Quando a resposta não cabe
 version: 2
 ---
 
-O segundo e-mail da seção 06, o do João, é o que dá errado.
-A primeira resposta a ele nem é JSON.
+O segundo e-mail da seção 06, o do João, dá errado como o primeiro:
+a primeira resposta a ele nem é JSON.
 
 ## Mais uma tentativa, com o motivo
 

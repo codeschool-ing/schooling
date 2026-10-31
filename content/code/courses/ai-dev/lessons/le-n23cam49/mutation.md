@@ -6,7 +6,7 @@ version: 2
 A test suite can be green and test almost nothing. Lesson 3 section 06 showed it: eight passing
 tests, and a change that did not do what was asked went straight through, as would the one that
 changed what customers pay, which the same request produced on another run. Coverage, the share
-of lines the tests run, would have counted every line of `shipping()` as covered, because every test runs it. **Running
+of lines the tests run, would have counted every line of `shipping()` as covered, because the tests reach both of its `return`s. **Running
 a line is not the same as checking what it does.**
 
 **Mutation testing** asks the direct question. Change the code on purpose, one small change at a

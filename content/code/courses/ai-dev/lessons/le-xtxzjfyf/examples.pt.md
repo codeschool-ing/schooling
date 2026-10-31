@@ -11,8 +11,8 @@ forte que existe para formato e estilo: o modelo continua o padrão que lhe most
 ## Um assunto de commit, de dois jeitos
 
 O `CONVENTIONS.md` diz que o assunto de um commit fica no imperativo e com menos de sessenta
-caracteres. Os cinco commits da própria loja foram feitos antes de alguém escrever isso, e são
-substantivos soltos: `Conventions`, `README`, `Coupons`. O script da ana, `scratch/subject.py`, pede
+caracteres. Os cinco commits da própria loja foram feitos antes de alguém escrever isso, e os três
+mais recentes são substantivos soltos: `Conventions`, `README`, `Coupons`. O script da ana, `scratch/subject.py`, pede
 um assunto para o commit mais recente, uma vez só com o diff dele, e outra com três assuntos escritos
 segundo a regra e a própria regra:
 
@@ -51,7 +51,7 @@ palavra por palavra**. O commit que ela descreve acrescenta o `CONVENTIONS.md`; 
 com preços negativos. O modelo copiou o padrão tão de perto que copiou o conteúdo junto.
 
 Aí estão as duas metades da técnica em duas linhas. Os exemplos acertaram a forma na hora, e não
-disseram nada ao modelo sobre o que este diff faz. A aula 5 seção 09, roda os mesmos dois prompts
+disseram nada ao modelo sobre o que este diff faz. A aula 5 seção 09 roda os mesmos dois prompts
 sobre todos os commits, três vezes cada, e conta as duas coisas.
 
 ## Escolhendo os exemplos

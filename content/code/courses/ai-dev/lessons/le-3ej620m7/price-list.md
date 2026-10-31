@@ -53,7 +53,7 @@ to read the sheet:
 - **The unit is dollars per million tokens.** Take Claude Sonnet 5.5 at `$2` input and `$10`
   output. A request with 2,000 tokens in and 500 out costs 2,000 × 2 / 1,000,000 plus 500 × 10 /
   1,000,000: $0.004 plus $0.005, nine tenths of a cent.
-- **Output is five to eight times input here**: 5× on all three Claude models, 6× on most of
+- **Output is five to just over eight times input here**: 5× on all three Claude models, 6× on most of
   OpenAI's and on Gemini's Pro and Flash, and over 8× on Flash-Lite. A feature that writes long answers costs a different order of
   money from one that reads long documents and answers yes or no.
 - **The spread inside one provider is larger than between providers.** `gpt-5.4-nano` is 25 times

@@ -35,7 +35,7 @@ being prepared, called it a "Basic Table Lamp" at the same $19.99, which is how 
 behave: the shape stays and the details move.
 
 The host can tell the model what it does not know and what the rule is. `--rules` adds the system
-prompt of lesson 7 section 03, today's date and "every fact must come from a tool result":
+prompt of lesson 7 section 03, today's date and "every fact in your answer must come from a tool result":
 
 ```
 ana@dev:~/shop$ python agent.py --rules "Which is the cheapest lamp you sell?"
@@ -96,8 +96,8 @@ carries everything so far. With the tools in sight, the second request is the bi
 should have been all along.
 
 Neither setting makes this model a working agent on this server: without the reminder it gets one
-round of tools, with it it never stops calling them. Two other models of about this size,
-`qwen2.5:3b` and `qwen2.5:7b`, were asked the same questions while this lesson was prepared; their
+round of tools, with it it never stops calling them. Two other models, `qwen2.5:3b`
+and the larger `qwen2.5:7b`, were asked the same questions while this lesson was prepared. Their
 templates keep the tools in sight, and both still answered after one call, with the same wrong
 conclusion about order 1042. **The host's guards are what made every one of these failures cheap**,
 and they are the part of this lesson that does not depend on the model.

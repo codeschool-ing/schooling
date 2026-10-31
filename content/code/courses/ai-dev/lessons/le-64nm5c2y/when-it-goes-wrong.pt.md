@@ -34,7 +34,7 @@ aula era preparada, chamou-a de "Basic Table Lamp" pelos mesmos $19.99, que é c
 comportam: a forma fica e os detalhes mudam.
 
 O host pode dizer ao modelo o que ele não sabe e qual é a regra. O `--rules` acrescenta o prompt de
-sistema da aula 7 seção 03, a data de hoje e "todo fato tem de vir de um resultado de ferramenta":
+sistema da aula 7 seção 03, a data de hoje e "todo fato na sua resposta tem de vir de um resultado de ferramenta":
 
 ```
 ana@dev:~/shop$ python agent.py --rules "Which is the cheapest lamp you sell?"
@@ -95,9 +95,9 @@ a anterior porque leva tudo até ali. Com as ferramentas à vista, a segunda req
 devia ter sido desde o começo.
 
 Nenhuma das duas opções faz deste modelo um agente que funciona neste servidor: sem o lembrete ele tem
-uma rodada de ferramentas, com ele nunca para de chamá-las. Dois outros modelos mais ou menos deste
-tamanho, `qwen2.5:3b` e `qwen2.5:7b`, receberam as mesmas perguntas enquanto esta aula era preparada;
-os templates deles mantêm as ferramentas à vista, e os dois ainda responderam depois de uma chamada,
+uma rodada de ferramentas, com ele nunca para de chamá-las. Dois outros modelos, o `qwen2.5:3b` e
+o `qwen2.5:7b`, maior, receberam as mesmas perguntas enquanto esta aula era preparada. Os templates
+deles mantêm as ferramentas à vista, e os dois ainda responderam depois de uma chamada,
 com a mesma conclusão errada sobre o pedido 1042. **As guardas do host são o que deixou cada uma
 dessas falhas barata**, e são a parte desta aula que não depende do modelo.
 
