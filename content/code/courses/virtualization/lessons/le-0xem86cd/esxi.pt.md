@@ -18,13 +18,15 @@ para onde a maioria das pessoas foi.
 
 A linha de comando dele é alcançada por SSH, quando um administrador a habilita, e é assim:
 
-```sh
-esxcli system version get          # the ESXi version and build
-esxcli network ip interface ipv4 get   # the host's own addresses
-esxcli storage filesystem list     # the datastores this host sees
-vim-cmd vmsvc/getallvms            # every VM registered on this host, with its id
-vim-cmd vmsvc/power.getstate 12    # whether VM 12 is on
-vim-cmd vmsvc/power.shutdown 12    # ask VM 12's guest to shut down, through VMware Tools
+```schooling-example
+{"language": "sh", "parts": [
+ {"code": "esxcli system version get", "note": "A versão e o build do ESXi."},
+ {"code": "esxcli network ip interface ipv4 get", "note": "Os endereços do próprio host."},
+ {"code": "esxcli storage filesystem list", "note": "Os datastores que este host enxerga."},
+ {"code": "vim-cmd vmsvc/getallvms", "note": "Toda VM registrada neste host, cada uma com o id dela."},
+ {"code": "vim-cmd vmsvc/power.getstate 12", "note": "Se a VM 12 está ligada."},
+ {"code": "vim-cmd vmsvc/power.shutdown 12", "note": "Pede ao convidado da VM 12 que desligue, pelo VMware Tools."}
+]}
 ```
 
 **Nenhum deles foi rodado para esta aula**; o ESXi não está instalado no host do curso e nem pode estar.

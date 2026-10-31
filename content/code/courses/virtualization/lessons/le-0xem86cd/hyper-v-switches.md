@@ -15,16 +15,17 @@ laptop is on Wi-Fi, the same fault as lesson 5's VMnet0.
 
 In PowerShell, as an administrator:
 
-```sh
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All   # switch it on; then reboot
-Get-VM                                              # every VM, its state and uptime
-New-VM -Name lab1 -Generation 2 -MemoryStartupBytes 2GB -NewVHDPath C:\VMs\lab1.vhdx -NewVHDSizeBytes 40GB -SwitchName "Default Switch"
-Set-VMFirmware lab1 -SecureBootTemplate MicrosoftUEFICertificateAuthority   # so a Linux guest can boot
-Add-VMDvdDrive lab1 -Path C:\ISO\ubuntu-24.04-live-server-amd64.iso
-Start-VM lab1
-Checkpoint-VM lab1 -SnapshotName clean              # Hyper-V's word for a snapshot
-Get-VMSwitch                                        # the virtual switches and their types
-Get-VMIntegrationService lab1                       # the guest services, Hyper-V's agent
+```schooling-example
+{"language": "sh", "parts": [
+ {"code": "Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All", "note": "Switches Hyper-V on. The computer then has to reboot."},
+ {"code": "Get-VM", "note": "Every VM, its state and its uptime."},
+ {"code": "New-VM -Name lab1 -Generation 2 -MemoryStartupBytes 2GB -NewVHDPath C:\\VMs\\lab1.vhdx -NewVHDSizeBytes 40GB -SwitchName \"Default Switch\""},
+ {"code": "Set-VMFirmware lab1 -SecureBootTemplate MicrosoftUEFICertificateAuthority", "note": "Changes the Secure Boot template, so a Linux guest can boot."},
+ {"code": "Add-VMDvdDrive lab1 -Path C:\\ISO\\ubuntu-24.04-live-server-amd64.iso\nStart-VM lab1"},
+ {"code": "Checkpoint-VM lab1 -SnapshotName clean", "note": "A checkpoint, Hyper-V's word for a snapshot."},
+ {"code": "Get-VMSwitch", "note": "The virtual switches and their types."},
+ {"code": "Get-VMIntegrationService lab1", "note": "The guest services, Hyper-V's agent."}
+]}
 ```
 
 **None of these were run for this lesson**; Hyper-V needs Windows, and the course's host is Ubuntu.

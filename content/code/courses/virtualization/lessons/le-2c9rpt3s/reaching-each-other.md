@@ -3,7 +3,7 @@ title: Reaching each other
 version: 1
 ---
 
-The one way host and guest reach each other that you choose to use is the network. From inside:
+Of everything that joins host and guest, the network is the one you choose to use. From inside:
 
 ```
 ana@vm1:~$ ip route

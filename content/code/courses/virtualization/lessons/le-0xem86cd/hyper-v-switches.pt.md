@@ -15,16 +15,17 @@ enquanto o laptop está no Wi-Fi, o mesmo defeito da VMnet0 da aula 5.
 
 No PowerShell, como administrador:
 
-```sh
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All   # switch it on; then reboot
-Get-VM                                              # every VM, its state and uptime
-New-VM -Name lab1 -Generation 2 -MemoryStartupBytes 2GB -NewVHDPath C:\VMs\lab1.vhdx -NewVHDSizeBytes 40GB -SwitchName "Default Switch"
-Set-VMFirmware lab1 -SecureBootTemplate MicrosoftUEFICertificateAuthority   # so a Linux guest can boot
-Add-VMDvdDrive lab1 -Path C:\ISO\ubuntu-24.04-live-server-amd64.iso
-Start-VM lab1
-Checkpoint-VM lab1 -SnapshotName clean              # Hyper-V's word for a snapshot
-Get-VMSwitch                                        # the virtual switches and their types
-Get-VMIntegrationService lab1                       # the guest services, Hyper-V's agent
+```schooling-example
+{"language": "sh", "parts": [
+ {"code": "Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All", "note": "Liga o Hyper-V. Depois o computador precisa reiniciar."},
+ {"code": "Get-VM", "note": "Toda VM, o estado dela e há quanto tempo está ligada."},
+ {"code": "New-VM -Name lab1 -Generation 2 -MemoryStartupBytes 2GB -NewVHDPath C:\\VMs\\lab1.vhdx -NewVHDSizeBytes 40GB -SwitchName \"Default Switch\""},
+ {"code": "Set-VMFirmware lab1 -SecureBootTemplate MicrosoftUEFICertificateAuthority", "note": "Troca o modelo do Secure Boot, para um convidado Linux conseguir dar boot."},
+ {"code": "Add-VMDvdDrive lab1 -Path C:\\ISO\\ubuntu-24.04-live-server-amd64.iso\nStart-VM lab1"},
+ {"code": "Checkpoint-VM lab1 -SnapshotName clean", "note": "Um checkpoint, a palavra do Hyper-V para snapshot."},
+ {"code": "Get-VMSwitch", "note": "Os switches virtuais e os tipos deles."},
+ {"code": "Get-VMIntegrationService lab1", "note": "Os serviços do convidado, o agente do Hyper-V."}
+]}
 ```
 
 **Nenhum deles foi rodado para esta aula**; o Hyper-V precisa do Windows, e o host do curso é Ubuntu.

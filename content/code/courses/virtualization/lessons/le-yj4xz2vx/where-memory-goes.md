@@ -35,10 +35,10 @@ ana@host:~$ sudo pmap -x $(pgrep -o qemu-system) | awk "\$5 == \"rwx--\" { n++; 
 ```
 
 `actual` is the memory the guest was given, 1048576 KiB, and `rss` is what the process really
-occupies, 1713460 KiB. `pmap` lists the process's memory areas, and the ones holding more than 60 MB say
-where it is. The area of exactly 1048576 KiB is **the guest's memory**, and only 446464 KiB of it is
-resident: the guest has touched less than half of what it was given. The other large areas are marked
-`rwx`, memory that can be executed, and there are 16 of them holding 1046796 KiB between them.
+occupies, 1713460 KiB. `pmap` lists the process's memory areas, and the ones with more than 60000 KiB
+resident say where it is. The area of exactly 1048576 KiB is **the guest's memory**, and only 446464 KiB of it is
+resident: the guest has touched less than half of what it was given. Of the other large areas, 16 are marked
+`rwx`, memory that can be executed, and they hold 1046796 KiB between them.
 
 That is **translated code**. Without VT-x, QEMU turns the guest's instructions into instructions for the
 host's processor and keeps the result, so that it does not have to translate the same loop twice. It

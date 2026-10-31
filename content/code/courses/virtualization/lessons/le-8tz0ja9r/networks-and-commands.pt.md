@@ -25,13 +25,14 @@ nomear o adaptador certo resolve. A aula 11 monta as três com o libvirt e olha 
 O Workstation também tem uma linha de comando, o `vmrun`, para ligar, desligar e tirar snapshots de
 convidados por script, e o `ovftool` da VMware converte entre OVA e `.vmx`:
 
-```sh
-vmrun list                                       # the guests that are running
-vmrun start "C:\VMs\lab1\lab1.vmx" nogui        # start one with no window
-vmrun snapshot "C:\VMs\lab1\lab1.vmx" clean      # take a snapshot called clean
-vmrun revertToSnapshot "C:\VMs\lab1\lab1.vmx" clean
-vmrun stop "C:\VMs\lab1\lab1.vmx" soft          # ask the guest to shut down
-ovftool lab1.ova "C:\VMs\lab1\lab1.vmx"          # convert an OVA into a Workstation machine
+```schooling-example
+{"language": "sh", "parts": [
+ {"code": "vmrun list", "note": "Os convidados que estão rodando."},
+ {"code": "vmrun start \"C:\\VMs\\lab1\\lab1.vmx\" nogui", "note": "Liga um sem janela."},
+ {"code": "vmrun snapshot \"C:\\VMs\\lab1\\lab1.vmx\" clean\nvmrun revertToSnapshot \"C:\\VMs\\lab1\\lab1.vmx\" clean", "note": "Tira um snapshot chamado clean, e depois volta para ele."},
+ {"code": "vmrun stop \"C:\\VMs\\lab1\\lab1.vmx\" soft", "note": "Pede ao convidado que desligue."},
+ {"code": "ovftool lab1.ova \"C:\\VMs\\lab1\\lab1.vmx\"", "note": "Converte um OVA numa máquina do Workstation."}
+]}
 ```
 
 **Nenhum deles foi rodado para esta aula**, já que o VMware não está instalado aqui. Os caminhos são do

@@ -3,7 +3,7 @@ title: Alcançando um ao outro
 version: 1
 ---
 
-O único jeito de host e convidado se alcançarem que você escolhe usar é a rede. De dentro:
+De tudo o que liga host e convidado, a rede é o que você escolhe usar. De dentro:
 
 ```
 ana@vm1:~$ ip route

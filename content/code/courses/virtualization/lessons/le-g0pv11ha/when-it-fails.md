@@ -3,8 +3,8 @@ title: When the setup fails
 version: 1
 ---
 
-Every failure below happened while this lesson was being recorded, on the computer it was recorded on,
-and each comes with what it looks like and what fixes it. Most of them fail loudly. Two of them do not,
+Every failure below but the last was recorded on the computer this lesson was recorded on, and each
+comes with what it looks like and what fixes it. Most of them fail loudly. Two of them do not,
 and those are the ones to remember.
 
 **The processor gives no help.** `kvm-ok` said `KVM acceleration can NOT be used` in section 03, and the

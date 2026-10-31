@@ -29,5 +29,5 @@ root password. Every machine gets a **number**, starting at `100`, and the numbe
 as the files and commands are concerned.
 
 Proxmox is not installed on this course's host, which is itself a virtual machine without VT-x, as
-lesson 2 found. What the lab does have is the engine Proxmox runs, and the next three sections look at
+lesson 2 found. What the lab does have is the engine Proxmox runs, and the next four sections look at
 it through the names Proxmox gives each part.

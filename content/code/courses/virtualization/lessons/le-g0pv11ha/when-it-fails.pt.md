@@ -3,7 +3,7 @@ title: Quando a preparação falha
 version: 1
 ---
 
-Toda falha abaixo aconteceu enquanto esta aula era gravada, no computador em que foi gravada, e cada uma
+Toda falha abaixo, menos a última, foi gravada no computador em que esta aula foi gravada, e cada uma
 vem com a cara que tem e o que a corrige. A maioria falha alto. Duas não, e são essas que vale lembrar.
 
 **O processador não ajuda.** O `kvm-ok` disse `KVM acceleration can NOT be used` na seção 03, e o

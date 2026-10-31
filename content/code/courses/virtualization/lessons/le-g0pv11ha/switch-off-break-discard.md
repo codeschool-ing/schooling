@@ -50,4 +50,4 @@ about to be deleted and a bad habit for one that is not. `virsh undefine` remove
 description of it, and `rm` removes the file. The list is empty.
 
 The base disk was never touched, because every write went to `vm1.qcow2`. The next guest in this
-course is made from the same base in a minute, as if nothing had happened.
+course is made from the same base in about two minutes, as if nothing had happened.

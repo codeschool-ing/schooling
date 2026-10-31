@@ -8,7 +8,7 @@ formato de quase todo chamado: **alguém num computador não consegue usar um se
 laboratório tem três convidados, cada um com um trabalho:
 
 - O **client** é o computador do usuário, e de onde você trabalha. Toda conferência começa aqui, porque
-  um serviço que funciona no servidor e não do cliente é o chamado mais comum que existe.
+  um serviço que funciona no servidor e não do client é o chamado mais comum que existe.
 - O **server** roda um servidor web que funciona. É a referência: quando algo parece estranho no target,
   o server mostra como deveria estar.
 - O **target** roda o mesmo serviço, **quebrado de propósito**, e salvo nesse estado para o exercício poder

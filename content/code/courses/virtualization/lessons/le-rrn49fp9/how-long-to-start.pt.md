@@ -30,5 +30,5 @@ de 150 vezes mais.
 
 Parte dessa diferença é o processador imitado deste computador, aula 2, e com KVM a máquina virtual seria
 bem mais rápida. Mas não 0,401 segundos: uma máquina virtual liga um computador, firmware, kernel,
-serviços e tudo, e um contêiner liga um processo. É por isso que contêineres são como serviços são
-entregues quando muitas cópias precisam ir e vir de minuto em minuto.
+serviços e tudo, e um contêiner liga um processo. É por isso que os serviços vão em contêineres
+quando muitas cópias precisam ir e vir de minuto em minuto.
