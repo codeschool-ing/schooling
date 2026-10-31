@@ -44,6 +44,6 @@ estrago é limitado pelo alcance do modelo, e não pelo julgamento dele:
 - um modelo que só responde pode, no pior caso, responder mal, e as verificações da aula 9 e os
   filtros da aula 5 ficam entre essa resposta e o cliente;
 - um modelo que chama ferramentas pode, no pior caso, chamá-las mal, e o portão e a confirmação da aula
-  20 ficam entre a proposta e o efeito.
+  10 ficam entre a proposta e o efeito.
 
 O resto desta aula transforma essa pergunta numa lista, e a lista num plano.

@@ -62,5 +62,5 @@ list, the hold on sensitive data, the provider's terms. Writing it before the fe
 afternoon. Reconstructing it after an incident means explaining decisions that nobody wrote down.
 
 What not doing any of this costs is in art. 52: sanctions that go up to 2% of the company's revenue
-in Brazil, limited to R$ 50 million per infraction, along with others that can hurt more, such as
+in Brazil, limited to R$ 50 million per infraction. Others can hurt more, such as
 publicising the infraction and suspending the processing.

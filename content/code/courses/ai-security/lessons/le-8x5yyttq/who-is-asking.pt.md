@@ -247,8 +247,8 @@ ap-08  Lima Advocacia         REVIEW  sandbox  use case legal-drafting needs a p
 Cada decisão nomeia todas as regras que a produziram, não só a primeira, para que uma recusa possa ser
 explicada à empresa e um erro possa ser corrigido. O Studio Pixel digitou o CNPJ com o último dígito
 errado; o cadastro tem o certo, e a recusa diz qual verificação falhou. A Disparo Total é recusada duas
-vezes: a Receita a lista como *inapta*, situação que ela atribui, entre outros motivos, a uma empresa
-que deixou de entregar as declarações obrigatórias; e o caso de uso dela é proibido, assunto da próxima
+vezes. A Receita a lista como *inapta*, situação que ela atribui, entre outros motivos, a uma empresa
+que deixou de entregar as declarações obrigatórias. E o caso de uso dela é proibido, assunto da próxima
 seção.
 
 ## Sinais, não provas

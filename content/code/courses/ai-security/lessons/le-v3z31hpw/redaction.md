@@ -4,7 +4,7 @@ version: 2
 ---
 
 **Redaction belongs on the way in, before the record reaches any store.** Redacting a log after it
-has been written leaves a window in which the unredacted copy exists, and in that window it is
+has been written leaves a window in which the unredacted copy exists. In that window it is
 backed up, shipped to a log vendor, indexed for search and read by whoever was debugging. Each of
 those is a copy the later redaction never reaches. In `~/guard`, `tiers.py` makes the redacted tier
 with the same function `guard redact` calls, and in a real application that call happens at the moment
@@ -81,7 +81,7 @@ ana@lab:~/guard$ guard scan logs/raw
 ```
 
 Half the log. These are records of a support assistant that never asked anybody for a document
-number, and the proportion is the course's invention, but the shape is what teams find when they
+number. The proportion is the course's invention, but the shape is what teams find when they
 first look: people paste what they are asked about, and they are asked about their accounts.
 
 ## A shape, and then arithmetic

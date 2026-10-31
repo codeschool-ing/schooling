@@ -40,6 +40,6 @@ Three practical notes:
 
 - **One marker per prompt version**, so that an alert says which version leaked and since when.
 - **Never put a secret in a system prompt** and rely on the canary to protect it. The canary reports a
-  leak; it does not prevent one. Keys and credentials stay with the tools, as lesson 10 said.
+  leak; it does not prevent one. Keys and credentials stay with the tools, as lesson 10 shows.
 - **Write the system prompt as if it will be read.** It probably will be, by somebody. A prompt that
   would embarrass the company if published is a prompt to rewrite, whatever filters stand behind it.

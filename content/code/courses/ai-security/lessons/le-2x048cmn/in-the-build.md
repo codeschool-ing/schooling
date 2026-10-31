@@ -43,8 +43,8 @@ exit status 1
 ```
 
 Two reasons for a red build, and they are different kinds. The overdue key is a promise past its
-date. The candidate is a measurement that could not clear the bar: 40.4% is a tenth of a point over
-the ceiling. **That is not a finding that the candidate is bad.** It says 120 trials cannot show it
+date. The candidate is a measurement that could not clear the bar: 40.4% is four tenths of a point
+over the ceiling. **That is not a finding that the candidate is bad.** It says 120 trials cannot show it
 is good enough. The author's choices are honest ones: run more trials and see whether the interval
 comes down under 40%, or drop the sentence the classifier never needed. Lowering the ceiling to let
 it through is not one of them.
@@ -72,9 +72,9 @@ CI system's secret store rather than in the repository, and given only to jobs t
 somebody with write access has already accepted. A pull request from a fork that could print the key
 in its own build log is the leak lesson 17 was about, with the CI system as the courier.
 
-The rate check also costs money every time it runs. Its 240 calls cost under one real at lesson 18's
-prices; 240 calls on every push of every branch, on a busy repository, is a budget line that grows
-without anybody deciding it should. Running it only when the files it measures
+The rate check also costs money every time it runs. The two rate runs of the last section made 240
+calls, under one real at lesson 18's prices. 240 calls on every push of every branch, on a busy
+repository, is a budget line that grows without anybody deciding it should. Running it only when the files it measures
 change is the cheap answer, and lesson 18's daily ceiling is the backstop.
 
 ## What a red build means

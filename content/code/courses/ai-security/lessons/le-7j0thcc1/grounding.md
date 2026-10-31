@@ -227,7 +227,7 @@ r4  ok    grounded in hc-payouts
 exit 0
 ```
 
-All four passed, and that is worth reading rather than skipping. With three short pages in front of it
+All four passed. With three short pages in front of it
 and the temperature at 0, the model kept to the pages, and it said it did not know about instalments
 rather than guess, which is the behaviour `a5` stands for. Your replies may be worded differently.
 

@@ -285,7 +285,7 @@ exit 1
 
 **Uma lista de campos aceitos.** O `in-3` traz um campo `priority` que o formulário nunca ofereceu. Um
 montador de requisição que copia para o prompt todo campo que recebe transforma qualquer campo extra
-numa instrução que o desenvolvedor nunca escreveu; aceitar só os campos nomeados fecha esse caminho
+numa instrução que o desenvolvedor nunca escreveu. Aceitar só os campos nomeados fecha esse caminho
 sem custo. É o mesmo movimento da lista de finalidade da aula 12, aplicado na outra direção.
 
 **Listas fechadas onde a resposta é fechada.** `category` aceita um de cinco valores. *Photography*

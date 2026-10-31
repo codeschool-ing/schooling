@@ -31,7 +31,7 @@ como uma forma de ajudar a detectar abuso. A da Anthropic pede um identificador 
 nem telefone; a da OpenAI sugere fazer o hash do nome de usuário ou do e-mail. A próxima seção mostra
 por que um hash simples de e-mail protege menos do que parece.
 
-Nomes de campo mudam entre versões de API, então o hábito a guardar independe deles: **toda chamada
+Nomes de campo mudam entre versões de API, então o hábito a guardar independe deles. **Toda chamada
 ao modelo leva a identidade da pessoa a quem ela serve, num campo feito para isso, e numa forma que não
 identifica ninguém para o fornecedor.** Eis o formato de uma requisição com ele, escrito como o corpo
 JSON que uma aplicação enviaria; esta aula não envia nada a lugar nenhum:
@@ -46,7 +46,7 @@ JSON que uma aplicação enviaria; esta aula não envia nada a lugar nenhum:
 ```
 
 `eu-fe47aa8e7cd5e1b6f8bc` é o identificador que o `guard enduser`, na próxima seção, produz para a
-conta `ac-7Q2M`, o cliente cujo e-mail você viu na aula 11. A próxima seção é como ele é feito.
+conta `ac-7Q2M`, o cliente cujo e-mail aparece nos logs da aula 11. A próxima seção é como ele é feito.
 
 ## O que o fornecedor faz com ele
 
@@ -54,5 +54,5 @@ Um identificador permite ao fornecedor dizer à Tarefa *qual* usuário disparou 
 para que a Tarefa trate de uma conta em vez de ter a chave restrita. O que cada fornecedor faz de fato
 com o campo, quanto tempo o guarda e se age sobre ele automaticamente está nos termos e na
 documentação, e varia entre fornecedores. Leia-os para o fornecedor que você usa, do mesmo jeito que a
-aula 12 leu o contrato. O campo custa poucos bytes por requisição, e o dia em que ele importa é o dia
+aula 12 lê o contrato. O campo custa poucos bytes por requisição, e o dia em que ele importa é o dia
 em que um relatório de abuso cita a sua chave.

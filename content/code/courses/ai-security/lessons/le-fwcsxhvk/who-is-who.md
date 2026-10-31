@@ -4,7 +4,7 @@ version: 2
 ---
 
 The intuition most developers bring is that a model provider is infrastructure, like a database or
-a queue: a place data passes through on its way to an answer, and so nothing the privacy law has
+a queue. On that view it is a place data passes through on its way to an answer, and so nothing the privacy law has
 much to say about. **The LGPD reads it the other way.** Sending a ticket to a provider's API is
 *tratamento*, the law's word for anything done with personal data, and art. 5, X lists
 transferring and communicating data among the operations it covers. It is done by another company,
@@ -131,9 +131,9 @@ processing limited to the minimum that purpose requires. The summary of a late l
 Marcos's birth date. The next section turns that principle into a file.
 
 **Does it leave Brazil?** If the provider runs the model abroad, sending the ticket is an
-international transfer, and art. 33 allows one only in the cases it lists: a country the ANPD
-recognises as giving adequate protection, or guarantees the controller provides, of which the
-common one is a contract with the ANPD's standard clauses, published in Resolution CD/ANPD nº 19
+international transfer, and art. 33 allows one only in the cases it lists. Two of them are a country the ANPD
+recognises as giving adequate protection, and guarantees the controller provides. The common
+guarantee is a contract with the ANPD's standard clauses, published in Resolution CD/ANPD nº 19
 of 2024. Where the model runs is therefore part of choosing a provider, along with its price and
 its quality.
 

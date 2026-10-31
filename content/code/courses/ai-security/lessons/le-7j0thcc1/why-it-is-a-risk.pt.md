@@ -28,7 +28,7 @@ inventou um produto.
 Três propriedades põem o assunto neste curso, e não só numa revisão de qualidade:
 
 - **É explorável.** Quando um modelo inventa sempre o mesmo nome, como um pacote de software, alguém pode
-  registrar esse nome e esperar. A terceira seção desta aula é esse caso.
+  registrar esse nome e esperar. A seção *Nomes que ainda não existem*, nesta mesma aula, é esse caso.
 - **Carrega uma autoridade que não conquistou.** Uma resposta errada de um formulário que diz
   *"respondemos em dois dias"* é visivelmente um palpite. Uma resposta errada na voz confiante do
   assistente é lida como política.

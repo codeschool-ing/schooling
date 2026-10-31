@@ -199,7 +199,7 @@ out-2  REJECT  not JSON: Expecting value at character 0
 ```
 
 O `out-2` é o JSON do `out-1` com uma frase simpática na frente. O conserto tentador é procurar a
-primeira `{` na resposta e interpretar dali, e é um mau conserto: um parser que cava JSON no meio do
+primeira `{` na resposta e interpretar dali, e é um mau conserto. Um parser que cava JSON no meio do
 texto aceita qualquer coisa que contenha um objeto em algum lugar, inclusive uma resposta que diz outra
 coisa inteiramente em volta dele. Recuse e peça de novo. Muitos fornecedores também oferecem um modo de
 saída estruturada que restringe a resposta a JSON válido, ou a um schema dado, enquanto ela é gerada,

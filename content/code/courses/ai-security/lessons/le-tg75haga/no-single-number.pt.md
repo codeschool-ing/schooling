@@ -35,13 +35,13 @@ lista começa a parecer pouco confiável.
 A causa está na coluna `base`, que nenhuma mudança na lista consegue mover: 60% dos candidatos do
 Sudeste são bons, e 50% dos do Nordeste. Alexandra Chouldechova provou em 2017 que, quando as taxas de
 base diferem, **nenhum classificador que comete erros consegue ter precisão, TPR e FPR iguais entre os
-grupos ao mesmo tempo**, e Jon Kleinberg, Sendhil Mullainathan e Manish Raghavan provaram um parente
-próximo disso para scores de risco em 2016. Iguale dois e o terceiro cede. A versão 1 manteve a
+grupos ao mesmo tempo**. Jon Kleinberg, Sendhil Mullainathan e Manish Raghavan provaram um parente
+próximo desse resultado para scores de risco em 2016. Iguale dois e o terceiro cede. A versão 1 manteve a
 precisão igual e pagou em TPR; a versão 2 comprou TPR e pagou em precisão e FPR. Nenhuma das duas é um
 bug da lista. É aritmética.
 
 Essa aritmética supõe que as taxas de base são verdadeiras. Aqui elas vêm do julgamento de um revisor,
-que é a linha de medição da primeira seção: se os revisores avaliam com mais dureza o trabalho vindo
+que é a linha de medição das quatro fontes do começo desta aula: se os revisores avaliam com mais dureza o trabalho vindo
 do Nordeste, o 0.50 já é parte do viés, e igualar contra ele o cristaliza.
 
 ## Escolher é o trabalho
@@ -56,7 +56,7 @@ aceita menos que caia de forma desigual**. Nomeie os dois erros pelo lado de que
 Para um recurso que decide quem consegue trabalho, muitas equipes decidem que o erro do freelancer é
 o mais grave e mantêm a diferença de TPR perto de zero, aceitando uma diferença de precisão e avisando
 os clientes. Outra equipe pode decidir diferente. O que torna qualquer das duas defensável é a escolha
-estar **registrada com os números dela**, no mesmo documento que a aula 12 chamou de RIPD: a métrica
+estar **registrada com os números dela**, no mesmo documento que a aula 12 chama de RIPD: a métrica
 escolhida, o motivo, as diferenças medidas, a data, e quando serão medidas de novo. É isso também que
 um pedido de revisão pelo art. 20 da LGPD vai querer ver.
 
