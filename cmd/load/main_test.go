@@ -438,3 +438,77 @@ func TestAQuestionInTheMirrorJoinsToItsSection(t *testing.T) {
 			"answer key arrives naming no lesson", lesson, clientAndServer)
 	}
 }
+
+// A REJECTED ROW STILL NAMES ITSELF. Batched, the statement that fails is one
+// of a thousand sent together, and the error that comes back says nothing about
+// which. The sentence it was queued with is what lets a failed deploy say
+// "writing the section se-…" instead of "a constraint failed somewhere".
+func TestARowRejectedInsideABatchIsNamed(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	tx, err := pool.Begin(ctx)
+	if err != nil {
+		t.Fatalf("beginning: %v", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }() // nothing here is meant to be kept
+
+	w := &batched{ctx: ctx, tx: tx}
+	for _, step := range []struct{ what, sql string }{
+		{"writing the lesson le-4xwdejgt", "SELECT 1"},
+		{"writing the section se-4mzk8p2r", "SELECT 1/0"},
+		{"writing the section se-7rq2m9kd", "SELECT 1"},
+	} {
+		if err := w.exec(step.what, step.sql); err != nil {
+			t.Fatalf("queueing %q failed before anything was sent: %v", step.what, err)
+		}
+	}
+
+	err = w.flush()
+	if err == nil {
+		t.Fatal("a batch with a statement that divides by zero was sent without an error")
+	}
+	if !strings.Contains(err.Error(), "writing the section se-4mzk8p2r") {
+		t.Errorf("the error does not name the row that failed: %v", err)
+	}
+	if strings.Contains(err.Error(), "se-7rq2m9kd") {
+		t.Errorf("the error names a row after the one that failed: %v", err)
+	}
+}
+
+// A FULL QUEUE IS SENT AND STARTED AGAIN, and nothing is lost or sent twice at
+// the seam. The catalogue is two hundred batches; a refill that kept the old
+// statements, or dropped the one that filled the queue, would pass a fixture
+// small enough to fit in one batch and corrupt the real one.
+func TestEveryRowCrossesTheBatchBoundaryOnce(t *testing.T) {
+	pool := testPool(t)
+	ctx := context.Background()
+	tx, err := pool.Begin(ctx)
+	if err != nil {
+		t.Fatalf("beginning: %v", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }() // a temporary table, gone with the transaction
+
+	if _, err := tx.Exec(ctx, `CREATE TEMPORARY TABLE rows_sent (n int PRIMARY KEY)`); err != nil {
+		t.Fatalf("creating the table: %v", err)
+	}
+
+	const rows = 2*batchSize + 7
+	w := &batched{ctx: ctx, tx: tx}
+	for n := 0; n < rows; n++ {
+		if err := w.exec("row", `INSERT INTO rows_sent (n) VALUES ($1)`, n); err != nil {
+			t.Fatalf("row %d: %v", n, err)
+		}
+	}
+	if err := w.flush(); err != nil {
+		t.Fatalf("the last flush: %v", err)
+	}
+
+	var got, distinct int
+	if err := tx.QueryRow(ctx,
+		`SELECT count(*), count(DISTINCT n) FROM rows_sent`).Scan(&got, &distinct); err != nil {
+		t.Fatalf("counting: %v", err)
+	}
+	if got != rows || distinct != rows {
+		t.Errorf("%d rows arrived (%d distinct), want %d", got, distinct, rows)
+	}
+}
