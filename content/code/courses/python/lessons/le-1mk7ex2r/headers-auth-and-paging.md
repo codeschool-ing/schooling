@@ -26,8 +26,8 @@ history, and a token in one is a token in all of them.
 os.environ["API_TOKEN"]       # from the environment
 ```
 
-Not in the file either. That is lesson 18's `.env` and lesson 17's `.gitignore`, and the failure
-mode is a repository somebody makes public two years later.
+Not in the file either. A file that holds a secret goes in `.gitignore`, as lesson 18's `.venv/`
+did, and the failure mode is a repository somebody makes public two years later.
 
 ## The rate limit is a header
 

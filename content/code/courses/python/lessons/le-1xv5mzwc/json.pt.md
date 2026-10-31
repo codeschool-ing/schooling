@@ -37,7 +37,7 @@ json.dump(data, f, indent=2, ensure_ascii=False, sort_keys=True)
 ```
 
 `indent=2` deixa legível e deixa um diff útil. `ensure_ascii=False` mantém `ção` como `ção` em vez
-de `ção`. `sort_keys=True` faz duas gravações do mesmo dado serem idênticas, que é o que
+de `\u00e7\u00e3o`. `sort_keys=True` faz duas gravações do mesmo dado serem idênticas, que é o que
 impede um arquivo de parecer alterado quando não está.
 
 ## Ler
@@ -47,8 +47,8 @@ with open(path, encoding="utf-8") as f:
     data = json.load(f)
 ```
 
-O `json.load` recebe o ARQUIVO, e não o texto — passar `f.read()` para ele funciona e lê o arquivo
-com o dobro do trabalho necessário.
+O `json.load` recebe o ARQUIVO, e não o texto. Passe `f.read()` para ele e ele falha, porque uma
+string não tem `read`; texto é para o `json.loads`.
 
 ## O que ele não vai fazer
 

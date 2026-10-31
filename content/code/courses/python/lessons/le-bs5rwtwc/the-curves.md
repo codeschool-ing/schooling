@@ -50,8 +50,8 @@ sorted, n =  10,000    1.277 ms      ← 10× the data, 14× the time
 sorted, n = 100,000   18.112 ms      ← 10× the data, 14× the time
 ```
 
-Measured. Ten times the data costs about fourteen times the work, every time — which is exactly
-what `n log n` predicts and what a linear cost would not.
+Measured. Ten times the data costs about fourteen times the work, every time. That is near the
+twelve or thirteen `n log n` predicts for these sizes, and far from the ten a linear cost would give.
 
 **Sorting is cheap enough to reach for.** If sorting the data first turns an `O(n²)` search into
 an `O(n)` pass, sorting was free by comparison.

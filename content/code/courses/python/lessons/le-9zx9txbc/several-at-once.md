@@ -47,7 +47,7 @@ with ExitStack() as stack:
     merge(files)
 ```
 
-Every file is closed on the way out, in reverse order, however the block ends. This is the answer
+**Every file is closed on the way out**, in reverse order, however the block ends. This is the answer
 when the count comes from the data rather than from the code — and writing it with a `try`/
 `finally` and a list is the version that leaks the ones opened before the failure.
 

@@ -58,4 +58,4 @@ exactly what you want and is otherwise a surprise.
 
 `re.search(pattern, s)` compiles the pattern and caches it, so calling it in a loop is not the
 disaster it looks like. `re.compile` is still clearer for a pattern used more than once, and it
-is the next section.
+is two sections on.

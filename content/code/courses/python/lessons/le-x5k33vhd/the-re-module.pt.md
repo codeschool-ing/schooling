@@ -56,5 +56,5 @@ o que você quer e no resto das vezes é uma surpresa.
 ## As funções de módulo têm cache
 
 `re.search(pattern, s)` compila o padrão e o guarda, então chamá-lo num laço não é o desastre que
-parece. O `re.compile` continua mais claro para um padrão usado mais de uma vez, e é a próxima
-seção.
+parece. O `re.compile` continua mais claro para um padrão usado mais de uma vez, e fica duas
+seções adiante.

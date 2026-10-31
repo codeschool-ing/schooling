@@ -7,7 +7,7 @@ version: 2
 discounted = [price * 0.9 for price in prices if price > 100]
 ```
 
-Seis linhas de laço numa, e a primeira coisa que ela diz é **o que está sendo construído**.
+Quatro linhas de laço numa, e a primeira coisa que ela diz é **o que está sendo construído**.
 
 ## Lendo
 

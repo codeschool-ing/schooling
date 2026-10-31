@@ -49,7 +49,7 @@ $ poetry env info -p
 /root/.cache/pypoetry/virtualenvs/rates-mFpQSSuL-py3.11
 ```
 
-Poetry keeps its environments in a central cache, named after the project path and a hash of it.
+Poetry keeps its environments in a central cache, named after the project with a hash of its path.
 `uv` puts `.venv` beside your code.
 
 Neither is wrong and the consequences differ: an editor finds `.venv` without being told, and a

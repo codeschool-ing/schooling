@@ -49,12 +49,12 @@ ignore_missing_imports = true
 ```
 
 Scoped to the library that is the problem. `ignore_missing_imports = true` at the top level
-silences the message for everything, including the import you misspelled — which is the next
-section's subject.
+silences the message for everything, including the import you misspelled — which is the subject
+two sections on.
 
 ## What not to put in it
 
-`exclude` looks like the tool for a directory you are not ready for, and it is the wrong one: an
+`exclude` looks like the tool for a directory you are not ready for, and it is the wrong one. An
 excluded module is still IMPORTED by the modules you do check, so its errors come back through
 the front door and you have made the report confusing rather than smaller. An override with
 loosened flags keeps it checked at a level it can pass.

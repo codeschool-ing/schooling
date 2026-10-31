@@ -38,7 +38,7 @@ while True:
 ```
 
 **Every surprise in this lesson follows from that.** The loop asks once for an iterator and then
-pulls values until the exception — so a second loop over the same ITERATOR gets nothing, and a
+pulls values until the exception. So a second loop over the same ITERATOR gets nothing, and a
 second loop over the same LIST gets a fresh iterator and works.
 
 ## `StopIteration` is a signal, not an error

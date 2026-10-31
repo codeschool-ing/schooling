@@ -20,7 +20,7 @@ crua também, pela mesma razão que o padrão é.
 re.sub(r"(?P<user>\w+)@example\.tld", r"\g<user>@example.com", text)
 ```
 
-**`\g<1>` é a forma a usar quando um dígito vem em seguida**: `\1 0` e `\g<1>0` diferem, e o
+**`\g<1>` é a forma a usar quando um dígito vem em seguida**: `\10` e `\g<1>0` diferem, e o
 primeiro é um grupo chamado 10.
 
 ## Uma função como substituição

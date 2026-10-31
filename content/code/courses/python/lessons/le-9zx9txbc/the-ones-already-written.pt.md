@@ -48,7 +48,7 @@ with suppress(FileNotFoundError):
     path.unlink()
 ```
 
-`try`/`except`/`pass`, com a classe nomeada onde quem lê vê. Duas linhas viram uma, e o nome é o
+`try`/`except`/`pass`, com a classe nomeada onde quem lê vê. Três linhas viram uma, e o nome é o
 ponto — um `except: pass` pelado não diz nada sobre o que era esperado.
 
 ## `redirect_stdout`
@@ -59,8 +59,8 @@ with redirect_stdout(buffer):
     noisy_library_call()
 ```
 
-Para a biblioteca que imprime e não tem opção de não imprimir. A aula 16 o usa para testar algo
-que foi escrito para imprimir.
+Para a biblioteca que imprime e não tem opção de não imprimir. Dentro de um teste, a aula 16 faz o
+mesmo trabalho com o `capsys` do pytest.
 
 ## E a forma que eles compartilham
 

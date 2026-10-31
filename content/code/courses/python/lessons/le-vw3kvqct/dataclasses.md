@@ -58,7 +58,7 @@ declaration.
 ## The annotations are not checked
 
 `name: str` is documentation at runtime — nothing stops `Student(3, 4)`. A type checker reads it
-and complains, which is lesson 17. The dataclass only uses the annotation to know that the field
+and complains, which is lesson 15. The dataclass only uses the annotation to know that the field
 EXISTS.
 
 ## When not to

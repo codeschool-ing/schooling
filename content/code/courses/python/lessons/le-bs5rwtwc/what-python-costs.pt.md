@@ -52,7 +52,7 @@ data.insert(0, x)     # everything after it shifts up one slot
 
 Uma lista é contígua, então pôr algo na frente move todo outro elemento. Em cem mil itens isso dá
 32 microssegundos contra os 19 nanossegundos do `append` — **cerca de mil e setecentas vezes** — e
-a próxima seção é o que usar no lugar.
+a seção 08 desta aula é o que usar no lugar.
 
 ## Strings, e uma regra que é meio lenda
 

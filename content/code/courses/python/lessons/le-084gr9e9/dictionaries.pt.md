@@ -24,16 +24,32 @@ None
 ```
 
 **O `[]` levanta erro e o `get` não.** Use `[]` quando uma chave ausente é um defeito sobre o qual
-você quer ser avisado, e `get` quando é um caso que você está tratando — que, para qualquer coisa
-vinda de um arquivo JSON, é a maior parte das vezes.
+você quer ser avisado, e `get` quando é um caso que você está tratando. Para qualquer coisa vinda
+de um arquivo JSON, é a maior parte das vezes.
 
 ## Escrevendo
 
-```python
-person["email"] = "ada@example.com"   # add or replace
-person.setdefault("city", "Paris")    # only if absent
-del person["email"]
-value = person.pop("city", None)      # remove and return, with a fallback
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "person[\"email\"] = \"ada@example.com\"",
+      "note": "Atribuir a uma chave a acrescenta, ou substitui o valor dela se ela já existe."
+    },
+    {
+      "code": "person.setdefault(\"city\", \"Paris\")",
+      "note": "O `setdefault` grava o valor só se a chave estiver ausente."
+    },
+    {
+      "code": "del person[\"email\"]"
+    },
+    {
+      "code": "value = person.pop(\"city\", None)",
+      "note": "O `pop` remove a chave e devolve o valor dela, com um substituto para quando ela não existe."
+    }
+  ]
+}
 ```
 
 O `update` funde outro dicionário, e `a | b` faz o mesmo como um dicionário novo.

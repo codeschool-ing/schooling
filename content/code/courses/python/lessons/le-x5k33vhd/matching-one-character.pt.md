@@ -35,11 +35,28 @@ esperava ASCII. O `re.ASCII` o estreita.
 
 ## Escapar, dentro e fora
 
-```python
-r"\."          # a literal dot
-r"[.]"         # also a literal dot — inside a class, most things are literal
-r"[\d.]"       # a digit or a dot
-r"[a\-z]"      # a, a hyphen, or z — the escape makes the hyphen literal
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "r\"\\.\"",
+      "note": "Um ponto literal."
+    },
+    {
+      "code": "r\"[.]\"",
+      "note": "Também um ponto literal: dentro de uma classe, quase tudo é literal."
+    },
+    {
+      "code": "r\"[\\d.]\"",
+      "note": "Um dígito ou um ponto."
+    },
+    {
+      "code": "r\"[a\\-z]\"",
+      "note": "`a`, um hífen ou `z`. O escape torna o hífen literal."
+    }
+  ]
+}
 ```
 
 **Dentro de uma classe quase nada é especial**, e é por isso que `[.]` não precisa de barra. As

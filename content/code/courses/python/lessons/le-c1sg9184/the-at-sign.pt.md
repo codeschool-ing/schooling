@@ -26,11 +26,20 @@ informação no topo, onde quem lê a vê antes do corpo.
 
 ## As duas formas, lado a lado
 
-```python
-@timed                          # the name `load_rows` now refers to
-def load_rows(path): ...        # whatever `timed` returned
-
-load_rows = timed(load_rows)    # the same rebinding, said out loud
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "@timed\ndef load_rows(path): ...\n",
+      "note": "O nome `load_rows` passa a se referir ao que `timed` devolveu."
+    },
+    {
+      "code": "load_rows = timed(load_rows)",
+      "note": "A mesma religação, dita em voz alta."
+    }
+  ]
+}
 ```
 
 O nome é religado. A função original continua existindo — o wrapper a está segurando — mas nada

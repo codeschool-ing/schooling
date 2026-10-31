@@ -60,6 +60,6 @@ applies it for you**, and the tool is the answer. What is worth carrying until t
 
 - `snake_case` for names of variables and functions
 - `UPPER_CASE` for constants
-- a blank line between functions, two between top-level definitions
+- one blank line between methods, two between top-level definitions
 - and a name that says what the thing is, because `data`, `temp` and `x` are three ways of not
   having decided

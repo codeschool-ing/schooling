@@ -20,7 +20,7 @@ too, for the same reason the pattern is.
 re.sub(r"(?P<user>\w+)@example\.tld", r"\g<user>@example.com", text)
 ```
 
-**`\g<1>` is the form to use when a digit follows**: `\1 0` and `\g<1>0` differ, and the first one
+**`\g<1>` is the form to use when a digit follows**: `\10` and `\g<1>0` differ, and the first one
 is a group called 10.
 
 ## A function as the replacement

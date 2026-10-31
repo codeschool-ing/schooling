@@ -64,5 +64,5 @@ fronteira, e nomeie a linha quando falhar.
 ## A regra
 
 **Leia como se eles tivessem feito o que a documentação diz, e trate como se não tivessem.** O erro
-que você levanta deveria nomear o arquivo, a linha e o campo — porque quando isto disparar você vai
+que você levanta deveria nomear o arquivo, a linha e o campo. Quando isto disparar, você vai
 estar olhando a exportação de outra pessoa, e mais nada no programa sabe de onde ela veio.

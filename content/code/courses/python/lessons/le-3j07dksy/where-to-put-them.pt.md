@@ -14,12 +14,20 @@ version: 2
 
 ## As que não precisam de nada
 
-```python
-def _slug(title: str) -> str:
-    return title.lower().replace(" ", "-")      # annotated anyway: it is a boundary of one line
-
-def _key(row):
-    return row["city"]                          # a `sorted` key, three lines from its use
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "def _slug(title: str) -> str:\n    return title.lower().replace(\" \", \"-\")\n",
+      "note": "Anotado mesmo assim: é uma fronteira de uma linha."
+    },
+    {
+      "code": "def _key(row):\n    return row[\"city\"]",
+      "note": "Uma chave de `sorted`, a três linhas de onde é usada."
+    }
+  ]
+}
 ```
 
 Um ajudante privado de duas linhas usado uma vez, ao lado de quem o chama, se entende lendo. Um

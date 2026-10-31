@@ -66,7 +66,7 @@ primeira intacta dentro de cada grupo.
 ## O que custa
 
 `O(n log n)`, medido na seção das curvas: dez vezes os dados, cerca de catorze vezes o trabalho. A
-ordenação do Python é o Timsort, que é muito mais rápido em dados já parcialmente ordenados — em
+ordenação do Python é o Timsort, que é muito mais rápido em dados já parcialmente ordenados. Em
 um milhão de floats, ordenar uma lista aleatória leva 344 ms e ordenar uma já ordenada leva 85,
 porque ele acha os trechos que já estão em ordem e os mescla.
 
@@ -85,4 +85,4 @@ at n = 1,000,000 floats
 ```
 
 Ordenar tudo para pegar o maior é `O(n log n)` onde o `max` é uma passagem só. Para os poucos do
-topo, o `heapq.nlargest` é vinte e três vezes uma ordenação completa em um milhão de itens.
+topo, o `heapq.nlargest` é vinte e três vezes mais rápido que uma ordenação completa em um milhão de itens.

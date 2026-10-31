@@ -31,8 +31,7 @@ greet(3)          # runs; the annotation is not consulted
 **O Python guarda as anotações e não age sobre elas.** `greet(3)` produz `hello, 3 ` — a f-string
 formatou um inteiro sem reclamar. A falha, quando existe, acontece depois e em outro lugar.
 
-Essa é a frase mais importante desta aula. Uma anotação de tipo é um recado para quem lê, para o
-editor e para o verificador, e é a aula 15 que a lê.
+Uma anotação de tipo é um recado para quem lê, para o editor e para o verificador, e é a aula 15 que a lê.
 
 ## Onde as anotações ficam
 

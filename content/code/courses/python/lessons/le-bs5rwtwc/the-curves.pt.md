@@ -51,8 +51,8 @@ sorted, n =  10,000    1.277 ms      ← 10× the data, 14× the time
 sorted, n = 100,000   18.112 ms      ← 10× the data, 14× the time
 ```
 
-Medido. Dez vezes os dados custam cerca de catorze vezes o trabalho, toda vez — que é exatamente o
-que `n log n` prevê e o que um custo linear não faria.
+Medido. Dez vezes os dados custam cerca de catorze vezes o trabalho, toda vez. Isso fica perto dos
+doze ou treze que `n log n` prevê para esses tamanhos, e longe dos dez que um custo linear daria.
 
 **Ordenar é barato o bastante para recorrer a ele.** Se ordenar os dados antes transforma uma
 busca `O(n²)` numa passagem `O(n)`, ordenar saiu de graça por comparação.

@@ -35,7 +35,7 @@ lado da preparação, dentro da coisa que está sendo usada, em vez de no fim de
 - ele dá `break` ou `continue` num laço
 - ele levanta erro
 
-**Nos cinco o desfazer roda.** A exceção então segue para cima, sem mudança — o gerenciador
+**Em todos eles o desfazer roda.** A exceção então segue para cima, sem mudança — o gerenciador
 arrumou e não interferiu.
 
 ## O que isso compra, numa frase

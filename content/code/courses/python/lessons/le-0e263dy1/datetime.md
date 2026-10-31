@@ -19,8 +19,8 @@ the arithmetic work: a date plus a duration is a date, and a date minus a date i
 ```
 
 **That is the whole reason not to do this by hand.** Thirty days from the 15th of February is a
-question with a right answer that depends on the year, and nobody gets the leap rule wrong twice
-— they get it wrong once, in production, in February.
+question with a right answer that depends on the year. Nobody gets the leap rule wrong twice —
+they get it wrong once, in production, in February.
 
 ## Parsing and formatting
 
@@ -45,8 +45,8 @@ datetime.now(timezone.utc)        # aware
 ```
 
 A `datetime` with no time zone is called NAIVE, and it is the default. It means "this time,
-somewhere" — and comparing a naive one with an aware one raises, which is Python refusing to
-guess.
+somewhere" — and asking whether a naive one comes before an aware one raises, which is Python
+refusing to guess.
 
 **The rule that survives contact with reality: store and compute in UTC, convert at the edge.**
 A timestamp in the database is UTC; the screen shows the reader's own time. Anything else is a
