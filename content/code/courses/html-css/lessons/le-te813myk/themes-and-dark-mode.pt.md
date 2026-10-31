@@ -63,7 +63,7 @@ a  color: rgb(143, 209, 173)
 axe: no violations
 ```
 
-No esquema claro a página é `rgb(251, 248, 242)`, com texto quase preto e o link verde. No escuro é `rgb(22, 26, 23)`, com texto claro e um link verde **mais claro**, `rgb(143, 209, 173)`, e o axe aprovou os dois. Essa última parte é o trabalho de um tema escuro. O verde que se lê bem sobre o creme, `#2f6f4e`, é escuro demais para ler sobre quase preto, então o tema escuro não é o claro invertido: cada cor é escolhida de novo para o próprio fundo, e conferida. A interface deste repositório faz exatamente isso com a paleta nos dois temas, e roda o axe em toda tela nos dois.
+No esquema claro a página é `rgb(251, 248, 242)`, com texto quase preto e o link verde. No escuro é `rgb(22, 26, 23)`, com texto claro e um link verde **mais claro**, `rgb(143, 209, 173)`, e o axe aprovou os dois. Essa última parte é o trabalho de um tema escuro. O verde que se lê bem sobre o creme, `#2f6f4e`, é escuro demais para ler sobre quase preto, então o tema escuro não é o claro invertido: cada cor é escolhida de novo para o próprio fundo, e conferida. A interface em que você está lendo esta aula faz exatamente isso com a paleta nos dois temas, e roda o axe em toda tela nos dois.
 
 ## Dois detalhes fáceis de perder
 

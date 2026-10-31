@@ -31,6 +31,6 @@ The reason is when the check happens. When the stylesheet is read, `color: var(-
 
 ## What follows from it
 
-**A fallback inside the `var()` is the fallback that works**: `color: var(--gap, #8a1c1c)` would have been red, because the fallback is used when the variable is missing. It is not used when the variable has the wrong type, however; then the result is still the inherited green. **The real fix is to use variables for one kind of value each**, and to name them so that their kind is obvious: `--color-accent`, `--space-2`, never a name that could hold either.
+**A fallback inside the `var()` does not rescue it.** `color: var(--gap, #8a1c1c)` would still be green: the fallback is used when the variable is missing, and `--gap` is not missing, only the wrong type. The fix is to use variables for one kind of value each, and to name them so that their kind is obvious: `--color-accent`, `--space-2`, never a name that could hold either.
 
 There is a way to tell the browser the type, `@property`, which registers a custom property with a syntax such as `<color>` and an initial value. A registered property with a wrong value then falls back to that initial value instead of `unset`. It is also what lets a custom property be animated, which lesson 12 does not need. For a stylesheet of tokens, careful names do most of the work.

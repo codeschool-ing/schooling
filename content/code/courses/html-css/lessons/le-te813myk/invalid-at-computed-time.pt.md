@@ -31,6 +31,6 @@ O motivo é o momento da conferência. Quando a folha de estilos é lida, `color
 
 ## O que decorre disso
 
-**Um valor reserva dentro do `var()` é o que funciona**: `color: var(--gap, #8a1c1c)` teria saído vermelho, porque o valor reserva é usado quando a variável falta. Mas ele não é usado quando a variável tem o tipo errado; aí o resultado continua sendo o verde herdado. **A correção de verdade é usar cada variável para um só tipo de valor**, e dar nomes que deixem o tipo óbvio: `--color-accent`, `--space-2`, nunca um nome que possa guardar qualquer um dos dois.
+**Um valor reserva dentro do `var()` não resolve.** `color: var(--gap, #8a1c1c)` continuaria verde: o valor reserva é usado quando a variável falta, e `--gap` não falta, só tem o tipo errado. A correção é usar cada variável para um só tipo de valor, e dar nomes que deixem o tipo óbvio: `--color-accent`, `--space-2`, nunca um nome que possa guardar qualquer um dos dois.
 
 Há um jeito de dizer o tipo ao navegador, `@property`, que registra uma propriedade personalizada com uma sintaxe como `<color>` e um valor inicial. Uma propriedade registrada com um valor errado passa a cair nesse valor inicial em vez de `unset`. É também o que permite animar uma propriedade personalizada, coisa de que a aula 12 não precisa. Para uma folha de tokens, nomes cuidadosos fazem a maior parte do trabalho.

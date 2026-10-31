@@ -27,7 +27,7 @@ Os dois estão certos. Na árvore de acessibilidade eles não deixam rastro, e �
 
 Antes de escrever uma `<div>`, faça a pergunta da aula 1: **o que é isto?** Se a resposta é um título, uma lista, um bloco de navegação, um item que se sustenta sozinho, um botão, use esse elemento. Se a resposta honesta é "uma caixa para o layout", use uma `<div>` e pare de se preocupar.
 
-A falha de que esta aula trata não é usar `<div>`. É usar `<div>` **onde o conteúdo tinha um significado**, como a página sopa fez com o título, o menu e os eventos, de modo que o significado acabou num nome de classe, onde só o CSS e quem lê o arquivo conseguem encontrá-lo.
+A falha de que esta aula trata não é usar `<div>`. É usar `<div>` **onde o conteúdo tinha um significado**, como a página sopa fez com o título, o menu e os eventos. O significado acabou então num nome de classe, onde só o CSS e quem lê o arquivo conseguem encontrá-lo.
 
 ## Uma nota sobre ARIA
 

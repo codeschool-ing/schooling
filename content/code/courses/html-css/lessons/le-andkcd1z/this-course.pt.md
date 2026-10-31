@@ -9,7 +9,7 @@ O curso pressupõe `web-fundamentals` e se apoia em duas aulas dele em particula
 
 ## O site que você vai construir
 
-Todo exemplo do curso pertence a um mesmo site pequeno: a **Andorinha Books**, um sebo em Pinheiros, São Paulo. Ela é inventada. Um sebo foi a escolha porque precisa de um pouco de tudo: uma página inicial, uma lista de eventos, um formulário para encomendar um livro, uma tabela de horários, fotos das estantes e um layout que funcione no celular de quem está parado na frente da loja. Cada aula acrescenta a parte que ensina.
+Todo exemplo do curso pertence a um mesmo site pequeno: a **Andorinha Books**, um sebo em Pinheiros, São Paulo. Ela é inventada. Um sebo foi a escolha porque precisa de um pouco de tudo. Ele tem uma página inicial, uma lista de eventos, um formulário para encomendar um livro, uma tabela de horários, fotos das estantes e um layout que funcione no celular de quem está parado na frente da loja. Cada aula acrescenta a parte que ensina.
 
 As páginas são arquivos que você escreve, numa pasta do seu próprio computador, e a próxima seção monta essa pasta. Cada aula mostra inteira cada página que usa, na seção que a usa. Você abre uma página com um clique duplo: o navegador lê um arquivo HTML do seu disco exatamente como lê um vindo de um servidor, e isso é tudo de que este curso precisa.
 

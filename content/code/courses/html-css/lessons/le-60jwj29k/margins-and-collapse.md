@@ -3,7 +3,7 @@ title: Margins, and when two become one
 version: 1
 ---
 
-Margins have one behaviour that padding and border do not, and it surprises everybody once: **vertical margins that touch collapse into one**, as big as the larger of them. Here are four event cards, each with 24 pixels of margin above and below, each holding a heading with 16 pixels of margin above and below:
+Margins have one behaviour that padding and border do not, and it surprises everybody once: **vertical margins that touch collapse into one**, as big as the larger of them. Here are four event cards, each holding a heading with 16 pixels of margin above and below. The first three also have 24 pixels of margin above and below themselves; the fourth replaces it with `margin: 0 auto`, which the last part of this section explains:
 
 ```html
 <!doctype html>

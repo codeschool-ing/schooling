@@ -23,7 +23,7 @@ css/utilities.css
 5. **`components/`**: one file per component, each styling only its own class names: the event card, the menu, the order form.
 6. **`utilities.css`**: small single-purpose classes that must win wherever they are put, such as the `visually-hidden` class from lesson 7.
 
-The order is also the order of **increasing specificity and increasing reach**: element selectors, then a few layout classes, then component classes, then utilities that override. Written in that order, the cascade mostly works without anybody fighting it, and section 10 makes that order a rule the browser enforces.
+The order is also the order of **increasing specificity and increasing reach**: element selectors, then a few layout classes, then component classes, then utilities that override. Written in that order, the cascade mostly works without anybody fighting it, and section 11 makes that order a rule the browser enforces.
 
 Every one of them is short. Here they are, to save under those names:
 

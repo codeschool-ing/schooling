@@ -5,15 +5,13 @@ version: 2
 
 Classes are where most of a stylesheet's selectors live, and a class name is read far more often than it is written. Without a convention, the same site ends up with `.card`, `.event-box`, `.eventCard` and `.tile` for four versions of one thing, and a selector like `.card .title` that also catches the title of a card inside another card. A naming convention prevents both. The one most teams know is **BEM**, for *block, element, modifier*, and section 09's `css/components/event-card.css` is written in it:
 
-```css
-.event-card { padding: calc(var(--space) * 2); border-left: 4px solid var(--color-accent); }
-.event-card__title { margin: 0; font-size: 1.1rem; }
-.event-card--cancelled { --color-accent: #8a1c1c; }
+```schooling-example
+{"language": "css", "file": "event-card.css", "parts": [
+ {"code": ".event-card { padding: calc(var(--space) * 2); border-left: 4px solid var(--color-accent); }", "note": "The block is the component: `.event-card`. One name, one component, one file."},
+ {"code": ".event-card__title { margin: 0; font-size: 1.1rem; }", "note": "An element is a part that only exists inside the block, written with two underscores. It is a class of its own, so the rule is `.event-card__title`, not `.event-card .title`. That is one class, specificity (0,1,0), and it cannot catch the title of anything else."},
+ {"code": ".event-card--cancelled { --color-accent: #8a1c1c; }", "note": "A modifier is a variant, written with two hyphens. It goes on the block beside the block's own class, and here it does the least it can: it redefines `--color-accent`, section 03's pattern, and everything inside the card follows."}
+]}
 ```
-
-- **The block** is the component: `.event-card`. One name, one component, one file.
-- **An element** is a part that only exists inside it, written with two underscores: `.event-card__title`. It is a class of its own, so the rule is `.event-card__title`, not `.event-card .title`. That is one class, specificity (0,1,0), and it cannot catch the title of anything else.
-- **A modifier** is a variant, written with two hyphens: `.event-card--cancelled`. It goes on the block beside the block's own class, and here it does the least it can: it redefines `--color-accent`, section 03's pattern, and everything inside the card follows.
 
 ```
 ana@laptop:~/site$ probe site.html style .event-card border-left-color,padding-top style .event-card__title font-size

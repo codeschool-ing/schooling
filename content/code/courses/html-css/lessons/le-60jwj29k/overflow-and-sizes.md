@@ -57,4 +57,4 @@ The last box says `width: 300px; aspect-ratio: 16 / 9` and no height. It is **16
 
 ## Content-based sizes
 
-Three keywords size a box by its content: **`min-content`**, as narrow as the content can be without spilling, which for text is its longest word; **`max-content`**, as wide as the content wants on one line; and **`fit-content`**, which is `max-content` but never wider than the space available. `width: fit-content` makes a box hug its text, which is how a label or a badge is sized. Grid, lesson 9, uses all three as track sizes.
+Three keywords size a box by its content. **`min-content`** is as narrow as the content can be without spilling, which for text is its longest word; **`max-content`** is as wide as the content wants on one line; and **`fit-content`** is `max-content` but never wider than the space available. `width: fit-content` makes a box hug its text, which is how a label or a badge is sized. Grid, lesson 9, uses all three as track sizes.

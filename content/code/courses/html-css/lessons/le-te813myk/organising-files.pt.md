@@ -23,7 +23,7 @@ css/utilities.css
 5. **`components/`**: um arquivo por componente, cada um estilizando só os próprios nomes de classe: o cartão de evento, o menu, o formulário de pedido.
 6. **`utilities.css`**: classes pequenas, de um propósito só, que precisam vencer onde quer que sejam postas, como a classe `visually-hidden` da aula 7.
 
-A ordem é também a de **especificidade crescente e alcance crescente**: seletores de elemento, depois algumas classes de layout, depois classes de componente, depois utilitários que sobrepõem. Escrita nessa ordem, a cascata quase sempre funciona sem ninguém brigar com ela, e a seção 10 transforma essa ordem numa regra que o navegador impõe.
+A ordem é também a de **especificidade crescente e alcance crescente**: seletores de elemento, depois algumas classes de layout, depois classes de componente, depois utilitários que sobrepõem. Escrita nessa ordem, a cascata quase sempre funciona sem ninguém brigar com ela, e a seção 11 transforma essa ordem numa regra que o navegador impõe.
 
 Todos são curtos. Aqui estão eles, para salvar com esses nomes:
 

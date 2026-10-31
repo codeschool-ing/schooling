@@ -9,7 +9,7 @@ The course assumes `web-fundamentals`, and leans on two of its lessons in partic
 
 ## The site you will build
 
-Every example in the course belongs to one small site: **Andorinha Books**, a second-hand bookshop in Pinheiros, São Paulo. It is invented. A bookshop was chosen because it needs a bit of everything: a home page, a list of events, a form for ordering a book, a table of opening hours, photographs of the shelves, and a layout that has to work on the phone of somebody standing outside the shop. Each lesson adds the part it teaches.
+Every example in the course belongs to one small site: **Andorinha Books**, a second-hand bookshop in Pinheiros, São Paulo. It is invented. A bookshop was chosen because it needs a bit of everything. It has a home page, a list of events, a form for ordering a book, a table of opening hours, photographs of the shelves, and a layout that has to work on the phone of somebody standing outside the shop. Each lesson adds the part it teaches.
 
 The pages are files you write, in one folder on your own computer, and the next section sets that folder up. Each lesson shows every page it uses, whole, in the section that uses it. You open a page by double-clicking it: a browser reads an HTML file from your disk exactly as it reads one from a server, which is all this course needs.
 
