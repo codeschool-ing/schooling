@@ -10,7 +10,7 @@ building it makes it worse**, because a link has two directions and the setting 
 The two ends are not equally loud. An enterprise access point can transmit around 20 to 23 dBm; a phone
 transmits around 12 to 16 dBm, less when it can, to save battery and to stay within the exposure
 limits for a device held against a head. Those are typical figures, not specifications, and they vary
-by model. The program of the last section took an access point at 23 dBm and a phone at 14 dBm,
+by model. The program of the previous section took an access point at 23 dBm and a phone at 14 dBm,
 nine decibels and 7.9 times the power apart, with 98 dB of loss between them, the same in both
 directions. Its last line is the whole problem: the phone hears the access point at −75 dBm, and the
 access point hears the phone at −84.
@@ -27,7 +27,7 @@ Turning the access point **down** to roughly what the clients transmit fixes thr
 The link becomes symmetric, so the bars tell the truth. The cell shrinks, so a phone walking away
 stops clinging to a distant access point and moves to a closer one; lesson 9 is about that decision,
 which belongs to the phone. And fewer access points hear each other on the same channel. That is the co-channel contention of
-this lesson's third section: with three channels on 2.4 GHz, an access point loud enough to reach the
+the section on sharing a channel: with three channels on 2.4 GHz, an access point loud enough to reach the
 next one on its channel shares airtime with it.
 
 **A dense network is many quiet cells, not a few loud ones.** It is the airtime arithmetic of lesson 6

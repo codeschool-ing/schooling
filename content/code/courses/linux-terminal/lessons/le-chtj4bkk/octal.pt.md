@@ -115,11 +115,11 @@ tempo todo em resposta de fórum porque faz o erro imediato desaparecer.
 
 **Ele funciona removendo a checagem em vez de consertar o problema.** O que estava de fato errado —
 o dono errado, um `x` faltando num diretório dois níveis acima, um grupo em que ninguém estava —
-continua errado; só deixou de importar, e todo o resto também.
+continua errado. Só deixou de importar, e todo o resto também.
 
-Duas coisas a fazer em vez disso, nesta ordem: descobrir **qual bit** faltava, com o `namei -l` da
-seção 03; e, se a resposta for mesmo "estas duas contas precisam compartilhar isto", é para isso
-que servem os grupos (seção 08) e as ACLs (seção 13).
+Faça duas coisas em vez disso, nesta ordem. Primeiro descubra **qual bit** faltava, com o `namei -l`
+da seção 03. Depois, se a resposta for mesmo "estas duas contas precisam compartilhar isto", é para
+isso que servem os grupos (seção 08) e as ACLs (seção 13).
 
 Existe um lugar em que `777` está certo, e é o `/tmp` — que é `1777`, e aquele `1` na frente é a
 razão inteira de ele ser seguro. Seção 10.

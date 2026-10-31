@@ -24,7 +24,7 @@ de processo alocado.
 | **D** — sono ininterruptível | esperando um disco, normalmente |
 
 A aula 6 seção 04 nomeou esses dois estados. **O D é a parte que surpreende todo
-mundo**, e é por que a carga média não é uma métrica de processador: uma máquina
+mundo**, e é por que a carga média não é uma métrica de processador. Uma máquina
 com processador ocioso e disco saturado tem carga média alta, e uma máquina
 usando todo núcleo sem nada na fila tem carga média igual à contagem de núcleos.
 

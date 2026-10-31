@@ -71,9 +71,9 @@ System has not been booted with systemd as init system (PID 1). Can't operate.
 Failed to connect to bus: Host is down
 ```
 
-O `hostnamectl` dá um resumo arrumado — distribuição, kernel, arquitetura, nome, hardware — e **faz
-parte do systemd**, então dentro de um contêiner — que é onde estas transcrições foram capturadas
-— ele não consegue responder nada. Na sua máquina virtual ele imprime o resumo. Mesma causa da
+O `hostnamectl` dá um resumo arrumado: distribuição, kernel, arquitetura, nome, hardware. Mas **ele
+faz parte do systemd**, então dentro de um contêiner, que é onde estas transcrições foram
+capturadas, ele não consegue responder nada. Na sua máquina virtual ele imprime o resumo. Mesma causa da
 mensagem do `systemctl` na seção 04 da aula 1, e a mesma leitura: nada está quebrado, nada deu
 boot.
 

@@ -52,7 +52,7 @@ A virtual environment is a directory holding its own copy of Python's package in
 you install there touches nothing else on the machine. Two tools go into this one. **moto**
 imitates the S3 interface for lesson 5, and the packages **cloud-init** needs to check a boot
 configuration in lesson 4. Cloud-init itself is not published on PyPI, so it comes from its own
-source code, at version 26.2, with a three-line script that runs it:
+source code, at version 26.2, with a two-line script that runs it:
 
 ```sh
 python3 -m venv ~/cloud/venv

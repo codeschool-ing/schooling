@@ -26,7 +26,7 @@ more than the 22 each needs, and that is why they are the plan every guide gives
 Channel 13 exists in Brazil and Europe and not in the United States, where the band stops at 11, and
 channel 14 was only ever for 802.11b in Japan. Some networks in Europe use four channels, 1, 5, 9 and
 13, spaced exactly 20 MHz apart. That works only if no 802.11b device is left, and the four sit edge to
-edge with nothing between them; **1, 6 and 11 remain the plan that works everywhere**, and the one a
+edge with nothing between them. **Channels 1, 6 and 11 remain the plan that works everywhere**, and the one a
 visiting laptop from anywhere will find.
 
 The plan decides what every access point in a building does, not only yours. Picking channel 3

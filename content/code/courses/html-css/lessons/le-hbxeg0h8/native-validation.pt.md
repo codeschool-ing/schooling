@@ -90,4 +90,4 @@ name=Ana+Souza&email=ana%40example.com&cep=05422-000&copies=2&title=Vidas+Secas
 
 Uma regra escrita num formulário é uma afirmação sobre o mundo, e uma errada barra quem não fez nada de errado. Um `pattern` para nomes que só aceita letras recusa *D'Ávila* e *Ana-Luísa*; um `maxlength` de 20 numa rua recusa ruas de verdade. Confira nomes e endereços o mínimo possível: `required`, e talvez um comprimento máximo que o banco de dados de fato tenha. Padrões são para coisas com um formato que alguém definiu, como um CEP.
 
-O `pattern` é comparado com o valor **inteiro**, como se estivesse escrito entre `^` e `$`, então `[0-9]{5}-[0-9]{3}` aceita `05422-000` e recusa `05422-0001`. Expressões regulares têm uma aula própria no curso `javascript`; os padrões de um formulário costumam ser curtos o bastante para ler.
+O `pattern` é comparado com o valor **inteiro**, como se estivesse escrito entre `^` e `$`, então `[0-9]{5}-[0-9]{3}` aceita `05422-000` e recusa `05422-0001`. Expressões regulares são um assunto à parte, que nenhuma aula deste curso ensina; os padrões de um formulário costumam ser curtos o bastante para ler.

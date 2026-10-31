@@ -47,7 +47,7 @@ código de leitura.
 
 A quarta linha é a única em que o próprio `fetch` rejeitou. A mensagem do navegador é vaga de
 propósito, `Failed to fetch`, seja a causa uma conexão recusada, falta de rede, ou uma requisição que
-o navegador recusou por segurança; a linha do console acima dela, `ERR_CONNECTION_REFUSED`, é escrita
+o navegador recusou por segurança. A linha do console acima dela, `ERR_CONNECTION_REFUSED`, é escrita
 para quem desenvolve e não fica disponível para o script.
 
 ## O mesmo no Node

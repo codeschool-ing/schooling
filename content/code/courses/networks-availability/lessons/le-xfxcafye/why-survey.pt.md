@@ -45,5 +45,5 @@ que nem é Wi-Fi, os micro-ondas e as babás eletrônicas da aula 7, que um adap
 canal misteriosamente ocupado.
 
 A sequência de costume é todos eles em ordem: **prever, conferir as paredes duvidosas no local,
-instalar, e medir de novo**. O último passo é o mais pulado, e a última seção desta aula diz por que ele
-não deveria ser.
+instalar, e medir de novo**. O último passo é o mais pulado, e a seção sobre o survey depois da instalação, no fim
+desta aula, diz por que ele não deveria ser.

@@ -224,7 +224,7 @@ The distinction earns its keep the day somebody swears they did not touch a file
 contents are from March. `ctime` says something about the file changed today — so its permissions
 or its name did, and that is a different conversation.
 
-**`Birth` is the creation time**, and it is the newest of the four: older filesystems did not
+**`Birth` is the creation time**, and it is the most recent addition of the four: older filesystems did not
 record it at all, and plenty of tools still ignore it. Do not build anything on it without
 checking it is there.
 

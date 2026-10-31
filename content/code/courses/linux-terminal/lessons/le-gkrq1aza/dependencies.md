@@ -38,8 +38,8 @@ apt install --dry-run thing        # the whole plan, without doing any of it
 ```
 
 **`--dry-run` is the habit worth forming.** It prints exactly the paragraph section 04 taught you
-to read, and changes nothing. On a production machine it is the difference between knowing and
-finding out.
+to read, and changes nothing. On a production machine, that is how you read the plan before any of
+it happens.
 
 `rdepends` — reverse dependencies — answers "what breaks if I remove this", which is the question
 you want before typing `apt remove` on a library.

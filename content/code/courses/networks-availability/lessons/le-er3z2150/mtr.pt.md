@@ -31,11 +31,11 @@ net.ipv4.icmp_ratemask = 6168
 regra que descarta 20% ao acaso: a amostragem da seção do ping agindo de novo. Os saltos 1 e 2 não
 perderam nada, porque as sondas que expiram neles nunca chegam à regra, que age sobre o que o provedor
 encaminha. **Perda que aparece num salto e continua em todos os saltos seguintes, até o destino, é real**,
-e começa no primeiro salto que a mostra ou depois dele.
+e começa no primeiro salto que a mostra ou no enlace que chega a ele.
 
 **O segundo relatório mostra perda que não é real.** `hq` e o roteador do provedor perderam cada um
 80.0% de 50 sondas, e o destino não perdeu nenhuma. Se `hq` estivesse mesmo descartando quatro pacotes
-em cinco, nada depois dele poderia ter mais que um em cinco, e o web2 recebeu todos. O que os dois
+em cinco, nada depois dele poderia ter mais que um em cinco, e o web1 recebeu todos. O que os dois
 roteadores perderam foram as próprias respostas, e o `sysctl` em `hq` diz por quê:
 
 - `icmp_ratelimit = 1000` é um intervalo em milissegundos: depois de uma pequena rajada, o kernel manda
@@ -54,5 +54,5 @@ durante uns cinco segundos, e cada roteador respondeu dez: a rajada, depois uma 
 Para ler um relatório do mtr, a regra é uma só: **olhe a última linha
 primeiro.** Se o destino não perde nada, a perda nos saltos acima dele é esses roteadores deixando de
 responder, por maior que seja a porcentagem. Se o destino perde, suba a tabela até o primeiro salto em que
-a perda começa e fica; aquele enlace, ou o seguinte, é onde procurar. Um trace que termina num firewall
+a perda começa e fica; aquele salto, ou o enlace que chega a ele, é onde procurar. Um trace que termina num firewall
 que descarta as sondas de vez pede `-T` ou `-u`, a mesma escolha que o traceroute oferecia.

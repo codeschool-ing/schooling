@@ -141,7 +141,7 @@ Restart=always
 RestartSec=10
 ```
 
-Quatro linhas em vez de quarenta, e a unit do pacote continua se atualizando por baixo.
+Três linhas em vez de quarenta, e a unit do pacote continua se atualizando por baixo.
 
 O `systemctl edit --full` te dá o arquivo inteiro para sobrepor, quando um drop-in não serve. E o
 `systemctl edit` roda o `daemon-reload` por você depois, que é o passo que a seção 09 disse que as

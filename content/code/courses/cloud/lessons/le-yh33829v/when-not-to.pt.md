@@ -4,8 +4,8 @@ version: 1
 ---
 
 Uma função é a ferramenta certa quando o trabalho chega em picos, termina rápido e não precisa lembrar
-de nada. **Cada caso abaixo quebra uma dessas três condições**, e cada um apareceu numa seção
-anterior desta aula.
+de nada. **Os três primeiros casos abaixo quebram, cada um, uma dessas condições, e os dois últimos
+são custos da própria plataforma**; cada um apareceu numa seção anterior desta aula.
 
 - Tarefas longas. Uma transcodificação de vídeo de uma hora ou um lote de quarenta minutos não cabem
   no teto de 15 minutos do Lambda, e uma computação pesada bate no limite de tempo de CPU do Workers

@@ -19,8 +19,8 @@ and the recovery are separate clocks, and only the second one is in the promise.
 
 The common mistake with RPO is to forget it applies at all. A system that holds no data has an RPO of
 zero for free, and that is why the failovers measured so far looked so clean. Anything that stores what
-users do has to answer the question explicitly, and the answer is set by how often the data is copied
-somewhere else, which is the last section of this lesson.
+users do has to answer the question explicitly. The answer is set by how often the data is copied
+somewhere else, the subject of the section on backups and replication at the end of this lesson.
 
 ## The two numbers for the systems in this course
 

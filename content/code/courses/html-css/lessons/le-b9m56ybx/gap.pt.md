@@ -3,7 +3,7 @@ title: Espaço entre itens: gap
 version: 1
 ---
 
-O espaço entre itens flex costumava ser feito com margens, e margens causam dois problemas: o último item tem uma margem depois dele que ninguém queria, então a fileira termina curta, e com quebra de linha os itens do começo de cada linha têm uma margem antes. **`gap`** põe espaço **entre** os itens e em nenhum outro lugar:
+O espaço entre itens flex costumava ser feito com margens, e margens causam dois problemas. O último item tem uma margem depois dele que ninguém queria, então a fileira termina curta, e com quebra de linha os itens do começo de cada linha têm uma margem antes. **`gap`** põe espaço **entre** os itens e em nenhum outro lugar:
 
 ```css
 .shelf {

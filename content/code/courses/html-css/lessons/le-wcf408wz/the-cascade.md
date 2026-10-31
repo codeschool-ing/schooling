@@ -21,4 +21,4 @@ The common wrong picture is that "the last rule wins". It is the last of four qu
 
 ## Why it was designed like this
 
-The cascade lets three parties style the same page and still produce one answer: the browser gives every element a sensible default, the author overrides what they care about, and the user can override the author where they need to. Specificity encodes a reasonable guess, that a rule about *this* thing is more deliberate than a rule about *every* thing, and source order settles the rest. The result is predictable, which is the only thing that matters here: given the rules, there is one answer, and it can be worked out before reloading.
+The cascade lets three parties style the same page and still produce one answer: the browser gives every element a sensible default, the author overrides what they care about, and the user can override the author where they need to. Specificity encodes a reasonable guess, that a rule about *this* thing is more deliberate than a rule about *every* thing, and source order settles the rest. The result is predictable: given the rules, there is one answer, and it can be worked out before reloading.

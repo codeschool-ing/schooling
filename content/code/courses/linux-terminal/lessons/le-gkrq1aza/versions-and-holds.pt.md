@@ -49,8 +49,9 @@ docker-ce:
         500 https://download.docker.com/linux/ubuntu noble/stable amd64 Packages
 ```
 
-Esta é uma máquina real atrasada no Docker: instalada `29.3.1`, candidata `29.8.0`, e quatro versões
-intermediárias que o repositório ainda carrega.
+Esta é uma máquina real atrasada no Docker: instalada `29.3.1`, candidata `29.8.0`, e o repositório
+ainda carrega as versões entre as duas: três aparecem abaixo da candidata antes de o `head` cortar
+a lista.
 
 **O `500` é a prioridade.** Toda versão ganha uma, e o apt escolhe a de maior prioridade, usando a
 mais nova para desempatar. Os padrões valem ser conhecidos porque explicam mais do que parece:

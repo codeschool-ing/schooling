@@ -62,7 +62,7 @@ Ten packets, and every one of them can be accounted for.
 
 | frames | what happened |
 |---|---|
-| 1 to 3 | the TCP handshake to port 8443, as in the first section |
+| 1 to 3 | the TCP handshake to port 8443, as in the section on the TCP handshake |
 | 4 | the Client Hello, 583 bytes, with the SNI |
 | 5 | `web1` acknowledges it: `Ack=518`, the next byte after 517 bytes of TLS counted from 1 |
 | 6 | the Server Hello and the encrypted certificate, 1509 bytes |

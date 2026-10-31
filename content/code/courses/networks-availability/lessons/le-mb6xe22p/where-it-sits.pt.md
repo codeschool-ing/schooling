@@ -16,8 +16,8 @@ rápido, e só tem a conexão para decidir.
 
 **Um balanceador de camada 7 é um proxy que fala o protocolo da aplicação.** Ele mesmo aceita a conexão do
 cliente, lê a requisição HTTP e abre uma segunda conexão, dele, até o servidor que escolher. Como lê cada
-requisição, pode escolher pelo caminho, pelo cabeçalho `Host` ou por um cookie, e pode acrescentar um
-cookie próprio à resposta, do que depende a última seção desta aula. O preço é trabalho: ele interpreta
+requisição, pode escolher pelo caminho, pelo cabeçalho `Host` ou por um cookie. Também pode acrescentar um
+cookie próprio à resposta, do que depende a seção sobre persistência, no fim desta aula. O preço é trabalho: ele interpreta
 cada requisição e, para HTTPS, precisa ter o certificado e decifrar.
 
 ```schooling-figure
@@ -31,8 +31,8 @@ mostrado.
 
 ## O balanceador
 
-No datacenter, `www.example.com` resolve para `192.0.2.80`, e esse endereço fica em `lb1`, posto lá à mão
-para esta aula, `sudo ip addr add 192.0.2.80/24 dev eth0` em `lb1`; a aula 16 é onde dois balanceadores o dividem. `lb1` roda o **HAProxy**, o balanceador de
+No datacenter, `www.example.com` resolve para `192.0.2.80`. Esse endereço fica em `lb1`, posto lá à mão
+para esta aula com `sudo ip addr add 192.0.2.80/24 dev eth0` em `lb1`; a aula 16 é onde dois balanceadores o dividem. `lb1` roda o **HAProxy**, o balanceador de
 código aberto que a maioria das equipes Linux conhece primeiro, como proxy de camada 7 em `mode http`, a
 configuração da aula 16. Atrás dele há três servidores `nginx`, `web1`, `web2` e `web3`, cada um
 respondendo a uma requisição de `/` com uma linha com o próprio nome, então cada escolha do balanceador

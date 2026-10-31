@@ -26,7 +26,7 @@ você vai achar na internet, e é assim que um banco de pacotes se corrompe.
 um shell de root, onde ele não consegue saber de quem é a pasta pessoal a criar em cada máquina. Rode-o
 exatamente como a mensagem diz, do seu próprio prompt.
 
-**`install first: sudo apt-get install mtr-tiny`.** Falta um pacote da lista da primeira seção, aqui o
+**`install first: sudo apt-get install mtr-tiny`.** Falta um pacote da lista da seção sobre o seu laboratório, aqui o
 `mtr-tiny`. A mensagem cita todos os que faltam; instale-os e rode o `up` de novo.
 
 **`netlab.sh: line 242: syntax error: unexpected end of file`.** A colagem parou antes do fim, e o bash
@@ -51,7 +51,7 @@ programa numa máquina só com `sudo bash netlab.sh kill web1 nginx`, digitado n
 as aulas fazem assim.
 
 **E quando nada mais funciona**, `sudo bash netlab.sh reset` monta a rede inteira de novo em uns dez
-segundos. Além disso, apague a máquina virtual com `multipass delete --purge netlab` e comece a primeira
-seção de novo; a parte lenta é o download. Parece desistir. É o que profissionais fazem com uma máquina
+segundos. Além disso, apague a máquina virtual com `multipass delete --purge netlab` e recomece
+pela seção sobre o seu laboratório; a parte lenta é o download. Parece desistir. É o que profissionais fazem com uma máquina
 cujo estado ninguém consegue mais explicar, e é por isso que este curso monta tudo a partir de um script
 que você consegue ler.

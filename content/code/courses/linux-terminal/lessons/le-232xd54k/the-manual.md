@@ -34,7 +34,7 @@ it is never out of date, and it is short. Pipe it to `head` when it is not.
 
 `man ls` opens the manual page: every option, the exit statuses, the standards it follows, and the
 related commands at the bottom. It is a pager — **`q` quits**, arrows scroll, `/` searches. Nobody
-tells beginners that `q` quits, and it is the single most common way to feel trapped in a
+tells beginners that `q` quits, and it is the most common way to feel trapped in a
 terminal.
 
 The manual has numbered sections, and the numbers matter exactly once: `man 5 passwd` is the file

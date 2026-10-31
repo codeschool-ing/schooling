@@ -57,6 +57,6 @@ meio, ele é digitado como `http.request.uri contains "nothing"`.
 
 Um filtro de captura erra de um jeito ainda mais quieto, porque um filtro válido que não seleciona
 nada não grava nada, e uma captura vazia se lê exatamente como "o tráfego nunca aconteceu". A captura
-do laptop na primeira seção era um filtro correto no lugar errado, e pegou um pedido ARP. **Antes de
+do laptop na seção sobre onde capturar era um filtro correto no lugar errado, e pegou um pedido ARP. **Antes de
 concluir que algo não foi enviado, confira se a captura poderia tê-lo visto**: a interface certa, a
 porta certa do switch e um filtro testado uma vez em tráfego que você sabe que existe.

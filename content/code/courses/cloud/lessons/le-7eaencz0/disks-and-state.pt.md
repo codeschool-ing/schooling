@@ -5,7 +5,7 @@ version: 1
 
 Num computador embaixo da mesa, o disco fica dentro da caixa, e desligar a caixa não faz nada com
 ele. **Uma instância tem dois tipos de disco, e eles se comportam de formas opostas** quando ela é
-desligada, e é por isso que "parei a instância e meus arquivos sumiram" e "apaguei a instância e
+desligada. É por isso que "parei a instância e meus arquivos sumiram" e "apaguei a instância e
 continuo pagando" são frases que as pessoas dizem no primeiro mês.
 
 ## Um volume de rede e um disco local

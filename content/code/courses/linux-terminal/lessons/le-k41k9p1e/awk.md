@@ -200,7 +200,7 @@ is a real language and the manual is a hundred pages.
 
 **The line to draw is this**: when the program needs a second condition and a third variable, and
 you have started counting quotes, it has become a program. Write it in a file — which is lesson 9 —
-or in python. A twelve-line `awk` one-liner is impressive and nobody will ever change it safely.
+or in Python. A twelve-line `awk` one-liner is impressive and nobody will ever change it safely.
 
 The `awk` worth having in your fingers is five patterns:
 

@@ -59,7 +59,7 @@ tick 4 ended at about 1000 ms
 ```
 
 **Com o `setInterval`, quatro ticks terminaram por volta de 700 ms**: cada vez que um tick acabava, o
-próximo já estava atrasado, então rodaram colados e a página não teve folga entre eles. **Com o
+próximo já estava atrasado, então rodaram colados e o programa não teve folga entre eles. **Com o
 `setTimeout` encadeado, terminaram por volta de 1000 ms**, e sempre houve 100 ms entre o fim de um tick
 e o começo do seguinte.
 

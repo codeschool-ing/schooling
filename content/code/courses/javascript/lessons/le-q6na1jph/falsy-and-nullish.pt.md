@@ -36,9 +36,9 @@ NaN        false
 
 ## A lista para lembrar
 
-`false`, `0`, `-0`, `0n`, `""`, `null`, `undefined` e `NaN`. **São todos.** As seis linhas de baixo
-mostram os valores que as pessoas esperam que sejam falsy e não são: as strings `"0"` e `"false"`,
-uma string com um espaço, um array vazio e um objeto vazio são todos truthy. `if (list)` é
+`false`, `0`, `-0`, `0n`, `""`, `null`, `undefined` e `NaN`. **São todos.** As seis últimas linhas
+da saída são valores que as pessoas esperam que sejam falsy e não são: as strings `"0"` e `"false"`,
+uma string com um espaço, um array vazio, um objeto vazio e `-1` são todos truthy. `if (list)` é
 verdadeiro para uma lista vazia, então para perguntar se um array tem itens, pergunte
 `list.length > 0`.
 

@@ -48,7 +48,7 @@ rtt min/avg/max/mdev = 0.053/0.065/0.092/0.014 ms
 ```
 
 The unmarked ping is where it was, up to **221 ms**, because it shares class `1:20` with the upload. The
-marked one came back in **0.065 ms** on average, the same as on an idle link. The link is exactly as
+marked one came back in **0.065 ms** on average, as fast as on an idle link. The link is exactly as
 full as before; the voice packets simply no longer stand in its queue.
 
 `tc -s` counts what went where, and the counts agree:

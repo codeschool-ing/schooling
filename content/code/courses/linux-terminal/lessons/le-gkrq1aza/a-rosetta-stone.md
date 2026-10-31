@@ -78,5 +78,5 @@ Almost everything reduces to four questions, and the shapes are stable across al
 | **a "do not actually" flag** | `apt --dry-run`, `dnf --assumeno`, `zypper install --dry-run` |
 
 **That last row is the one to use on an unfamiliar system.** When you are not sure what a command
-will do on a distribution you do not use daily, ask it to tell you instead of guessing — every one
+will do on a distribution you do not use daily, ask it to tell you instead of guessing. Every one
 of the three has a way to print the plan and stop.

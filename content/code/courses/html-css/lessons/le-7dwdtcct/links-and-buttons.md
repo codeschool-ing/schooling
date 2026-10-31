@@ -71,7 +71,7 @@ The first Tab went to the `<button>`, and Enter reserved the book. The next went
 
 ## What a `<button>` brings that a `<div>` does not
 
-To make the `<div>` behave like a button you would need: `role="button"` so the tree says what it is, `tabindex="0"` so it can be focused, a key handler for Enter *and* for Space, because buttons answer both, a visible focus style, and a disabled state when needed. That is five things to remember and get right on every one of them. `<button>` has all of them already, and they are correct in every browser.
+To make the `<div>` behave like a button you would need `role="button"` so the tree says what it is, and `tabindex="0"` so it can be focused. Then a key handler for Enter *and* for Space, because buttons answer both, a visible focus style, and a disabled state when needed. That is five things to remember and get right on every one of them. `<button>` has all of them already, and they are correct in every browser.
 
 The same goes for links: `<a href>` is focusable, opens with Enter, shows its address on hover, can be opened in a new tab and is announced as a link. A `<span>` with a click handler that changes the page does none of it, and an `<a>` without `href` is not focusable either.
 

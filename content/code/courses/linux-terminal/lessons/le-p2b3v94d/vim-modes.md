@@ -10,10 +10,10 @@ it the rest is vocabulary.
 when you are in insert mode.** The rest of the time the letter keys are
 commands.
 
-That is why typing `hello` into a freshly opened vim moves the cursor around and
-deletes something: `h` is left, `e` is end-of-word, `l` is right, and the second
-`l` is right again, and `o` opens a new line — which does finally put you in
-insert mode, which is why the confusion usually ends with a stray blank line.
+That is why typing `hello` into a freshly opened vim only moves the cursor
+around: `h` is left, `e` is end-of-word, `l` is right, and the second `l` is
+right again. Then `o` opens a new line, which does finally put you in insert
+mode. That is why the confusion usually ends with a stray blank line.
 
 ## The modes you will use
 

@@ -52,7 +52,7 @@ ana@laptop:~/site$ probe fixed.html scroll 500 box .chat
 a.chat  x 927.98 y 1212   width 80.02  height 40
 ```
 
-`probe box` imprime posições em coordenadas da página. Antes de rolar, o link está em y 712; depois de rolar 500 pixels, está em **y 1212**, exatamente 500 mais abaixo na página, o que quer dizer que ele não se mexeu na tela: 16 pixels acima do pé de uma janela de 768 pixels, como `bottom: 16px` diz.
+`probe box` imprime posições em coordenadas da página. Antes de rolar, o link está em y 712; depois de rolar 500 pixels, está em **y 1212**, exatamente 500 mais abaixo na página. Então ele não se mexeu nada na tela: termina 16 pixels acima do pé de uma janela de 768 pixels, como `bottom: 16px` diz.
 
 ## O que o fixed custa
 

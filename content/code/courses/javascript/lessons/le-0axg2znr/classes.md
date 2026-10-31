@@ -20,19 +20,19 @@ a few guarantees the old way lacked. The same `Book`, with two features the old 
       "note": "`constructor` is the function `new` calls in step 3. It sets the instance's own properties."
     },
     {
-      "code": "  describe() {\n    return `${this.title} (${this.year})`;\n  }",
+      "code": "\n  describe() {\n    return `${this.title} (${this.year})`;\n  }",
       "note": "A method written in the class body goes on `Book.prototype`, shared by every book, exactly as `Book.prototype.describe = …` did."
     },
     {
-      "code": "  get age() {\n    return 2026 - this.year;\n  }",
+      "code": "\n  get age() {\n    return 2026 - this.year;\n  }",
       "note": "`get` makes a property that is computed each time it is read. `b.age` is written without parentheses and runs this function."
     },
     {
-      "code": "  static fromLine(line) {\n    const [title, year] = line.split(\";\");\n    return new Book(title, Number(year));\n  }\n}",
+      "code": "\n  static fromLine(line) {\n    const [title, year] = line.split(\";\");\n    return new Book(title, Number(year));\n  }\n}",
       "note": "`static` puts a function on the class itself rather than on its instances. A static method that builds an instance from some other input is a common pattern, and `fromLine` is one."
     },
     {
-      "code": "const b = Book.fromLine(\"Dom Casmurro;1899\");\nconsole.log(b.describe(), b.age);\nconsole.log(typeof Book, Object.getPrototypeOf(b) === Book.prototype);\nconsole.log(Object.keys(b), Object.hasOwn(Book.prototype, \"describe\"));\nconsole.log(b);",
+      "code": "\nconst b = Book.fromLine(\"Dom Casmurro;1899\");\nconsole.log(b.describe(), b.age);\nconsole.log(typeof Book, Object.getPrototypeOf(b) === Book.prototype);\nconsole.log(Object.keys(b), Object.hasOwn(Book.prototype, \"describe\"));\nconsole.log(b);",
       "note": "Read the output against the old way: `typeof Book` is still `\"function\"`, the instance's prototype is `Book.prototype`, and `describe` lives there, not on the book."
     }
   ],

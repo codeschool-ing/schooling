@@ -59,7 +59,7 @@ UTC, numa máquina onde Nova York estava quatro horas atrás.
 
 Então neste cron o `CRON_TZ` é uma variável de ambiente comum: exportada para o
 job, ignorada pelo agendador. Uma linha escrita para `08:30 de Nova York` roda às
-08:30 UTC — três horas e meia adiantada no verão, e nada avisa.
+08:30 UTC — quatro horas adiantada no verão, e nada avisa.
 
 **O jeito portável é fazer a conversão você mesmo**, uma vez, no crontab, com um
 comentário:

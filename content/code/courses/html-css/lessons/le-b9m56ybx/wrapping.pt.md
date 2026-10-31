@@ -58,7 +58,7 @@ Com `wrap`, os itens que não cabem na linha vão para uma nova embaixo, como as
 
 ## Cada linha é montada por conta própria
 
-Quando um contêiner flex quebra, **cada linha é uma fileira separada** no que diz respeito ao eixo principal: `justify-content` espalha os itens de cada linha de forma independente, então uma última linha com duas capas é montada como duas capas, não alinhada às colunas de cima. Se você precisa que os itens de todas as linhas se alinhem em colunas, isso é uma grade, aula 9, e essa diferença é o jeito mais confiável de escolher entre os dois: **Flexbox monta coisas em uma dimensão, uma linha, e Grid em duas, linhas e colunas ao mesmo tempo.**
+Quando um contêiner flex quebra, **cada linha é uma fileira separada** no que diz respeito ao eixo principal. `justify-content` espalha os itens de cada linha de forma independente, então uma última linha com duas capas é montada como duas capas, não alinhada às colunas de cima. Se você precisa que os itens de todas as linhas se alinhem em colunas, isso é uma grade, aula 9. Essa diferença é o jeito mais confiável de escolher entre os dois: **Flexbox monta coisas em uma dimensão, uma linha, e Grid em duas, linhas e colunas ao mesmo tempo.**
 
 Com várias linhas existe mais uma propriedade, **`align-content`**, que posiciona as próprias linhas no eixo cruzado quando o contêiner é mais alto do que elas precisam: juntas em cima, espalhadas, centralizadas. Num contêiner de uma linha só ela não faz nada, que é o motivo usual de parecer não funcionar.
 

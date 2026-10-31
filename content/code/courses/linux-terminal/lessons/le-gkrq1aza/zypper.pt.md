@@ -9,7 +9,7 @@ a camada de cima tem palavras novas.
 
 **A mesma ressalva da seção 10**: estas transcrições foram capturadas no Ubuntu com o `zypper`
 instalado e o repositório da aula configurado. Os comandos e a saída deles são reais; a distribuição
-não é SUSE, e o único lugar em que isso aparece é apontado abaixo. O bloco da seção 10 construiu o
+não é SUSE, e os dois lugares em que isso aparece são apontados abaixo. O bloco da seção 10 construiu o
 repositório; isto o apresenta ao `zypper`:
 
 ```sh
@@ -28,7 +28,7 @@ Repository priorities are without effect. All enabled repositories share the sam
 ```
 
 O `zypper repos` — `zypper lr` para encurtar — é o `dnf repolist`. Repare nas colunas: **o zypper
-mostra prioridade e estado de refresh na listagem**, o que o dnf não faz, e a primeira linha é ele te
+mostra a checagem de GPG e o estado de refresh na listagem**, o que o dnf não faz, e a primeira linha é ele te
 dizendo que com um repositório só as prioridades não podem importar.
 
 Acrescentar e atualizar:
@@ -200,7 +200,7 @@ distribuição rolling substitui conjuntos inteiros de pacotes de uma vez, e o `
 de vendor e arquitetura que isso exige. Rodar o `up` no Tumbleweed por alguns meses produz uma
 máquina meio atualizada de um jeito que nada mais nesta aula consegue produzir.
 
-Esse é o fato mais específico de SUSE desta seção, e é o que as pessoas erram.
+Esse é o fato mais específico de SUSE desta seção, e o que as pessoas erram.
 
 ## O resto
 

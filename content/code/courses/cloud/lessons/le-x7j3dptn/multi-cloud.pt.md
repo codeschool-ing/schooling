@@ -29,9 +29,9 @@ conseguir sair já foi feito e pago.
 ## O motivo fraco: resiliência por padrão
 
 "Se o nosso provedor cair, fazemos failover para o outro." Parece o seguro óbvio, e é o motivo mais
-caro da lista. Para funcionar, cada parte da aplicação precisa rodar nos dois provedores, os dados
-precisam ser copiados continuamente entre eles — saindo de um provedor ao preço de saída para a
-internet, todo mês — e o failover precisa ser testado com frequência suficiente para funcionar no dia.
+caro da lista. Para funcionar, cada parte da aplicação precisa rodar nos dois provedores. Os dados
+precisam ser copiados continuamente entre eles, saindo de um provedor ao preço de saída para a
+internet, todo mês. E o failover precisa ser testado com frequência suficiente para funcionar no dia.
 Um failover sem teste é um plano para descobrir durante a queda.
 
 Uma segunda região do mesmo provedor protege contra a perda de uma região com **um conjunto de

@@ -3,7 +3,8 @@ title: Onde o QoS para
 version: 1
 ---
 
-Toda captura desta aula foi feita no roteador do provedor, e todas mostraram a marcação chegando intacta.
+As duas capturas de pacotes desta aula foram feitas no roteador do provedor, e as duas mostraram a
+marcação chegando como `hq` a tinha enviado.
 Esse roteador leu `tos 0xb8`, imprimiu e tratou o pacote como qualquer outro. **O DSCP é um comportamento
 por salto** (per-hop behaviour): cada roteador decide sozinho o que uma marcação significa, e um roteador
 sem classes configuradas decide que ela não significa nada.

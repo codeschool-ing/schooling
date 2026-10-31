@@ -47,7 +47,7 @@ na primeira semana em que tocar em Docker.
 
 ## O que "família" de fato te dá
 
-Não é sentimento. Saber a família te diz quatro coisas antes de você olhar qualquer outra:
+Saber a família te diz quatro coisas antes de você olhar qualquer outra:
 
 1. **O gerenciador de pacotes** — `apt` do lado do Debian, `dnf` do Red Hat, `zypper` do SUSE.
 2. **O formato do pacote** — `.deb` ou `.rpm`, que decide o que a página de download de um

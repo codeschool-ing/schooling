@@ -81,7 +81,7 @@ IP (tos 0x0, ttl 64, id 63671, offset 0, flags [DF], proto IPIP (4), length 104)
 
 Cada linha se lê da esquerda para a direita como dois pacotes, um dentro do outro: de `203.0.113.2` para
 `198.51.100.2`, e dentro dele do laptop para o caixa. Com `-v` aparecem os tamanhos. O pacote interno
-tem **84 bytes**, o externo **104**, e a diferença é o único cabeçalho que o IP-in-IP acrescenta. O
+tem **84 bytes, o externo 104**, e a diferença é o único cabeçalho que o IP-in-IP acrescenta. O
 cabeçalho externo diz `proto IPIP (4)`, e é assim que o roteador que recebe sabe que precisa olhar dentro.
 
 ## O programa por trás

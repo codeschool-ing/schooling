@@ -28,7 +28,7 @@ escaped: $who
 
 **Single quotes are the strong ones.** Anything between them arrives exactly as written, which is
 why every regular expression, every `awk` program and every `sed` command in the last lesson was in
-single quotes: `$1` inside double quotes would have been the shell's first argument, not awk's
+single quotes. Inside double quotes, `$1` would have been the shell's first argument, not awk's
 first field.
 
 ## What double quotes actually stop
@@ -123,15 +123,17 @@ unquoted**, and it is more likely, because command output is more likely to cont
 
 **Double quote every expansion, every time.** `"$var"`, `"$@"`, `"$(cmd)"`, `"${arr[@]}"`.
 
-Not "when the value might have a space in it" — always, because you do not know what will be in
+Not "when the value might have a space in it" — always. You do not know what will be in
 that variable on a machine you have not seen, on a day when a filename has a space in it because
 somebody exported it from a spreadsheet.
 
 There are two places where you can leave them off:
 
-```
-[[ $count -gt 5 ]]      # inside [[ ]] no splitting or globbing happens, so quotes are optional
-cmd $FLAGS              # when you deliberately want one variable to become several arguments
+```schooling-example
+{"language": "bash", "parts": [
+ {"code": "[[ $count -gt 5 ]]", "note": "Inside `[[ ]]` no splitting or globbing happens, so the quotes are optional."},
+ {"code": "cmd $FLAGS", "note": "When you deliberately want one variable to become several arguments."}
+]}
 ```
 
 `[[ ]]` is section 08, and the quotes are still not *wrong* there — they just change nothing.

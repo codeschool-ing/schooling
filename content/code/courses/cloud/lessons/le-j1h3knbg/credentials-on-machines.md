@@ -34,7 +34,7 @@ fetching a URL on an attacker's behalf can be made to fetch the metadata address
 was enough to hand over the role's credentials. A request that needs a `PUT` and a token first is
 much harder to trick an application into making.
 
-A function works the same way through its execution role, which lesson 8 uses, and a container
+A function works the same way through its execution role, which lesson 8 comes back to, and a container
 running on a managed service has an equivalent endpoint of its own.
 
 ## How a program finds its credentials

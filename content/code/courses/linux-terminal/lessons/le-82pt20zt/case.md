@@ -138,7 +138,7 @@ done
 echo "target=${target:-none} env=$env verbose=$verbose"
 ```
 
-Sixteen lines, and it handles every convention a command-line tool is expected to handle:
+Fifteen lines, and it handles every convention a command-line tool is expected to handle:
 
 ```
 ana@vm:~/work/scripts$ ./deploy.sh web01
@@ -177,8 +177,8 @@ exit 2
 ```
 
 **`--verbsoe` fell into `*)`, was assigned to `target`, and was then overwritten by `web01`.** The
-script ran, said nothing, and did the job without the flag you asked for. Four characters in the
-`case` turn that into an error with an exit status.
+script ran, said nothing, and did the job without the flag you asked for. One line in the
+`case` turns that into an error with an exit status.
 
 ## Where this stops being enough
 

@@ -31,13 +31,13 @@ products came before it: Wi-Fi 6 certification opened in 2019, well before 802.1
 And the top rate is **a ceiling the standard writes down, never a speed anybody measures**. It assumes
 the widest channel, the most streams and a signal clean enough for the densest modulation, all at
 once. The section on channel width computes every one of them from 802.11a on, from the standard's own numbers.
-The last section of this lesson says how much of one a phone gets.
+The section on the number on the box, near the end of this lesson, says how much of one a phone gets.
 
 **Wi-Fi 6E is the same 802.11ax, allowed into a third band**, and certified since 2021. A Wi-Fi 6
 router with no 6E on the box does not transmit at 6 GHz, whatever its number suggests.
 
 **The standards are backwards compatible inside a band.** An 802.11ax access point on 2.4 GHz still
 talks to an 802.11b client from 1999, and on 5 GHz to an 802.11a one. It does so at the old client's
-speed, using the old client's time on the air, which is why the last section of this lesson has a
+speed, using the old client's time on the air, which is why the section on the number on the box has a
 printer in it. The 6 GHz band is the one exception, and the next section says why that matters: no
 device older than Wi-Fi 6E can join it, so nothing old is there to be waited for.

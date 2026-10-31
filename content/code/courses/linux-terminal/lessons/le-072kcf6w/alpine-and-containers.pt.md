@@ -17,7 +17,7 @@ imagem a baixa.
 
 ## Ele é pequeno de propósito, e esse é o projeto inteiro
 
-Uma imagem Alpine tem alguns megabytes onde uma do Debian tem cem ou mais. Num contêiner isso
+Uma imagem Alpine tem 13MB onde uma do Ubuntu tem 119MB, como mostra a listagem abaixo. Num contêiner isso
 importa mais do que parece: uma imagem é baixada por toda máquina que a roda, guardada em todo
 registro que a mantém, e reconstruída toda vez que o CI roda. Tamanho é banda e dinheiro,
 multiplicados por um número que só cresce.

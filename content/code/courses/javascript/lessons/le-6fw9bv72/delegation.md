@@ -51,7 +51,7 @@ lend book 19
 The list has one listener and no button has any. For each click:
 
 - `event.target.closest(".lend")` walks up from whatever was clicked to the nearest lend button, the
-  method lesson 11 introduced for exactly this. **Clicking the row's text, the last action, found no
+  method lesson 11 introduced for exactly this. **Clicking the row itself, the last action, found no
   button, and the listener returned without doing anything**;
 - from the button, `closest(".book")` found the row, and `data-id` said which book. The book is known
   by its id, never by its title or its position in the list.

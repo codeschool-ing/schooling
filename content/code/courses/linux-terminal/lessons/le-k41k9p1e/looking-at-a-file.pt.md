@@ -11,7 +11,7 @@ ana@vm:~/work$ head -1 logs/access.log
 198.51.100.10 - - [14/Sep/2026:06:01:15 +0000] "GET / HTTP/1.1" 200 23295 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 27
 ```
 
-Conte os campos separados por espaço e você tem o mapa que o resto da aula usa: o endereço é o `$1`,
+Conte os campos separados por espaço e você tem o mapa que o resto da aula usa. O endereço é o `$1`,
 o horário é o `$4` e o `$5`, o método é o `$6`, o caminho é o `$7`, o status é o `$9`, o tamanho é o
 `$10`, e os milissegundos são o último.
 
@@ -73,8 +73,8 @@ tabulação, e sequências `M-BM-` para bytes não-ASCII.
 
 Essa última é o motivo de saber que o `cat -A` existe. Quando um arquivo de configuração não é
 interpretado, ou um script falha numa linha que parece perfeita, o `cat -A` te mostra o espaço no
-fim, a tabulação que devia ser espaços, ou o `^M` no fim de cada linha que quer dizer que o arquivo
-veio do Windows.
+fim ou a tabulação que devia ser espaços. Mostra também o `^M` no fim de cada linha que quer dizer
+que o arquivo veio do Windows.
 
 O `nl` é o `cat -n` com mais controle sobre a numeração, e por padrão ele só numera linhas não
 vazias:

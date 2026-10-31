@@ -12,7 +12,7 @@ ana@vm:~$ id
 uid=1001(ana) gid=1002(ana) groups=1002(ana),27(sudo),1004(team)
 ```
 
-Três números e três nomes numa linha só, e vale ler devagar.
+Quatro números e três nomes numa linha só, e vale ler devagar.
 
 ## Primário e suplementares
 

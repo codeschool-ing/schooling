@@ -53,9 +53,9 @@ ana@vm:~$ cat /etc/debian_version
 trixie/sid
 ```
 
-**That is an Ubuntu machine claiming to be Debian trixie.** It is not lying exactly — the file
-records which Debian snapshot this Ubuntu was built from — but if you read it as "which system am
-I on" you get a wrong answer with total confidence.
+**That is an Ubuntu machine claiming to be Debian trixie.** It is not lying exactly: the file
+records which Debian snapshot this Ubuntu was built from. But read it as "which system am I on"
+and you get a wrong answer with total confidence.
 
 `/etc/debian_version`, `/etc/redhat-release` and the rest are older, per-family files that
 predate the standard. They still exist, they are still written, and they are the reason

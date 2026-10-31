@@ -65,4 +65,4 @@ of the bill decide among them.
 A company whose staff sign in through Microsoft 365, running SQL Server on Windows machines in its
 own building, starts with Azure ahead on identity and licences. Another provider has to win that comparison; Azure does not have to lose it.
 
-Neither case produces a winner the next company could copy, and neither was meant to.
+Neither case produces a winner the next company could copy.

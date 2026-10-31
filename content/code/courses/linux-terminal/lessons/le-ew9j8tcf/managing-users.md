@@ -123,7 +123,7 @@ drwxr-x--- 2 1005 dora 4096 Oct  7 11:36 /home/dora
 The account is gone — `getent` prints nothing. **The home directory is still there, and `ls` now
 prints `1005` where a name used to be**, because there is nothing left to look the number up in.
 
-That is the single most visible demonstration of section 02's claim that the filesystem stores
+That is the plainest demonstration of section 02's claim that the filesystem stores
 numbers. Nothing about those files changed. The mapping did.
 
 `userdel -r` removes the home directory and the mail spool as well — and **it is worth not doing

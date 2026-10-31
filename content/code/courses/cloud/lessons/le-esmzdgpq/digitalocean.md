@@ -40,7 +40,7 @@ Compare what a single machine costs to read at each kind of provider:
 | data it sends out | a separate line, per GB | included up to an allowance |
 
 The AWS sheet in this course shows the separate lines are real: a public IPv4 address is `0.0050`
-USD an hour in both regions, and a gp3 disk is `0.1520` USD per GB-month in `sa-east-1`. None of them is large, but **at DigitalOcean the bill for a small project is a few lines you
+USD an hour in both regions, and a gp3 disk is `0.1520` USD per GB-month in `sa-east-1`. Neither is large, but **at DigitalOcean the bill for a small project is a few lines you
 could predict in advance**, and at a hyperscaler it is the sum of several meters.
 
 The amounts themselves are on DigitalOcean's pricing pages, which this course did not capture. The

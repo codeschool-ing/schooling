@@ -132,8 +132,8 @@ Note first that **`logs.tar` is the same size as what went in.** `tar` did not c
 it only packed.
 
 Then the three that did. Those ratios are unusually good, because that file is the same block of
-text repeated forty times and repetition is exactly what a compressor eats — but the *ordering* is
-the real lesson and it holds everywhere:
+text repeated forty times and repetition is exactly what a compressor eats. The *ordering* is what
+carries over to other files:
 
 | | typical use | speed |
 |---|---|---|
@@ -204,8 +204,7 @@ rather than `-C` because these are two unrelated programs that happened to solve
 double-click. Use `tar` for everything staying on Linux, because it keeps the permissions and
 ownership that a deployment or a backup depends on.
 
-And one honest warning: `unzip` is not installed everywhere by default, and neither is `zip`.
-`tar` always is.
+And where `zip` and `unzip` are missing, as on Ubuntu Server, `tar` is still there.
 
 ## `file` settles any argument about what you have
 

@@ -43,5 +43,5 @@ paid for. **A spectrum analyser** sees energy that is not Wi-Fi at all, the micr
 monitors of lesson 7, which a Wi-Fi adapter only experiences as a channel that is mysteriously busy.
 
 The usual sequence is all of them in order: **predict, check the doubtful walls on site, install, then
-measure again**. The last step is the one most often skipped, and the last section of this lesson says why it
-should not be.
+measure again**. The last step is the one most often skipped, and the section on the survey after
+installation, at the end of this lesson, says why it should not be.

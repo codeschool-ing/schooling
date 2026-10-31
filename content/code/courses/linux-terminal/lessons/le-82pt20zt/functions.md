@@ -181,7 +181,7 @@ That one file has four lessons in it. Start with the first three lines of output
 `withlocal() { local i=safe; }` did not.
 
 **Everything in a function is global unless you say `local`.** A loop counter called `i` inside a
-function will silently destroy the caller's `i`, and this is the kind of bug that appears only when
+function will silently destroy the caller's `i`. It is the kind of bug that appears only when
 the script grows to the point where two loops are nested through a function call.
 
 The rule is mechanical: **every variable a function assigns to gets a `local`**, on the first line
@@ -268,7 +268,7 @@ expands variables, which is occasionally useful and usually a surprise.
 ## What functions cannot do
 
 They cannot be called before they are defined, they cannot return anything but a number, and
-**they cannot be exported to a child script** in any way you should rely on — `export -f` exists,
+**they cannot be exported to a child script** in any way you should rely on. `export -f` exists,
 is bash-only, and was the mechanism behind a famous security hole in 2014.
 
 If two scripts need the same function, put it in a third file and `source` it (section 02). That

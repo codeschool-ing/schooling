@@ -95,7 +95,7 @@ ana@web1:~$ tail -n 2 /lab/web1/www/logs/access.log | cut -d" " -f1-7
 
 Agora a rota para o `web1` é `dev wg0 table 51820`, e o traceroute passa primeiro por `hq`,
 `10.20.0.1`, e depois sai para o provedor a partir da matriz. A página é a mesma. As duas últimas linhas
-do log de acesso do `web1`, que o `netlab.sh` guarda em `/lab/web1`, são os dois pedidos, feitos no mesmo segundo: **o mesmo laptop e a mesma
+do log de acesso do `web1`, que o `netlab.sh` guarda em `/lab/web1`, são os dois pedidos, feitos no mesmo segundo. **O mesmo laptop pediu a mesma
 página, e o `web1` viu dois clientes diferentes.** Dividido, o pedido veio de `198.51.100.77`, o
 roteador da casa da Ana. Completo, veio de `203.0.113.2`, porque `hq` encaminhou o tráfego dela para a
 internet e o traduziu para o próprio endereço (NAT, visto em `networks-addressing`).

@@ -81,6 +81,6 @@ div.frame        x 8      y 8      width 122    height 86
 div.frame.fixed  x 8      y 94     width 122    height 82
 ```
 
-The first frame is 86 pixels tall for an 80-pixel image and 2 pixels of border, so 4 pixels are left over: the space below the line's baseline that lesson 1 met in standards mode. The second frame says `img { display: block; }`, the image is no longer on a line of text, and the frame is 82, exactly image plus border. `vertical-align: bottom` on the image also removes it, by moving the image off the baseline. Either is the usual first line in a stylesheet's treatment of images.
+The first frame is 86 pixels tall for an 80-pixel image and 2 pixels of border, so 4 pixels are left over: the space below the line's baseline that lesson 1 met in standards mode. The second frame carries the class `fixed`, whose rule gives its image `display: block`: the image is no longer on a line of text, and the frame is 82, exactly image plus border. `vertical-align: bottom` on the image also removes it, by moving the image off the baseline. Either is the usual first line in a stylesheet's treatment of images.
 
 Lessons 8 and 9 add two more values, `flex` and `grid`, which change how an element lays out its **children**. Everything in this lesson is about the box itself.

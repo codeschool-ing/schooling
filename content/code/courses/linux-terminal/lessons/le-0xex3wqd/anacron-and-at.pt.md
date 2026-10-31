@@ -198,9 +198,9 @@ da manhã. Uma linha ficou de fora porque tem milhares de caracteres: o
 também vai carregar.
 
 **Isso é mais amigável e não é mais confiável.** O job roda com o que por acaso
-estava definido no terminal em que você o digitou — incluindo um `JAVA_HOME` de
-uma sessão de que você já esqueceu — que não é uma coisa que você escolheu e não é
-uma coisa que outra pessoa consegue reproduzir.
+estava definido no terminal em que você o digitou, incluindo um `JAVA_HOME` de
+uma sessão de que você já esqueceu. Você não escolheu isso, e ninguém mais
+consegue reproduzir.
 
 **Use para "rode isto às quatro, uma vez".** Uma migração, um reinício numa
 janela, um lembrete para um script. Qualquer coisa que se repete pertence a um

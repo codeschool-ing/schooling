@@ -28,8 +28,7 @@ em que se espera que um cliente fique:
 | chamadas de voz e vídeo | −67 dBm | 25 dB |
 | áreas densas, de alta vazão | −65 dBm ou melhor | 25 a 30 dB |
 
-**−67 dBm é o número que vive aparecendo**, e os motivos por trás dele são o que o torna útil. Ele deixa
-espaço para o que o adaptador de survey não viveu. Um celular tem antena menor, com uma mão ou um corpo em volta dela (3 a 5 dB na tabela de perdas), e o próprio sinal flutua de um instante para outro. E ele
+**−67 dBm é o número que vive aparecendo**, por dois motivos. Ele deixa espaço para o que o adaptador de survey não viveu. Um celular tem antena menor, com uma mão ou um corpo em volta dela (3 a 5 dB na tabela de perdas), e o próprio sinal flutua de um instante para outro. E ele
 mantém a borda da célula acima dos limiares de roaming da aula 9, por volta de −70 a −75 dBm, para que o
 celular encontre o próximo AP antes de a chamada começar a sofrer. Para voz, os guias também pedem **um
 segundo AP num nível utilizável em todo ponto**, para que haja para onde fazer roaming.
@@ -44,4 +43,5 @@ potência do AP até o mapa ficar verde.
 
 O adaptador também importa. **Dois adaptadores podem ler o mesmo ponto com vários dB de diferença**, e
 nenhum deles bate com o celular no bolso de alguém. Um survey que vale a leitura diz qual adaptador usou e
-como ele se comparou com os aparelhos que vão usar a rede, e a última seção volta a isso.
+como ele se comparou com os aparelhos que vão usar a rede, e a seção sobre o documento do survey, no fim
+desta aula, volta a isso.

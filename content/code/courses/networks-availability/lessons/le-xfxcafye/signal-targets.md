@@ -27,8 +27,7 @@ the worst spot a client is expected to use:
 | voice and video calls | −67 dBm | 25 dB |
 | dense, high-throughput areas | −65 dBm or better | 25 to 30 dB |
 
-**−67 dBm is the number that keeps coming up**, and the reasons behind it are what make it useful. It
-leaves room for what the survey adapter did not experience: a phone's smaller antenna, a hand or a body
+**−67 dBm is the number that keeps coming up**, for two reasons. It leaves room for what the survey adapter did not experience: a phone's smaller antenna, a hand or a body
 around it (3 to 5 dB in the path-loss table), and the signal's own fluctuation from moment to moment. And
 it keeps the cell edge above the roaming thresholds of lesson 9, around −70 to −75 dBm, so a phone meets
 the next AP before its call starts to suffer. For voice, guides also ask for **a second AP at a usable
@@ -44,4 +43,5 @@ the map turns green.
 
 The adapter matters as well. **Two adapters can read the same spot several dB apart**, and neither
 matches the phone in anybody's pocket. A survey worth reading says which adapter it used and how it
-compared with the devices that will use the network, which the last section returns to.
+compared with the devices that will use the network, which the section on the survey document, at the
+end of this lesson, returns to.

@@ -4,8 +4,8 @@ version: 1
 ---
 
 É aqui que um curso é abandonado com mais frequência, num erro sobre uma ferramenta que o aluno ainda
-não terminou de instalar. Estas são as falhas encontradas enquanto esta aula era gravada, na ordem em
-que a preparação as encontra, e o que cada uma quer dizer.
+não terminou de instalar. Estas são as falhas encontradas enquanto esta aula era gravada, e o que
+cada uma quer dizer.
 
 **O ambiente virtual não foi criado.** O Ubuntu vem com o Python sem a parte que cria ambientes
 virtuais, e é isto que o `python3 -m venv` diz sem ela:

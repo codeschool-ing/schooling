@@ -183,8 +183,8 @@ root@vm:~# cat /etc/fstab
 
 Vazio, na máquina em que estas transcrições foram capturadas, porque o sistema de arquivos raiz
 dela foi montado pelo que a iniciou, e não a partir de uma tabela. Na máquina que você instalou na
-aula 1 ele tem uma linha para cada sistema de arquivos que o instalador criou. Numa instalação normal ele tem uma linha por
-sistema de arquivos, com seis campos cada:
+aula 1 ele tem uma linha para cada sistema de arquivos que o instalador criou, com seis campos
+cada:
 
 | campo | é | exemplo |
 |---|---|---|

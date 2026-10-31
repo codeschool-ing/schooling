@@ -137,7 +137,7 @@ done
 echo "target=${target:-none} env=$env verbose=$verbose"
 ```
 
-Dezesseis linhas, e ele trata toda convenção que se espera de uma ferramenta de linha de comando:
+Quinze linhas, e ele trata toda convenção que se espera de uma ferramenta de linha de comando:
 
 ```
 ana@vm:~/work/scripts$ ./deploy.sh web01
@@ -176,8 +176,8 @@ exit 2
 ```
 
 **O `--verbsoe` caiu no `*)`, foi atribuído ao `target`, e então foi sobrescrito pelo `web01`.** O
-script rodou, não disse nada, e fez o trabalho sem a opção que você pediu. Quatro caracteres no
-`case` transformam isso num erro com código de saída.
+script rodou, não disse nada, e fez o trabalho sem a opção que você pediu. Uma linha no
+`case` transforma isso num erro com código de saída.
 
 ## Onde isso deixa de bastar
 

@@ -23,7 +23,7 @@ total 4
 722950 -rw-r--r-- 1 ana ana 13 Oct  7 11:09 report.txt
 ```
 
-`573516` é como o sistema de arquivos chama estes dados. `report.txt` é como o diretório os chama.
+`722950` é como o sistema de arquivos chama estes dados. `report.txt` é como o diretório os chama.
 O inode guarda tudo que o `ls -l` te mostrou — permissões, dono, tamanho, horários e onde estão os
 bytes. **O nome não está no inode.** O nome está no diretório.
 
@@ -61,8 +61,8 @@ ana@vm:~/hard$ cat hardlink.txt
 changed
 ```
 
-**O `rm` não apagou o arquivo.** Ele removeu um nome e decrementou a contagem, de 2 de volta para
-1. Os dados continuam lá, alcançáveis pelo outro nome — e vão continuar lá até o último nome que
+**O `rm` não apagou o arquivo.** Ele removeu um nome e decrementou a contagem, de 2 de volta para 1.
+Os dados continuam lá, alcançáveis pelo outro nome — e vão continuar lá até o último nome que
 aponta para eles sumir.
 
 É isso que o `rm` sempre fez. Num arquivo com um nome só, remover o nome e remover os dados parecem
@@ -83,7 +83,7 @@ total 4
 
 Três diferenças em relação a um hard link, e cada uma importa:
 
-- **inode próprio**, `573519` — é uma coisa separada no disco;
+- **inode próprio**, `722952` — é uma coisa separada no disco;
 - **tipo `l`** na primeira coluna — o campo 1 da seção 06, pagando o aluguel;
 - **tamanho 10**, que é o comprimento da string `report.txt`. Um link simbólico é só isso: um
   arquivo minúsculo cujo conteúdo é um caminho.

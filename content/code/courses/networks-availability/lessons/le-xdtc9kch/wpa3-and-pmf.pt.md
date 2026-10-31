@@ -7,7 +7,8 @@ O WPA3-Personal mantém a passphrase e o four-way handshake, e muda de onde vem 
 passphrase por um hash, os dois lados rodam o **SAE, Simultaneous Authentication of Equals**, uma troca de
 chaves da família Diffie-Hellman com a senha misturada nela. Cada lado envia valores que dependem da senha
 e de segredos que ele sorteou para esta troca, e os dois terminam com a mesma PMK, **uma nova e aleatória
-a cada vez**. O four-way handshake da figura acima roda então sobre essa PMK exatamente como antes.
+a cada vez**. O four-way handshake desenhado na seção sobre o WPA2 roda então sobre essa PMK exatamente
+como antes.
 
 Essa única mudança resolve os dois problemas da seção anterior.
 
@@ -39,7 +40,7 @@ de transição** roda os dois num SSID só, com a mesma passphrase: os clientes 
 o handshake do WPA2, e o PMF vira opcional para que os antigos consigam entrar.
 
 O custo é que **a passphrase fica exatamente tão exposta quanto no WPA2**: qualquer handshake WPA2 gravado
-nessa rede permite os palpites offline descritos acima, não importa o que os clientes WPA3 façam. A
+nessa rede permite os palpites offline descritos na seção sobre o WPA2, não importa o que os clientes WPA3 façam. A
 especificação do WPA3 acrescenta uma indicação de **Transition Disable**, para que um cliente que entrou
 uma vez com WPA3 se recuse a usar WPA2 nessa rede de novo. Isso protege os clientes modernos de serem
 levados de volta ao método antigo. Ela não protege a passphrase. Duas saídas:

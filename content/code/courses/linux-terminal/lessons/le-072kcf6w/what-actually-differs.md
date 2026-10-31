@@ -57,8 +57,8 @@ The list above is short, and that is the useful fact. All of these are the same 
 - `grep`, `sed`, `awk`, pipes and redirection — lesson 8
 - SSH, and everything about reaching a machine
 
-**Alpine is the exception that proves the rule**: it differs in the userland and the init system as
-well, which is why section 07 gives it a section of its own rather than a column.
+**Alpine is the one exception**: it differs in the userland and the init system as well, which is
+why it has section 07 to itself rather than a column here.
 
 ## Translating a command you were given
 

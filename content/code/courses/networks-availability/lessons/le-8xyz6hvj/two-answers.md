@@ -29,5 +29,5 @@ nothing waits and part of the burst is gone.
 **Neither is the better one; they sit on opposite sides of the same link.** A provider polices, at its
 edge, because it sells a rate and has no wish to store its customers' excess. A customer shapes, on its
 own router, because a queue it owns is a queue it can arrange, which is what lesson 18's classes needed.
-The last section of this lesson puts the two together on one link and shows why the customer's number
+The section at the end of this lesson, on shaping just under the contract, puts the two together on one link and shows why the customer's number
 has to sit a little below the provider's.

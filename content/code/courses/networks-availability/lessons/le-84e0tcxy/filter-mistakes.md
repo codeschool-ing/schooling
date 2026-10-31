@@ -57,6 +57,6 @@ between, it is typed as `http.request.uri contains "nothing"`.
 
 A capture filter goes wrong more quietly still, because a valid filter that selects nothing records
 nothing, and an empty capture reads exactly like "the traffic never happened". The laptop's capture
-in the first section was a correct filter in the wrong place, and it caught one ARP request. **Before
+in the section on where to capture was a correct filter in the wrong place, and it caught one ARP request. **Before
 concluding that something was not sent, check that the capture could have seen it**: the right
 interface, the right port of the switch, and a filter tried once on traffic you know is there.

@@ -35,7 +35,7 @@ Total HTTP Packets      8                                                       
 ```
 
 Oito pacotes HTTP, quatro requisições e quatro respostas: três `200 OK` e um `404 Not Found`, a mesma
-contagem que o `grep` deu na seção anterior. **O menu de estatísticas lê um arquivo, então lê um
+contagem que o `grep` deu na seção sobre ler o arquivo de volta. **O menu de estatísticas lê um arquivo, então lê um
 arquivo vindo de qualquer lugar**, e não precisa de privilégio para isso.
 
 Quando o arquivo viaja, ele vai por algo criptografado, `scp` ou `sftp` da aula 8 de `networks`, e quem

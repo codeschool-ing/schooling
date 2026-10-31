@@ -41,9 +41,9 @@ atender**, que é a cara de um desenho que escala bem.
 ```
 
 A curva oposta é o sinal de alerta. Quando o custo por usuário sobe à medida que os usuários crescem,
-alguma coisa no desenho cresce mais rápido que o negócio: logs guardados para sempre, uma consulta que
-varre toda linha que já guardou, uma réplica por cliente, um NAT gateway levando um tráfego que dobra a
-cada funcionalidade nova. Um total subindo é normal; **um custo unitário subindo é um defeito esperando
+alguma coisa no desenho cresce mais rápido que o negócio. Podem ser logs guardados para sempre, uma
+consulta que varre toda linha que já guardou, uma réplica por cliente, ou um NAT gateway levando um
+tráfego que dobra a cada funcionalidade nova. Um total subindo é normal; **um custo unitário subindo é um defeito esperando
 para ser achado**.
 
 Escolher a unidade é uma decisão por si só. Ela deve ser algo que o produto já conta, que cresce com o

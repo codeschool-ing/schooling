@@ -29,8 +29,8 @@ already been done and paid for.
 
 "If our provider goes down, we fail over to the other one." It sounds like the obvious insurance, and
 it is the most expensive reason on the list. For it to work, every part of the application has to
-run on both providers, the data has to be copied continuously between them — out of one provider at
-its internet egress price, every month — and the failover has to be tested often enough that it
+run on both providers. The data has to be copied continuously between them, out of one provider at
+its internet egress price, every month. And the failover has to be tested often enough that it
 works on the day. An untested failover is a plan to find out during the outage.
 
 A second region of the same provider protects against the loss of one region with **one set of

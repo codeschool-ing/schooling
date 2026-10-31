@@ -44,5 +44,5 @@ Three new pieces of syntax are in this file, and lessons 13 and 14 are where the
   to arrive.
 
 **The shape is what to take from this lesson**: the same pull-one-at-a-time conversation as `for…of`,
-with a pause between the asking and the answer. Lesson 16 uses it on a server, where the
-pause is a real request.
+with a pause between the asking and the answer. In lesson 16 that pause becomes real: a request
+to a server.

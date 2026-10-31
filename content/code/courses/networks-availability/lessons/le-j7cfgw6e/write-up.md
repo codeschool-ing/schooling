@@ -35,8 +35,8 @@ the next incident. In order, as the transcripts show it:
 
 1. `/` from the till: `200 16 bytes`.
 2. `big.bin` from the till: 0 bytes, curl gives up after 8002 ms.
-3. Capture on `hq`'s office side: 1448-byte segments leave `files`, and none of the nine packets captured
-   acknowledges data.
+3. Capture on `hq`'s office side: 1448-byte segments leave `files`, and in the nine packets captured the
+   till acknowledges none of their data.
 4. From `files`, Don't Fragment pings: `-s 1392` crosses, `-s 1400` is lost with no error.
 5. `wg0` on `hq` has `mtu 1420`.
 6. `nft list ruleset` on `hq` shows the `hardening` rule dropping destination unreachable on output.
@@ -48,7 +48,7 @@ the next incident. In order, as the transcripts show it:
 | | hypothesis | test | result | verdict |
 |---|---|---|---|---|
 | 1 | the name, the route, the tunnel or the web server is down | `/` from the till | `200 16 bytes` | refuted: all four work |
-| 2 | full-size packets are lost on the way to the till | `tcpdump` on `hq`'s office side during the download | 1448-byte segments sent, no data acknowledged in nine packets | supported |
+| 2 | full-size packets are lost on the way to the till | `tcpdump` on `hq`'s office side during the download | 1448-byte segments sent, none acknowledged in nine packets | supported |
 | 3 | the tunnel's MTU is smaller than those packets | Don't Fragment pings from `files`; `ip link show wg0` | 1392 crosses, 1400 lost; `mtu 1420` | confirmed |
 | 4 | `hq`'s "fragmentation needed" never reaches `files` | the 1400 ping's statistics; `nft list ruleset` on `hq` | no `+1 errors`; a rule drops destination unreachable on output | confirmed |
 

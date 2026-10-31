@@ -49,8 +49,8 @@ Porque a máquina não vai te avisar. Não há diálogo, não há contagem regre
 lançamento em fim de vida reporta que está tudo em dia — **o que é verdade e soa tranquilizador** —
 e quer dizer apenas que nunca mais vem atualização nenhuma.
 
-Esse é o formato honesto: o modo de falha de um ciclo de vida é o silêncio, e o mesmo vale para o
-job agendado da aula 13 e o backup da aula 10. **Um sistema que parou de te proteger parece idêntico
+O modo de falha de um ciclo de vida é o silêncio, e o mesmo vale para o backup noturno da aula 13,
+que falha por meses sem avisar ninguém. **Um sistema que parou de te proteger parece idêntico
 a um que não tem nada a fazer.** Aprender a conferir coisas que não reportam nada é a maior parte do
 que operação é.
 

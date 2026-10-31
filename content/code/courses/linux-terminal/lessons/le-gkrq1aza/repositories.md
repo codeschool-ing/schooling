@@ -118,8 +118,8 @@ So when you see `is no longer signed`, **read the `E: Failed to fetch` line abov
 and `404` are network answers and a key problem is not. A key problem shows `NO_PUBKEY` and a
 hexadecimal key id instead.
 
-**And notice what did not happen: nothing was installed or upgraded.** Two repositories failed,
-seven worked, and the machine is exactly as it was. `update` only ever writes to a cache.
+**And notice what did not happen: nothing was installed or upgraded.** Of the nine indexes apt asked
+for, two failed and seven worked, and the machine is exactly as it was. `update` only ever writes to a cache.
 
 ## The rest of the vocabulary
 
@@ -133,8 +133,8 @@ apt list --upgradable      # what upgrade would do, before doing it
 **`apt list --upgradable` is the one to run first**, every time. It is the dry run, it is instant,
 and it turns "168 not upgraded" from a number into a list you can read.
 
-`full-upgrade` — `dist-upgrade` in older instructions — differs from `upgrade` in one way and it is
-important: plain `upgrade` will never remove a package to satisfy an upgrade, and `full-upgrade`
+`full-upgrade` — `dist-upgrade` in older instructions — differs from `upgrade` in one way:
+plain `upgrade` will never remove a package to satisfy an upgrade, and `full-upgrade`
 will. On a server, run `upgrade`, read what it held back, and decide about those by hand.
 
 On the rpm side the same split exists with different words: `dnf check-update` lists, `dnf upgrade`

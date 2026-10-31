@@ -21,19 +21,19 @@ sintaxe antiga tornava desajeitados:
       "note": "`constructor` é a função que o `new` chama no passo 3. Ela define as propriedades próprias da instância."
     },
     {
-      "code": "  describe() {\n    return `${this.title} (${this.year})`;\n  }",
+      "code": "\n  describe() {\n    return `${this.title} (${this.year})`;\n  }",
       "note": "Um método escrito no corpo da classe vai para `Book.prototype`, compartilhado por todo livro, exatamente como `Book.prototype.describe = …` fazia."
     },
     {
-      "code": "  get age() {\n    return 2026 - this.year;\n  }",
+      "code": "\n  get age() {\n    return 2026 - this.year;\n  }",
       "note": "`get` cria uma propriedade que é calculada a cada leitura. `b.age` se escreve sem parênteses e roda esta função."
     },
     {
-      "code": "  static fromLine(line) {\n    const [title, year] = line.split(\";\");\n    return new Book(title, Number(year));\n  }\n}",
+      "code": "\n  static fromLine(line) {\n    const [title, year] = line.split(\";\");\n    return new Book(title, Number(year));\n  }\n}",
       "note": "`static` põe uma função na própria classe e não nas instâncias. Um método estático que constrói uma instância a partir de outra entrada é um padrão comum, e `fromLine` é um."
     },
     {
-      "code": "const b = Book.fromLine(\"Dom Casmurro;1899\");\nconsole.log(b.describe(), b.age);\nconsole.log(typeof Book, Object.getPrototypeOf(b) === Book.prototype);\nconsole.log(Object.keys(b), Object.hasOwn(Book.prototype, \"describe\"));\nconsole.log(b);",
+      "code": "\nconst b = Book.fromLine(\"Dom Casmurro;1899\");\nconsole.log(b.describe(), b.age);\nconsole.log(typeof Book, Object.getPrototypeOf(b) === Book.prototype);\nconsole.log(Object.keys(b), Object.hasOwn(Book.prototype, \"describe\"));\nconsole.log(b);",
       "note": "Leia a saída junto com o jeito antigo: `typeof Book` continua `\"function\"`, o protótipo da instância é `Book.prototype`, e `describe` mora lá, não no livro."
     }
   ],

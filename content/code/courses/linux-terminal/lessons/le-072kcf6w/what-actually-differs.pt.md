@@ -57,8 +57,8 @@ A lista acima é curta, e esse é o fato útil. Tudo isto é igual em todo lugar
 - `grep`, `sed`, `awk`, pipes e redirecionamento — aula 8
 - SSH, e tudo sobre alcançar uma máquina
 
-**O Alpine é a exceção que confirma a regra**: ele difere também no userland e no sistema de
-inicialização, e é por isso que a seção 07 dá uma seção inteira a ele em vez de uma coluna.
+**O Alpine é a única exceção**: ele difere também no userland e no sistema de inicialização, e é
+por isso que tem a seção 07 só para ele em vez de uma coluna aqui.
 
 ## Traduzindo um comando que te deram
 

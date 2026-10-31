@@ -9,7 +9,7 @@ The course assumes `web-fundamentals`, and leans on two of its lessons in partic
 
 ## The site you will build
 
-Every example in the course belongs to one small site: **Andorinha Books**, a second-hand bookshop in Pinheiros, São Paulo. It is invented, and it was chosen because a bookshop needs a bit of everything: a home page, a list of events, a form for ordering a book, a table of opening hours, photographs of the shelves, and a layout that has to work on the phone of somebody standing outside the shop. Each lesson adds the part it teaches.
+Every example in the course belongs to one small site: **Andorinha Books**, a second-hand bookshop in Pinheiros, São Paulo. It is invented. A bookshop was chosen because it needs a bit of everything. It has a home page, a list of events, a form for ordering a book, a table of opening hours, photographs of the shelves, and a layout that has to work on the phone of somebody standing outside the shop. Each lesson adds the part it teaches.
 
 The pages are files you write, in one folder on your own computer, and the next section sets that folder up. Each lesson shows every page it uses, whole, in the section that uses it. You open a page by double-clicking it: a browser reads an HTML file from your disk exactly as it reads one from a server, which is all this course needs.
 
@@ -17,7 +17,7 @@ The pages are files you write, in one folder on your own computer, and the next 
 
 The output of HTML and CSS is a **picture**, and a picture is awkward to quote. "The card is narrower than the one beside it" is a description; it is not something you can check. So every claim this course makes about what the browser did is a measurement, printed by a small program called `probe`.
 
-`probe` opens a page in Chromium, the engine inside Chrome and Edge, and asks it the questions the Elements panel answers when you click on something: where is this box, how wide is it, what colour did this rule finally give it, what would a screen reader announce here. It prints the answers as text. Here it is opening this lesson's first page and printing its title and what assistive technology sees in it:
+`probe` opens a page in Chromium, the engine inside Chrome and Edge. Then it asks the questions the Elements panel answers when you click on something: where is this box, how wide is it, what colour did this rule finally give it, what would a screen reader announce here. It prints the answers as text. Here it is opening this lesson's first page and printing its title and what assistive technology sees in it:
 
 ```
 ana@laptop:~/site$ probe skeleton.html title tree
@@ -32,7 +32,7 @@ title: "Andorinha Books"
 
 A page is checked by looking at it, and nothing in this platform can look at a page you wrote and say whether it is right. So the questions in these lessons ask the other half of the skill: **given this HTML and this CSS, what will the browser do?** How wide will that box be, which rule wins, which element is on top at that point. Those have one right answer, and it is the answer `probe` printed.
 
-That is not a lesser exercise. The difference between somebody who writes CSS by trying things until it looks right and somebody who writes it on purpose is exactly this: the second person can predict the result before reloading. The building you do in your own browser, starting from the pages each lesson shows.
+That is not a lesser exercise. The difference between somebody who writes CSS by trying things until it looks right and somebody who writes it on purpose is exactly this: the second person can predict the result before reloading. You do the building in your own browser, starting from the pages each lesson shows.
 
 ## Where this course sits in your track
 

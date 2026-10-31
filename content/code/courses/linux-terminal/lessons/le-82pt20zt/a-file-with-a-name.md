@@ -61,7 +61,7 @@ Four attempts, three different outcomes, and each one is a rule.
 | `chmod +x`, then `./` | works — now the kernel will execute the file itself |
 
 **The `./` is not decoration.** It is a path, and it is required because the current directory is
-deliberately absent from `$PATH` — if it were present, a file called `ls` dropped in a directory
+deliberately absent from `$PATH`. If it were present, a file called `ls` dropped in a directory
 you happened to `cd` into would run instead of the real one. Lesson 3 section 04 covered that; this
 is where you feel it.
 

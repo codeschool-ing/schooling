@@ -23,7 +23,7 @@ control group this shell is in.**
 `free` reads `/proc/meminfo`. So does `top`, and so does every monitoring agent
 that was written before about 2018. All of them will tell you this machine has
 16 GB, and all of them are wrong by two — and on a container with a 512 MB limit
-they are wrong by thirty times.
+they are wrong by thirty-two times.
 
 ## Why
 

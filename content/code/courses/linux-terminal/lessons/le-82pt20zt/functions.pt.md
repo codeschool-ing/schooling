@@ -181,7 +181,7 @@ O `nolocal() { i=clobbered; }` esticou o braço e mudou a variável de quem cham
 `withlocal() { local i=safe; }` não.
 
 **Tudo dentro de uma função é global a menos que você diga `local`.** Um contador de laço chamado
-`i` dentro de uma função vai destruir em silêncio o `i` de quem chamou, e esse é o tipo de bug que
+`i` dentro de uma função vai destruir em silêncio o `i` de quem chamou. É o tipo de bug que
 só aparece quando o script cresce a ponto de dois laços se aninharem através de uma chamada de
 função.
 
@@ -269,7 +269,7 @@ chega exatamente como escrito, que é o que você quer para algo contendo `$` e 
 ## O que funções não conseguem fazer
 
 Elas não podem ser chamadas antes de definidas, não podem devolver nada além de um número, e **não
-podem ser exportadas para um script filho** de nenhum jeito em que você deva confiar — o `export -f`
+podem ser exportadas para um script filho** de nenhum jeito em que você deva confiar. O `export -f`
 existe, é só do bash, e foi o mecanismo por trás de um furo de segurança famoso em 2014.
 
 Se dois scripts precisam da mesma função, ponha num terceiro arquivo e use `source` (seção 02).

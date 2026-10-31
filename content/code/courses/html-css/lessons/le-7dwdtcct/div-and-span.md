@@ -27,7 +27,7 @@ Both are correct. In the accessibility tree they leave no trace, and that is rig
 
 Before writing a `<div>`, ask the question from lesson 1: **what is this?** If the answer is a heading, a list, a navigation block, a self-contained item, a button, use that element. If the honest answer is "a box for the layout", use a `<div>` and stop worrying about it.
 
-The failure this lesson is about is not using `<div>`. It is using `<div>` **where the content had a meaning**, as the soup page did with its title, its menu and its events, so that the meaning ended up in a class name where only the CSS and the person reading the file could find it.
+The failure this lesson is about is not using `<div>`. It is using `<div>` **where the content had a meaning**, as the soup page did with its title, its menu and its events. The meaning then ended up in a class name, where only the CSS and the person reading the file could find it.
 
 ## A note on ARIA
 

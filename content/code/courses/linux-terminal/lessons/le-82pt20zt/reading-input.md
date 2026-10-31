@@ -207,7 +207,7 @@ whose output is being captured still asks its question on the terminal.
 while treating an empty answer — somebody just pressing return — as no. **Default to no** on
 anything destructive.
 
-One more thing to know: `read` inside a loop that is already reading a file will eat the file's
+`read` inside a loop that is already reading a file will eat the file's
 next line instead of waiting for the user — use `read -u 3` with an explicit descriptor, or
 restructure.
 

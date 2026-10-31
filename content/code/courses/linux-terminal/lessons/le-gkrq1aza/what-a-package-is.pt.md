@@ -63,7 +63,8 @@ varre o disco; é uma consulta.
 
 ## O que um pacote promete
 
-Quatro campos fazem a maior parte do trabalho, e os quatro estão visíveis no `apt show`:
+Quatro campos fazem a maior parte do trabalho. O `apt show` imprime os três que o `cowsay` tem;
+ele não declara `Recommends`:
 
 ```
 root@vm:~# apt show cowsay 2>/dev/null | head -14
@@ -107,8 +108,8 @@ O `Depends: libtext-charwidth-perl` é a promessa que a seção 07 quebra de pro
 | `-8` | a revisão de **empacotamento**: a oitava tentativa de empacotar aquele mesmo 3.03 |
 
 **O último número muda sem o programa mudar nada.** Um `-8` onde você tinha `-7` pode ser uma falha
-de segurança corrigida e nada mais, que é exatamente para o que a versão estável de uma distribuição
-serve: o número da versão fica parado e as correções chegam por baixo.
+de segurança corrigida e nada mais. É exatamente para isso que serve a versão estável de uma
+distribuição: o número da versão fica parado e as correções chegam por baixo.
 
 O `5:29.3.1-1~ubuntu.24.04~noble` da seção 09 tem uma quarta parte — o `5:` é um **epoch**, um
 número que sobrepõe a comparação normal de versões quando a numeração do upstream andou para trás.

@@ -91,7 +91,7 @@ ma        # set mark a here
 `a        # jump to the exact position of mark a
 ```
 
-Duas marcas são definidas por você e valem conhecer:
+Três marcas são definidas para você, e vale a pena conhecê-las:
 
 | | |
 |---|---|

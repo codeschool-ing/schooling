@@ -80,7 +80,7 @@ IP (tos 0x0, ttl 64, id 63671, offset 0, flags [DF], proto IPIP (4), length 104)
 
 Each line reads left to right as two packets, one inside the other: from `203.0.113.2` to
 `198.51.100.2`, and inside it from the laptop to the till. With `-v` the byte counts appear. The inner
-packet is **84 bytes**, the outer one **104**, and the difference is the one header IP-in-IP adds. The
+packet is **84 bytes, the outer one 104**, and the difference is the one header IP-in-IP adds. The
 outer header says `proto IPIP (4)`, which is how the receiving router knows to look inside.
 
 ## The program behind it

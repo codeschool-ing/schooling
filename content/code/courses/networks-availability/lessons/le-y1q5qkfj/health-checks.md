@@ -8,7 +8,7 @@ server, and it does so the same way, with a check that runs whether or not anyth
 `server` line in the configuration ends `check inter 1s fall 2 rise 2`, and `option httpchk GET /` makes
 the check a real HTTP request for the home page rather than a test that the port is open.
 
-With HAProxy on `lb1` started again, with the same command as in the first section, nginx on `web2`
+With HAProxy on `lb1` started again, with the same command as in the active-passive section, nginx on `web2`
 was stopped: `sudo bash netlab.sh kill web2 nginx` on the virtual machine. Each balancer checks the servers itself; this is
 `lb2`'s view:
 

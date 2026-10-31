@@ -114,7 +114,7 @@ ana@vm:~/work$ df -h /tmp | tail -1
 Read the three `df` lines. **13G, then 13G after deleting two gigabytes, then 11G after killing a
 process that was not even writing to it.**
 
-Lesson 3 section 10 said `rm` removes a name, not a file. This is the consequence: the directory
+Lesson 3 section 11 said `rm` removes a name, not a file. This is the consequence: the directory
 entry is gone — `ls` cannot find it — and the data is still there because **a descriptor is also a
 reference**. The kernel frees the blocks when the last name and the last open descriptor are both
 gone, and not before.

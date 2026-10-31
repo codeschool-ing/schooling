@@ -81,7 +81,7 @@ O conserto é um par de opções que precisam ser usadas juntas:
 
 Um byte nulo não pode aparecer num nome de arquivo, que é por que este é o único separador sempre
 seguro. **O `find … -print0 | xargs -0 …` é a forma a digitar por padrão**, não a de lembrar quando
-um nome tem espaço — porque o nome com espaço vai ser de outra pessoa, num dia em que você não estava
+um nome tem espaço. O nome com espaço vai ser de outra pessoa, num dia em que você não estava
 esperando.
 
 E repare em como a falha se comportou: ela **funcionou pela metade**. O `plain.txt` foi contado, o
@@ -148,4 +148,4 @@ find . -name '*.log' -exec gzip {} +             # find already has the names
 printf '%s\n' a b | xargs -I{} mv {} {}.bak      # the argument is not last
 ```
 
-**A segunda linha é a de virar hábito**, porque ela é correta em todo caso e custa oito caracteres.
+**A segunda linha é a de virar hábito**, porque ela é correta em todo caso e custa duas flags.

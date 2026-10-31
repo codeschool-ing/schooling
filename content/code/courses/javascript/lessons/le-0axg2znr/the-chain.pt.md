@@ -38,8 +38,8 @@ cadeia termina**. `list.map` não é uma cópia de `Array.prototype.map`; é a m
 subindo um degrau, e o `===` confirma.
 
 Quando a caminhada chega a `null` sem achar o nome, a resposta é `undefined`, como mostra
-`list.missing`. **Uma propriedade que falta custa uma caminhada pela cadeia inteira**, e é por isso
-que nunca é erro e nunca é instantânea.
+`list.missing`. **Uma propriedade que falta custa uma caminhada pela cadeia inteira**, então nunca é
+instantânea, e o que ela dá no fim é `undefined`, nunca um erro.
 
 Isso explica duas coisas de aulas anteriores. O objeto vazio da aula 5 que já tinha um `constructor`
 o tinha herdado de `Object.prototype`. E o dicionário `Object.create(null)` da aula 7 não tinha

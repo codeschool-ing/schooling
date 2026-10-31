@@ -57,4 +57,4 @@ A última caixa diz `width: 300px; aspect-ratio: 16 / 9` e nenhuma altura. Ela t
 
 ## Tamanhos baseados no conteúdo
 
-Três palavras-chave dimensionam uma caixa pelo conteúdo: **`min-content`**, tão estreita quanto o conteúdo consegue ficar sem transbordar, o que para texto é a palavra mais longa; **`max-content`**, tão larga quanto o conteúdo quer numa linha só; e **`fit-content`**, que é `max-content` mas nunca mais larga que o espaço disponível. `width: fit-content` faz uma caixa abraçar o texto, que é como se dimensiona um rótulo ou um selo. O Grid, aula 9, usa as três como tamanhos de trilha.
+Três palavras-chave dimensionam uma caixa pelo conteúdo. **`min-content`** é tão estreita quanto o conteúdo consegue ficar sem transbordar, o que para texto é a palavra mais longa; **`max-content`** é tão larga quanto o conteúdo quer numa linha só; e **`fit-content`** é `max-content`, mas nunca mais larga que o espaço disponível. `width: fit-content` faz uma caixa abraçar o texto, que é como se dimensiona um rótulo ou um selo. O Grid, aula 9, usa as três como tamanhos de trilha.

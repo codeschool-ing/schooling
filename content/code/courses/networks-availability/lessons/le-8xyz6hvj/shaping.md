@@ -64,7 +64,7 @@ ana@laptop:~$ sleep 2; ping -c 5 -q 192.0.2.21 | tail -n 2
 rtt min/avg/max/mdev = 20.932/21.989/22.950/0.805 ms
 ```
 
-**22 ms on average**, against 0.08 ms on an idle link in lesson 18. That is the queue, and the upload's
+**22 ms on average**, against 0.106 ms on the idle 5 Mbit/s link in lesson 18. That is the queue, and the upload's
 own columns account for it. The `Cwnd` column says TCP kept about **14.1 KBytes** in flight, and in
 steady state that is roughly what sits in the shaper's queue: 14.1 × 1024 × 8 = 115,507 bits, which at
 5,000,000 bits a second take **23 ms** to leave. The ping waited behind the upload's window.

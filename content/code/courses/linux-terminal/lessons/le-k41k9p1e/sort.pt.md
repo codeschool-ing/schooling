@@ -100,8 +100,8 @@ por valor de byte, então o `LC_ALL=C` não muda nada. Numa máquina configurada
 primeiro comando dá `a A b B` — sem diferenciar caixa, letra por letra — e o segundo continua dando
 `A B a b`.
 
-Isso importa em exatamente uma situação e ela é ruim: **um script que compara saída ordenada entre
-duas máquinas.** O `comm` e o `join` da seção 15 exigem que as entradas estejam ordenadas *do mesmo
+Isso importa em exatamente uma situação, e ela é ruim: **um script que compara saída ordenada entre
+duas máquinas**. O `comm` e o `join` da seção 15 exigem que as entradas estejam ordenadas *do mesmo
 jeito*, e duas máquinas com locales diferentes produzem ordens diferentes dos mesmos dados.
 
 O conserto é ser explícito. **`LC_ALL=C sort` num script** torna a ordem determinística, e também é
@@ -124,7 +124,7 @@ E o `sort --parallel=4` usa vários núcleos, o que num arquivo grande é uma di
 
 ## Os dois hábitos
 
-**Reduza antes de ordenar.** `grep` e `cut` primeiro: ordenar mil e duzentos campos de quatro
+**Reduza antes de ordenar.** `grep` e `cut` primeiro: ordenar mil e duzentos campos de três
 caracteres é mais barato que ordenar mil e duzentas linhas de bem mais de cem, e num log grande a
 proporção é a mesma mas os números são minutos.
 

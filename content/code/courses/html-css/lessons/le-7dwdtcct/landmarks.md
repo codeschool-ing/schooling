@@ -31,4 +31,4 @@ The semantic home page from section 02 uses four of them, and here they are as b
 
 ## Landmarks you get for free
 
-None of this needs an attribute. `role="navigation"` exists and does the same as `<nav>`, and you will see it in old code, written before the elements existed. **The first rule of using ARIA**, the specification that defines those roles, is not to use it where an HTML element already does the job, because the element brings the role, the keyboard behaviour and the browser's handling with it, and an attribute brings only the role.
+None of this needs an attribute. `role="navigation"` exists and does the same as `<nav>`, and you will see it in old code, written before the elements existed. **The first rule of using ARIA**, the specification that defines those roles, is not to use it where an HTML element already does the job. The element brings the role, the keyboard behaviour and the browser's handling with it, and an attribute brings only the role.

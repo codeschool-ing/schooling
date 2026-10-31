@@ -39,8 +39,8 @@ three widths set in one task; the screen only ever saw the last
 - **Changes made within one task are drawn together.** The script set the bar's width three times in
   a row; the screen was never drawn between them, so nobody saw 100 or 200 pixels. That is why a
   script can rebuild a whole list (lesson 11) without the page flickering through every step;
-- **`requestAnimationFrame(fn)` runs `fn` just before the next frame is drawn.** `grow` asked for it
-  five times, once per frame, and the bar grew ten pixels a frame. Animation code uses it so each
+- **`requestAnimationFrame(fn)` runs `fn` just before the next frame is drawn.** `grow` ran five
+  times, once per frame, and the bar grew ten pixels a frame. Animation code uses it so each
   change lands on exactly one frame.
 
 ## Fixing the frozen page

@@ -16,8 +16,8 @@ cheap and fast, and it has only the connection to go on.
 
 **A layer 7 balancer is a proxy that speaks the application's protocol.** It accepts the client's
 connection itself, reads the HTTP request, and opens a second connection of its own to the server it
-picks. Because it reads every request, it can choose by the path, by the `Host` header or by a cookie,
-and it can add a cookie of its own to the reply, which the last section of this lesson depends on. The
+picks. Because it reads every request, it can choose by the path, by the `Host` header or by a cookie.
+It can also add a cookie of its own to the reply, which the section on persistence, at the end of this lesson, depends on. The
 price is work: it parses every request, and for HTTPS it has to hold the certificate and decrypt.
 
 ```schooling-figure
@@ -30,8 +30,8 @@ client's own address, if the server needs it, travels in a header the proxy adds
 
 ## The balancer
 
-In the data centre, `www.example.com` resolves to `192.0.2.80`, and that address sits on `lb1`, put there
-by hand for this lesson, `sudo ip addr add 192.0.2.80/24 dev eth0` on `lb1`; lesson 16 is where two
+In the data centre, `www.example.com` resolves to `192.0.2.80`. That address sits on `lb1`, put there
+by hand for this lesson with `sudo ip addr add 192.0.2.80/24 dev eth0` on `lb1`; lesson 16 is where two
 balancers share it. `lb1` runs **HAProxy**, the open
 source balancer most Linux shops meet first, as a layer 7 proxy in `mode http`, the configuration of
 lesson 16. Behind it are three `nginx` servers, `web1`, `web2` and `web3`, each answering a request for

@@ -55,8 +55,8 @@ IP 203.0.113.2.4500 > 198.51.100.77.4500: UDP-encap: ESP(spi=0x8d6d0dca,seq=0x1)
 
 Each side hashes the addresses and ports it believes the packet carried and sends the hashes as
 `N(NATD_S_IP)` and `N(NATD_D_IP)`. `remote` hashed `192.168.1.50`, while `hq` saw the packet arrive from
-`198.51.100.77`, as the ISP's capture shows. The hashes did not match, and **both sides concluded `local
-host is behind NAT` before a single key was agreed.** The first exchange ran on port 500 and the second
+`198.51.100.77`, as the ISP's capture shows. The hashes did not match, so **both sides knew there was a NAT before a single key was
+agreed**, and the laptop logged `local host is behind NAT`. The first exchange ran on port 500 and the second
 on 4500.
 
 IKE and ESP now share port 4500, so the receiver has to tell them apart. An IKE message there starts

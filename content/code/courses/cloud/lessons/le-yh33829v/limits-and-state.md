@@ -23,8 +23,8 @@ documents plainly:
 
 ## No state between calls
 
-This lesson's handler already showed it with a counter. **Whatever a function keeps in memory
-belongs to one execution environment, and the platform creates and discards those as it chooses.**
+This lesson's handler already showed it with a counter. Whatever a function keeps in memory
+belongs to one execution environment, and the platform creates and discards those as it chooses.
 **So every piece of state lives outside: in a database, a cache, an object store or a queue.** A
 user's session is a row or a signed token, not a variable. A file being processed is in a bucket,
 not in `/tmp` waiting for the next call to find it.

@@ -6,8 +6,9 @@ version: 1
 When a tunnel will not come up, people read the configuration again, and both files look right to
 whoever wrote them. **The log of one negotiation says which step failed**, and that narrows the search to
 a few lines. `swanctl --initiate` starts a negotiation by hand and prints the daemon's log as it goes. A
-working one is the reference to read a broken one against. Tear the connection down first, as in the
-previous section, so that there is something to negotiate:
+working one is the reference to read a broken one against. Tear the connection down first, with
+`sudo swanctl --terminate --ike offices` as in the section on IKEv2, so that there is something to
+negotiate:
 
 ```
 ana@hq:~$ sudo swanctl --initiate --child lans

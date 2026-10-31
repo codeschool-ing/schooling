@@ -17,23 +17,23 @@ codebase. The newest, the **arrow function**, is the shortest:
       "note": "A function declaration: the keyword, a name, the parameters, and a body in braces. `return` hands the result back."
     },
     {
-      "code": "const triple = function (n) {\n  return n * 3;\n};",
+      "code": "\nconst triple = function (n) {\n  return n * 3;\n};",
       "note": "A function expression: the same thing written as a value and given to a name. The name lives wherever `const` puts it."
     },
     {
-      "code": "const half = (n) => n / 2;",
+      "code": "\nconst half = (n) => n / 2;",
       "note": "An arrow function. `=>` stands between the parameters and the body, and with no braces the body is a single expression whose value is returned without writing `return`."
     },
     {
-      "code": "const square = n => n * n;",
+      "code": "\nconst square = n => n * n;",
       "note": "With exactly one parameter the parentheses are optional. Prettier puts them back by default, and most teams leave them in."
     },
     {
-      "code": "const describe = (title, year = \"unknown\") => {\n  const age = typeof year === \"number\" ? 2026 - year : \"?\";\n  return title + \" (\" + year + \"), \" + age + \" years old\";\n};",
+      "code": "\nconst describe = (title, year = \"unknown\") => {\n  const age = typeof year === \"number\" ? 2026 - year : \"?\";\n  return title + \" (\" + year + \"), \" + age + \" years old\";\n};",
       "note": "With braces the body is a block like any other, and then `return` is needed again. `year = \"unknown\"` is a default, used when the caller passes nothing for that parameter."
     },
     {
-      "code": "console.log(double(4), triple(4), half(4), square(4));\nconsole.log(describe(\"Dom Casmurro\", 1899));\nconsole.log(describe(\"Iracema\"));",
+      "code": "\nconsole.log(double(4), triple(4), half(4), square(4));\nconsole.log(describe(\"Dom Casmurro\", 1899));\nconsole.log(describe(\"Iracema\"));",
       "note": "The calls. `describe(\"Iracema\")` leaves `year` out, so the default fills it in."
     }
   ],
@@ -64,8 +64,9 @@ undefined
 ```
 
 **After `=>`, a brace always opens a block, never an object.** In `wrong`, the braces are a
-function body, `title` and its colon are a label (a part of the language almost nobody uses), and the function
-returns nothing. Wrapping the object in parentheses, as `right` does, makes it an expression again.
+function body, `title` and its colon are a label (a part of the language almost nobody uses), and
+the function returns nothing. Wrapping the object in parentheses, as `right` does, makes it an
+expression again.
 Everybody writes `wrong` once.
 
 ## An arrow cannot be a constructor

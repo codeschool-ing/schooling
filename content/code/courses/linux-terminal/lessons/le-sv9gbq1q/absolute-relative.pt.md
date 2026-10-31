@@ -52,10 +52,10 @@ Estando em `/home/ana/work/notes`, cada um destes nomeia o mesmo arquivo:
 | `/home/ana/work/src/main.c` | absoluto | da raiz, por extenso |
 | `../src/main.c` | relativo | um acima, depois abaixo |
 | `~/work/src/main.c` | absoluto, depois da expansão | `~` vira `/home/ana` antes de o comando rodar |
-| `../../ana/work/src/main.c` | relativo | bobo, e correto |
+| `../../../ana/work/src/main.c` | relativo | bobo, e correto |
 
 O último está aí para marcar um ponto: **um caminho não precisa ser o trajeto mais curto, só um
-trajeto válido.** Subir dois e descer três é exatamente tão correto quanto subir um — o kernel
+trajeto válido.** Subir três e descer três é exatamente tão correto quanto subir um — o kernel
 percorre o que você entregar.
 
 ## Quando usar cada um

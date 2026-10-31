@@ -7,9 +7,9 @@ There is a reason a command you learn today works on a server in Frankfurt, on a
 container, and on a Raspberry Pi on your desk. It is not that they run the same software. **It is
 that they agreed, decades ago, on what the commands would be called and how they would behave.**
 
-That agreement has a name and a history, and both are worth ten minutes, because they explain what
-carries from one machine to another and what does not — which is the difference between confidence
-and superstition when you sit down at a system you have never seen.
+That agreement has a name and a history, and both are worth ten minutes. They explain what carries
+from one machine to another and what does not, which is the difference between confidence and
+superstition when you sit down at a system you have never seen.
 
 ## The family tree
 
@@ -39,10 +39,10 @@ lineage** — which is why it is legally free of Unix, and why it behaves like U
 
 ## The promise is the interface, and it is written down
 
-The thing being inherited is not code. It is a specification, and it is called **POSIX** — a
-document that says what a compliant system must provide: that there is a command called `ls`, that
-it lists a directory, that `|` sends one program's output into the next, that paths are separated
-by `/`, that a file has an owner and permission bits, that a program can be sent a signal.
+The thing being inherited is not code. It is a specification, and it is called **POSIX**: a
+document that says what a compliant system must provide. There is a command called `ls`, and it
+lists a directory. `|` sends one program's output into the next. Paths are separated by `/`. A file
+has an owner and permission bits, and a program can be sent a signal.
 
 POSIX is why this holds:
 
@@ -72,7 +72,7 @@ POSIX is a floor, not a ceiling, and every real system builds above it. The part
 are where two Unix-like machines stop agreeing:
 
 **Flags beyond the standard ones.** GNU tools on Linux take long options — `ls --human-readable`,
-`grep --recursive`. The BSD tools on macOS often do not. The single most common version of this is
+`grep --recursive`. The BSD tools on macOS often do not. The most common version of this is
 `sed -i`, which edits a file in place: on Linux `sed -i 's/a/b/' f` works, and on macOS the same
 line fails, because there `-i` wants an argument for the backup suffix.
 
@@ -107,8 +107,7 @@ which means you cannot `grep` it or put it in git.
 **And it is why WSL exists.** Microsoft's eventual answer to "developers need Unix" was not to
 make Windows more Unix-like. It was to ship an actual Linux kernel alongside Windows and let you
 open a terminal into it. That is an admission that the gap is not closeable by imitation — and,
-for you, it is the easiest way to do this course on a Windows machine. The next section sets it
-up.
+for you, it is the easiest way to do this course on a Windows machine. Section 04 sets it up.
 
 ## What this buys you, concretely
 

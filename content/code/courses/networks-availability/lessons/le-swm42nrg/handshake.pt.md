@@ -59,7 +59,7 @@ do laptop, e a resposta do servidor, `Server Hello, Change Cipher Spec, Applicat
 
 `Continuation Data` é o resto de um registro, dividido em pacotes de 1264 bytes. **Os pacotes `P_ACK_V1`
 são o OpenVPN confirmando ele mesmo os pacotes de controle, porque o UDP não confirma.** Os pacotes 9 a
-11 vão no outro sentido: o certificado e a prova do próprio laptop, cifrados, cerca de 2,7 kilobytes.
+11 vão no outro sentido: o certificado e a prova do próprio laptop, cifrados, 2756 bytes de quadros ao todo.
 São a conferência que o servidor faz do cliente. Doze pacotes, 3,8 milissegundos, num
 computador conversando consigo mesmo.
 
