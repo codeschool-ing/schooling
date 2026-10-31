@@ -50,7 +50,7 @@ fabric.
 ## Thermal paste, briefly, and honestly
 
 Between the processor and the heatsink there is a layer of paste, and after five to ten years it
-dries out and conducts badly. Replacing it is a genuine repair that genuinely works.
+dries out and conducts badly. Replacing it is a repair, and it works.
 
 It is also the point where a home job becomes a real one: the heatsink has to come off, the old
 paste has to be cleaned off both surfaces, and the new layer has to be the right amount. It is

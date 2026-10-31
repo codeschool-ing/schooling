@@ -15,7 +15,7 @@ para servir a um deles.
   arquivos, seus programas instalados, o próprio sistema operacional.
 - A **placa-mãe** é o que conecta os outros três.
 
-Essa última é a estranha da lista, e vale dizer logo por quê: **a placa-mãe não faz trabalho
+Essa última é a estranha da lista, e o motivo vem primeiro: **a placa-mãe não faz trabalho
 nenhum.** Não calcula nada e não lembra de nada. Ela é o prédio em que os outros três trabalham
 — a fiação, os soquetes, os caminhos entre eles. As pessoas a listam como quarto componente
 porque é o maior objeto dentro do gabinete, o que é exatamente o contrário.
@@ -56,5 +56,5 @@ Intel Core i5-13400 · 16 GB DDR4 · 512 GB NVMe SSD
 ```
 
 — e dizer qual das quatro partes é cada pedaço, mais ou menos o que significa, e qual delas é a
-que mais provavelmente vai te decepcionar. É uma habilidade genuinamente útil e está a quatro
-aulas de vocabulário de distância, não a quatro anos.
+que mais provavelmente vai te decepcionar. É uma habilidade útil, e está a quatro seções de
+vocabulário de distância, não a quatro anos.

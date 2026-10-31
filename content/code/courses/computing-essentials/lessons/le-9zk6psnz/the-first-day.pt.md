@@ -31,8 +31,8 @@ arranjo que envelhece melhor.
 O ritual antigo era um disco de drivers e uma tarde. Hoje uma instalação atual de Windows ou de
 Linux chega com quase tudo funcionando, e há exatamente dois para buscar à mão:
 
-- **o driver de vídeo**, no fabricante da placa e não no serviço de atualização, porque é o que é
-  genuinamente mais novo e genuinamente importa;
+- **o driver de vídeo**, no fabricante da placa e não no serviço de atualização, porque é o que de
+  fato é mais novo e importa;
 - **o driver de chipset**, na página da própria placa-mãe, que afeta sobretudo gerenciamento de
   energia e vale dez minutos.
 
@@ -55,8 +55,8 @@ de drivers é uma máquina cujos drivers têm três anos.
 **Arme o backup hoje.** Não quando houver algo na máquina que valha guardar — hoje, com a máquina
 vazia e o serviço levando dez minutos.
 
-A razão não é diligência. É que **um backup arranjado depois é um backup arranjado depois da
-primeira coisa que você teria querido de volta**, e toda pessoa que já perdeu algo armou o dela na
+**Um backup arranjado depois é um backup arranjado depois da primeira coisa que você teria
+querido de volta**, e toda pessoa que já perdeu algo armou o dela na
 semana seguinte. Um disco externo e a ferramenta do próprio sistema bastam; qualquer coisa
 automática ganha de qualquer coisa melhor que seja feita à mão.
 

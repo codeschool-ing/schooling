@@ -19,7 +19,7 @@ You do not need a spreadsheet. Two numbers dominate and everything else is round
 | everything else together | about 50 W |
 
 A machine with no graphics card lands near 150 W. The same machine with a mid-range card lands
-near 400 W. **The card is the decision**, exactly as the last section said.
+near 400 W. **The card is the decision**, exactly as the section on integrated graphics said.
 
 ## Headroom, and why more is not safer
 

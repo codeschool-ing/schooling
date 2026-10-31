@@ -4,7 +4,7 @@ version: 1
 ---
 
 Wi-Fi é rádio. Tudo o que surpreende nele deixa de surpreender quando essa frase é levada ao pé da
-letra: ele é absorvido por coisas, é refletido por coisas, sofre interferência de outros rádios, e
+letra. Ele é absorvido por coisas, é refletido por coisas, sofre interferência de outros rádios, e
 enfraquece com a distância de um jeito que não liga para quanto você pagou.
 
 ## Duas faixas, e a troca é sempre a mesma
@@ -25,7 +25,7 @@ tempo com o mesmo nome.
 Uma faixa mais nova, **6 GHz**, vai mais longe na mesma direção: mais rápida ainda, e mal sai do
 cômodo. Celulares e notebooks dos últimos anos conseguem usá-la; nada mais velho consegue.
 
-**A decisão em geral é tomada por você**, porque a maioria das caixas anuncia um nome só nas duas
+**A decisão em geral já vem tomada**, porque a maioria das caixas anuncia um nome só nas duas
 faixas e deixa cada aparelho escolher. Isso funciona bem e falha de um jeito específico: um
 aparelho que se conectou em 5 GHz na sala se agarra a ela enquanto você se afasta, muito depois do
 ponto em que 2,4 GHz seria mais rápido. Desligar e ligar o Wi-Fi faz ele escolher de novo, que é

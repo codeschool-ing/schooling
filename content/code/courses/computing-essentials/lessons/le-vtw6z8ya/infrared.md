@@ -44,6 +44,6 @@ Where it remains, it remains because it is almost free and good enough:
 no pairing, no address, no acknowledgement, no security at all — any remote can control any
 television that speaks its codes, and that is why universal remotes exist and work.
 
-It is a fair trade for a device that has to cost a dollar and run for four years on two cells,
-and it is the clearest example in this lesson of the rule from the first section: **something at
+It is a fair trade for a device that has to cost a dollar and run for four years on two cells.
+It is also the clearest example in this lesson of the rule from the first section: **something at
 the far corner of the range-speed-power triangle gives up everything else to get there.**

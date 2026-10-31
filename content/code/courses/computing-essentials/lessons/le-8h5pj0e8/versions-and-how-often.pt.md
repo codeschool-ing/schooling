@@ -52,7 +52,7 @@ vida real.
 
 ## Completo, incremental, diferencial
 
-Três palavras na tela de ajustes, e um parágrafo basta:
+Três palavras na tela de ajustes, e três linhas bastam:
 
 - Um backup **completo** copia tudo. Lento, grande e autossuficiente.
 - Um **incremental** copia o que mudou desde o último backup de qualquer tipo. Rápido e pequeno,
@@ -68,7 +68,7 @@ argumento para o teste de restauração.
 ## A que não é sobre software
 
 **Confira que rodou.** Toda ferramenta de backup consegue mandar um aviso ou mostrar um estado, e
-toda uma delas também consegue falhar em silêncio por meses com o disco desconectado.
+cada uma delas também consegue falhar em silêncio por meses com o disco desconectado.
 
 Uma vez por mês, olhe a data do backup mais novo. É essa a manutenção inteira, e é o passo entre
 *ter um backup* e *ter tido um backup*.

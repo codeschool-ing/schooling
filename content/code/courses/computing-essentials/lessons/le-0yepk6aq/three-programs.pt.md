@@ -43,7 +43,7 @@ Duas consequências práticas:
 ## Desktop, web e celular são três produtos diferentes
 
 Eles dividem um nome e um formato de arquivo e não dividem uma lista de recursos. As versões web
-são genuinamente capazes e têm faltas: mala direta, a maior parte das funções estatísticas
+são capazes e têm faltas: mala direta, a maior parte das funções estatísticas
 avançadas, refinamentos de tabela dinâmica, macros.
 
 **Trabalhe na versão de desktop para qualquer coisa complicada e use a web para qualquer coisa

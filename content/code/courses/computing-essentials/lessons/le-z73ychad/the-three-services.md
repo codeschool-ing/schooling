@@ -16,9 +16,9 @@ about what a person is doing, and that assumption is the thing to know.
 
 **iCloud** is the only one that syncs things that are not files: messages, passwords, health data,
 the arrangement of a home screen. Its *Desktop and Documents* option is genuinely useful and
-genuinely surprising, because turning it on **moves** those folders into iCloud — and turning it
-off later leaves them in iCloud and gives the Mac empty ones, which is the single most alarming
-five minutes this service produces.
+genuinely surprising, because turning it on **moves** those folders into iCloud. Turning it off
+later leaves them in iCloud and gives the Mac empty ones, which is the most alarming five minutes
+this service produces.
 
 **OneDrive** has *Known Folder Move*, which does the same redirection on Windows, and it is what
 most companies turn on for everybody. It is the reason a new work laptop can be signed into and

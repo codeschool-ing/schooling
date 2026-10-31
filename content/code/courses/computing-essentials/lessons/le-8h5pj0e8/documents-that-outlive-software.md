@@ -59,12 +59,12 @@ Lesson three said that OCR invents plausible words when it fails and that the fa
 look like one. For an archive, that means **keeping the picture as well as the text** — which is
 what a searchable PDF is: the scan you can read and a text layer underneath it you can search.
 
-## And the last idea in this course
+## And the last idea in this lesson
 
-Everything since lesson one has been about a machine: the parts, the ports, the radios, the
+Everything from lesson one to here has been about a machine: the parts, the ports, the radios, the
 files. This is the only part of it that is about **time**.
 
 A machine lasts five years. A format lasts as long as somebody keeps implementing it. **Your
 documents should be readable by the person you will be when none of the hardware in this course
-exists** — and the way to arrange that is the same three sentences: a plain format, a copy that
+exists.** The way to arrange that is the same three sentences: a plain format, a copy that
 does not change when the original does, and one of them somewhere else.

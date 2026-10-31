@@ -31,9 +31,9 @@ O **histórico de versões** é a defesa de verdade, e os três o têm:
 | **Google Drive** | 30 dias ou 100 versões, o que vier primeiro, salvo se uma versão for marcada para manter |
 | **iCloud Drive** | 30 dias para arquivos apagados; versões por arquivo só em aplicativos que suportam |
 
-**Trinta dias é o formato de tudo isso**, que é a mesma figura que a aula oito chamou de mínimo
+**Trinta dias é o formato de tudo isso**, que é o mesmo número que a aula oito chamou de mínimo
 que vale ter. Então sincronia mais histórico de versões é genuinamente uma defesa contra as duas
-primeiras linhas daquela grade — desde que alguém perceba dentro de um mês.
+primeiras falhas acima — desde que alguém perceba dentro de um mês.
 
 O que não é defesa contra a terceira: uma conta que se vai leva o próprio histórico junto.
 

@@ -49,7 +49,7 @@ chegar embaixo, e **não o use sobre uma cama ou um sofá**, onde a entrada fica
 ## Pasta térmica, em resumo, e com honestidade
 
 Entre o processador e o dissipador há uma camada de pasta, e depois de cinco a dez anos ela seca e
-conduz mal. Trocá-la é um reparo de verdade que funciona de verdade.
+conduz mal. Trocá-la é um reparo, e ele funciona.
 
 É também o ponto em que um serviço caseiro vira um serviço profissional: o dissipador tem de sair,
 a pasta velha tem de ser limpa das duas superfícies, e a camada nova tem de ter a quantidade

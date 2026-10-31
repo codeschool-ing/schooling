@@ -28,12 +28,12 @@ a coisa que está arrastada.
 
 **Ele pode traduzir mal.** Um teclado que não escreve `ç` sem ginástica, uma impressora que
 transforma uma fotografia numa grade de pontos visíveis, um scanner que inventa um detalhe que
-nunca enxergou — cada um é uma tradução que perdeu alguma coisa, e nenhum deles aparece como
+nunca enxergou: cada um é uma tradução que perdeu alguma coisa. Nenhum deles aparece como
 mensagem de erro.
 
-**Ele pode ser caro de um jeito que a etiqueta de preço esconde.** Três dos cinco aparelhos daqui
-têm custo de uso: tinta, toner, papel. Um deles é vendido abaixo do que custa fabricar, no
-entendimento de que você vai pagar a diferença depois. Isso é a seção das impressoras, e é o
+**Ele pode ser caro de um jeito que a etiqueta de preço esconde.** Um dos cinco aparelhos daqui
+tem custo de uso próprio: tinta, toner, papel. Ele também é vendido abaixo do que custa fabricar,
+no entendimento de que você vai pagar a diferença depois. Isso é a seção das impressoras, e é o
 maior gasto evitável deste curso inteiro.
 
 ## A única regra que cobre todos eles

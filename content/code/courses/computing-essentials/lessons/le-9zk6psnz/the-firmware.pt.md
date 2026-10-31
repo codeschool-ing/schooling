@@ -1,5 +1,5 @@
 ---
-title: O firmware, onde dois ajustes importam e trinta não
+title: O firmware, onde dois ajustes importam e o resto não
 version: 1
 ---
 

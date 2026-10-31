@@ -21,7 +21,7 @@ Quatro itens, e a esta altura você situa todos.
 ## O que a ficha não diz, e como perceber
 
 **Uma palavra ausente é informação.** Se um anúncio diz `1 TB HDD` onde outro diz `512 GB SSD`,
-o primeiro está oferecendo quatro vezes o espaço e a espera de quatro meses. Máquinas baratas
+o primeiro está oferecendo o dobro do espaço e a espera de quatro meses. Máquinas baratas
 ainda são vendidas assim, e é o número da capacidade que faz o convencimento.
 
 **Um número grande no lugar errado é a armadilha mais comum.** `32 GB RAM · 1 TB HDD` numa

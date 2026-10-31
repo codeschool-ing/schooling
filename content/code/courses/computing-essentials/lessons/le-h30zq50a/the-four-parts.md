@@ -15,8 +15,8 @@ one of them.
   programs as installed, the operating system itself.
 - The **motherboard** is what connects the other three.
 
-That last one is the odd one out, and it is worth being clear about why straight away: **the
-motherboard does no work.** It calculates nothing and remembers nothing. It is the building the
+That last one is the odd one out, and the reason comes first: **the motherboard does no
+work.** It calculates nothing and remembers nothing. It is the building the
 other three work in — the wiring, the sockets, the routes between them. People list it as a
 fourth component because it is the largest object in the case, which is exactly backwards.
 
@@ -38,7 +38,7 @@ without reasons:
 
 **Why closing programs helps.** A crowded desk means the worker spends their time shuffling
 paper instead of working. That is not a figure of speech — it is exactly what a computer does
-when memory fills up, and the next section but two gives it its real name.
+when memory fills up, and the section after next gives it its real name.
 
 **Why an SSD feels like a new computer.** It is not the desk that changed. It is the distance to
 the cabinet.
@@ -56,5 +56,5 @@ Intel Core i5-13400 · 16 GB DDR4 · 512 GB NVMe SSD
 ```
 
 — and say which of the four parts each piece is, roughly what it means, and which one is most
-likely to be the thing that disappoints you. That is a genuinely useful skill and it is four
-lessons' worth of vocabulary away, not four years'.
+likely to be the thing that disappoints you. That is a useful skill, and it is four sections'
+worth of vocabulary away, not four years'.

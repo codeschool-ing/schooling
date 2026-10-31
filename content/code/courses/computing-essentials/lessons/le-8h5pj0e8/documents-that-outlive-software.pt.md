@@ -60,12 +60,12 @@ A aula três disse que o OCR inventa palavras plausíveis quando erra e que a fa
 Para um arquivo, isso significa **guardar a imagem além do texto** — que é o que um PDF buscável
 é: o escaneamento que você lê e uma camada de texto embaixo dele que você busca.
 
-## E a última ideia deste curso
+## E a última ideia desta aula
 
-Tudo desde a aula um foi sobre uma máquina: as peças, as portas, os rádios, os arquivos. Esta é a
+Tudo da aula um até aqui foi sobre uma máquina: as peças, as portas, os rádios, os arquivos. Esta é a
 única parte disso que é sobre **tempo**.
 
 Uma máquina dura cinco anos. Um formato dura o tanto que alguém continuar implementando. **Os
 seus documentos deveriam ser legíveis pela pessoa que você vai ser quando nenhum dos hardwares
-deste curso existir** — e o jeito de arranjar isso são as mesmas três frases: um formato simples,
+deste curso existir.** O jeito de arranjar isso são as mesmas três frases: um formato simples,
 uma cópia que não muda quando o original muda, e uma delas em outro lugar.

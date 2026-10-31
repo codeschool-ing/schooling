@@ -3,8 +3,8 @@ title: O Word na prática, e o recurso por trás de quase toda a dor
 version: 1
 ---
 
-Quatro coisas no Word causam quase toda a dificuldade que as pessoas têm com ele, e três delas
-são um recurso só, mal entendido.
+Quatro coisas no Word causam quase toda a dificuldade que as pessoas têm com ele, e a primeira
+delas causa a maior parte.
 
 ## Quebras de seção, que é esse recurso
 
@@ -25,7 +25,7 @@ Duas coisas tornam isso tratável:
 
 ## Listas que se renumeram
 
-A numeração automática é genuinamente boa e tem um comportamento que pega todo mundo: uma lista
+A numeração automática é boa e tem um comportamento que pega todo mundo: uma lista
 que continua depois de uma interrupção às vezes recomeça do um, e às vezes uma lista nova continua
 da antiga.
 

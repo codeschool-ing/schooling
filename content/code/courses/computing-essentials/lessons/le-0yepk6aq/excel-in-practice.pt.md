@@ -14,7 +14,7 @@ a segunda, se `C1` for a alíquota por que tudo é multiplicado.
 ```
 
 O `F4` passa uma referência pelas quatro formas enquanto você a digita: `C1`, `$C$1`, `C$1`,
-`$C1`. As duas do meio congelam uma direção e são o que você quer numa tabuada.
+`$C1`. As duas últimas congelam uma direção e são o que você quer numa tabuada.
 
 ## As duas regras
 
@@ -63,4 +63,4 @@ cobrindo as primeiras oitocentas linhas de uma planilha que hoje tem novecentas.
 - **Nunca ordene uma coluna sozinha.** Selecione o intervalo inteiro, ou use uma tabela. Ordenar
   uma coluna só a separa das linhas que ela descrevia, em silêncio e sem volta.
 - **Confira o total contra alguma coisa.** Um `CONT.NÚM` ao lado de uma `SOMA` pega o problema de
-  texto numa coluna de números da seção anterior, e é a única conferência que não custa nada.
+  texto numa coluna de números da seção anterior, e não custa nada.

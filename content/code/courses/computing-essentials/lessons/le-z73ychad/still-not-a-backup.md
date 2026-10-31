@@ -33,7 +33,7 @@ None of those is a flaw in the design. All three are the design working exactly 
 
 **Thirty days is the shape of all of it**, which is the same figure lesson eight called the
 minimum worth having. So sync plus version history is genuinely a defence against the first two
-rows of that grid — provided somebody notices inside a month.
+failures above — provided somebody notices inside a month.
 
 What it is not a defence against is the third: an account that goes takes its own history with
 it.

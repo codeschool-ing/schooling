@@ -27,12 +27,13 @@ A sync service — Drive, OneDrive, iCloud, Dropbox — keeps two places identic
 is for and it is genuinely useful. It also means that **a deletion is copied**, and **a file
 encrypted a second ago is copied**, and both within seconds, to every device you own.
 
-It answers the second and third rows of that grid perfectly and the first and fourth barely.
+It answers the second and third rows of that grid perfectly, the first only perhaps, and the
+fourth not at all.
 Which is unfortunate, because the first and fourth are the ones that happen.
 
 What partly rescues it is **version history**: most services keep previous versions and deleted
-files for somewhere between thirty days and a year. That is a real safety net and it is a
-different feature from the syncing, it has to be found and used deliberately, and it is not
+files for somewhere between thirty days and a year. That is a real safety net, and it is a
+different feature from the syncing. It has to be found and used deliberately, and it is not
 always on for every plan.
 
 ## What a backup actually is

@@ -4,7 +4,7 @@ version: 1
 ---
 
 Wi-Fi is radio. Everything that is surprising about it stops being surprising once that sentence
-is taken literally: it is absorbed by things, it is reflected by things, it is interfered with by
+is taken literally. It is absorbed by things, it is reflected by things, it is interfered with by
 other radios, and it gets weaker with distance in a way that does not care how much you paid.
 
 ## Two bands, and the trade is always the same

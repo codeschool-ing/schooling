@@ -33,7 +33,7 @@ it.
 Two arrangements go wrong, and both are common:
 
 - **every fan blowing inward.** Pressure builds, air has nowhere to leave, and the case fills
-  with warm air that has nowhere to go.
+  with warm air.
 - **a fan fitted backwards.** Fans have an arrow on the frame for this reason, and it is the
   easiest mistake to make and to miss.
 

@@ -20,7 +20,7 @@ third copy is what makes a failed restore an inconvenience rather than the end.
 bought on the same day. A batch of drives fails at similar ages. An external drive and a cloud
 service are two different failure modes, which is the property that matters.
 
-**One somewhere else** — because rows three is a *place* failing, not a device. An external drive
+**One somewhere else** — because row three is a *place* failing, not a device. An external drive
 in the drawer under the machine is in the same fire, the same flood and the same burglary.
 
 ## What this looks like in an ordinary house
@@ -52,4 +52,4 @@ the machine.** Unplugging it between backups is free and it converts row four fr
 If you do one thing from this lesson: **an external drive, connected once a week, with
 versioning on, unplugged in between, and stored somewhere other than on the desk.** That is two
 copies and one medium and it is not the rule — and it answers three of the four rows, which is
-three more than most people manage.
+more than a sync service alone answers.

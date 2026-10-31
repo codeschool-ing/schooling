@@ -16,7 +16,7 @@ standing open.
 - **The operating system: automatic, and let it restart.** The update that is downloaded and never
   applied is the same as no update, and *restart later* pressed for six weeks is the common case.
 - **The browser: automatic.** It is the program that runs code from strangers all day, which makes
-  it the single most important thing on the machine to keep current.
+  it the most important thing on the machine to keep current.
 - **The phone: automatic**, and the same argument doubled, because it is the thing holding the
   second factor.
 

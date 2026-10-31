@@ -36,8 +36,8 @@ Two related things worth knowing:
 ## What the extension is good for
 
 Almost everything, almost all of the time. It is a convention that works because people mostly do
-not lie, and the alternatives are worse: macOS and Linux can inspect the first few bytes of a file
-to guess its real type, which is more honest and slower, and both still use the extension as the
+not lie. The alternatives are worse: macOS and Linux can inspect the first few bytes of a file to
+guess its real type, which is more honest and slower, and both still use the extension as the
 first answer.
 
 | | what it means |

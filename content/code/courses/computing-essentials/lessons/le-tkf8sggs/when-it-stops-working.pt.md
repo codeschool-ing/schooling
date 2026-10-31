@@ -29,7 +29,7 @@ roteador com ela.
 
 1. **Falha num segundo aparelho?** Não, e é aquele aparelho. Essa pergunta sozinha elimina metade
    de tudo.
-2. **Outro site funciona?** Sim, e era aquele site. Um celular no dado móvel testando o mesmo
+2. **Outro site funciona?** Sim, e era aquele site. Um celular nos dados móveis testando o mesmo
    endereço resolve de vez.
 3. **A página de configuração do roteador abre?** Sim, e o Wi-Fi e o roteador estão bem; o
    problema está entre o roteador e a rua. Não, e o problema está entre você e o roteador — o
@@ -61,7 +61,7 @@ dois lugares certos:
 - num cabo até o roteador, ou de pé ao lado dele.
 
 Se os dois estão lentos, a linha está lenta. Se só o primeiro está, o Wi-Fi é o problema, e isso é
-a seção de cima e não uma ligação para o provedor.
+a seção sobre Wi-Fi desta aula e não uma ligação para o provedor.
 
 **Compare com o que você paga**, que está na fatura e é declarado em megabits. Um gerenciador de
 arquivos reporta megabytes, que é oito vezes menor, e boa parte do *minha linha de cem megas só

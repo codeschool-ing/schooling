@@ -35,7 +35,7 @@ de contra ela.
 Dois arranjos dão errado, e os dois são comuns:
 
 - **toda ventoinha soprando para dentro.** A pressão sobe, o ar não tem por onde sair, e o
-  gabinete enche de ar quente sem destino.
+  gabinete enche de ar quente.
 - **uma ventoinha montada ao contrário.** Ventoinhas têm uma seta no quadro justamente por isso,
   e é o erro mais fácil de cometer e de não notar.
 

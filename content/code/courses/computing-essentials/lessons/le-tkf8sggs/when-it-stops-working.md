@@ -61,7 +61,7 @@ repeated in the right two places:
 - on a cable into the router, or standing next to it.
 
 If both are slow, the line is slow. If only the first is, the Wi-Fi is the problem, and that is
-the section above rather than a phone call to the provider.
+the Wi-Fi section of this lesson rather than a phone call to the provider.
 
 **Compare against what you pay for**, which is on the bill and is stated in megabits. A file
 manager reports megabytes, which is eight times smaller, and a great deal of *my hundred-megabit

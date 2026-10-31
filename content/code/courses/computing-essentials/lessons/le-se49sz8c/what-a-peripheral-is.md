@@ -27,12 +27,12 @@ anything changed. If a screen feels sluggish, the screen is almost never the thi
 sluggish.
 
 **It can translate badly.** A keyboard that cannot type `ç` without a workaround, a printer that
-renders a photograph as a grid of visible dots, a scanner that invents detail it never saw — each
-is a translation that lost something, and none of them shows up as an error message.
+renders a photograph as a grid of visible dots, a scanner that invents detail it never saw: each
+is a translation that lost something. None of them shows up as an error message.
 
-**It can be expensive in a way the price tag hides.** Three of the five devices here have running
-costs: ink, toner, paper. One of them is sold below what it costs to make, on the understanding
-that you will pay the difference later. That is the printers section, and it is the single
+**It can be expensive in a way the price tag hides.** One of the five devices here has running
+costs of its own: ink, toner, paper. It is also sold below what it costs to make, on the
+understanding that you will pay the difference later. That is the printers section, and it is the single
 largest avoidable expense in this course.
 
 ## The one rule that covers all of them

@@ -33,7 +33,7 @@ Discos guardam contadores de saúde próprios — setores realocados, setores pe
 leitura, horas ligado — e os reportam sob o nome **SMART**. Todo sistema consegue lê-los, e
 ferramentas gratuitas os mostram com clareza.
 
-Duas coisas sobre esse número:
+Duas coisas sobre o que ele relata:
 
 - **Um aviso do SMART é um ótimo motivo para agir.** Setores realocados que só aumentam querem
   dizer que o disco está ficando sem lugares reservas para pôr os seus dados.

@@ -19,13 +19,12 @@ resto ou é reinstalável ou é o sistema operacional, e os dois voltam de um in
 
 ## A Área de Trabalho é uma pasta
 
-Isso surpreende as pessoas e vale um parágrafo. **A área de trabalho não é uma superfície
-especial. É uma pasta** — `C:\Users\ana\Desktop` — e o fundo da sua tela é uma janela mostrando o
+**A área de trabalho não é uma superfície especial. É uma pasta** — `C:\Users\ana\Desktop` — e o fundo da sua tela é uma janela mostrando o
 conteúdo dela.
 
-O que significa: arquivos na área de trabalho estão na pasta pessoal e são copiados como
-quaisquer outros; uma área de trabalho com quatrocentos itens é uma pasta com quatrocentos itens
-e ela carrega devagar; e arrumar a área de trabalho é mover arquivos entre pastas, nada mais.
+Então arquivos na área de trabalho estão na pasta pessoal e são copiados como quaisquer outros.
+Uma área de trabalho com quatrocentos itens é uma pasta com quatrocentos itens, e ela carrega
+devagar. Arrumar a área de trabalho é mover arquivos entre pastas, nada mais.
 
 ## Downloads, e a pasta que todo mundo usa como arquivo morto
 
@@ -35,8 +34,8 @@ ferramenta de limpeza, e aquela em que um arquivo chamado `documento(3).pdf` é 
 identificar.
 
 **Trate como caixa de entrada e não como gaveta.** Tudo nela ou é processado para algum lugar com
-nome ou é apagado. Esse hábito é o maior ganho de organização disponível, e custa uns dois
-minutos por semana.
+nome ou é apagado. Esse hábito é o maior ganho de organização disponível, e custa cerca de um
+minuto por semana.
 
 ## Arquivos ocultos, e por que eles são ocultos
 

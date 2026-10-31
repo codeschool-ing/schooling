@@ -30,7 +30,7 @@ trabalho.
 
 **Você roda alguma coisa da segunda lista?** Se não souber nomear uma, uma placa separada é
 dinheiro gasto numa máquina que não vai ser mais rápida em nada que você faz, e vai te custar
-mais duas vezes:
+três vezes:
 
 - a placa custa dinheiro;
 - a placa precisa de uma fonte maior, que custa dinheiro;

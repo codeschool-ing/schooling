@@ -31,8 +31,8 @@ where the network is configured.
 
 **It is very often still `admin` / `admin`.**
 
-That matters in a way the Wi-Fi password does not, because somebody with the settings page has
-the network itself: they can read the Wi-Fi password in plain text, change where name lookups go,
+That matters in a way the Wi-Fi password does not. Somebody with the settings page has the
+network itself: they can read the Wi-Fi password in plain text, change where name lookups go,
 open a path from outside to a device inside, and leave all of it in place.
 
 Two things follow:

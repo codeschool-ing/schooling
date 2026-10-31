@@ -51,7 +51,7 @@ thousands separator and the date order. It is set from where the account is, not
 data came from.
 
 So a CSV exported from a Brazilian system, with `1.234,56` in it, opened in a sheet set to the
-United States, produces either text or a number a thousand times too large — and a date column
+United States, produces either text or a number a thousand times too large. A date column
 written `03/04` lands on the wrong month without any warning.
 
 **Set the locale before importing anything**, and check one row of the result against the source.

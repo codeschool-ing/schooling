@@ -19,7 +19,7 @@ Você não precisa de planilha. Dois números dominam e o resto é arredondament
 | todo o resto junto | uns 50 W |
 
 Uma máquina sem placa de vídeo fica perto de 150 W. A mesma máquina com uma placa intermediária
-fica perto de 400 W. **A placa é a decisão**, exatamente como a seção anterior disse.
+fica perto de 400 W. **A placa é a decisão**, exatamente como a seção sobre vídeo embutido disse.
 
 ## Folga, e por que mais não é mais seguro
 

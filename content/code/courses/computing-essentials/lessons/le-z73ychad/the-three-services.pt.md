@@ -16,8 +16,8 @@ sobre o que uma pessoa está fazendo, e essa suposição é a coisa a conhecer.
 
 O **iCloud** é o único que sincroniza coisas que não são arquivos: mensagens, senhas, dados de
 saúde, o arranjo de uma tela inicial. A opção *Mesa e Documentos* dele é genuinamente útil e
-genuinamente surpreendente, porque ligá-la **move** aquelas pastas para dentro do iCloud — e
-desligá-la depois as deixa no iCloud e dá ao Mac pastas vazias, que são os cinco minutos mais
+genuinamente surpreendente, porque ligá-la **move** aquelas pastas para dentro do iCloud.
+Desligá-la depois as deixa no iCloud e dá ao Mac pastas vazias, que são os cinco minutos mais
 alarmantes que este serviço produz.
 
 O **OneDrive** tem o *Known Folder Move*, que faz o mesmo redirecionamento no Windows, e é o que a

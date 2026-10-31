@@ -28,13 +28,13 @@ para isso que ele serve e é genuinamente útil. Também significa que **uma exc
 que **um arquivo criptografado um segundo atrás é copiado**, e os dois em questão de segundos,
 para todo aparelho que você tem.
 
-Ele responde à segunda e à terceira linha daquela grade perfeitamente e à primeira e à quarta
-mal. O que é uma pena, porque a primeira e a quarta são as que acontecem.
+Ele responde à segunda e à terceira linha daquela grade perfeitamente, à primeira só talvez, e à
+quarta de jeito nenhum. O que é uma pena, porque a primeira e a quarta são as que acontecem.
 
 O que o resgata em parte é o **histórico de versões**: a maioria dos serviços guarda versões
 anteriores e arquivos apagados por algo entre trinta dias e um ano. Essa é uma rede de segurança
-real e é um recurso diferente da sincronia, tem de ser procurado e usado de propósito, e não está
-sempre ligado em todo plano.
+real, e é um recurso diferente da sincronia. Tem de ser procurado e usado de propósito, e não
+está sempre ligado em todo plano.
 
 ## O que um backup de fato é
 

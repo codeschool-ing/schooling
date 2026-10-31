@@ -1,5 +1,5 @@
 ---
-title: The firmware, where two settings matter and thirty do not
+title: The firmware, where two settings matter and the rest do not
 version: 1
 ---
 

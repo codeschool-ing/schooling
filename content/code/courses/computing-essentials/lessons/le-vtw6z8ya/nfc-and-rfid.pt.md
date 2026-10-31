@@ -37,7 +37,7 @@ cartão.** O chip produz um criptograma — um valor de uso único derivado de u
 do cartão — de modo que uma transação capturada não pode ser repetida e o comerciante nunca fica
 com nada reutilizável.
 
-Isso é genuinamente mais privado que entregar a um garçom um cartão com o número impresso nele.
+Isso é mais privado que entregar a um garçom um cartão com o número impresso nele.
 
 ## Os riscos honestos, que são pequenos e não são zero
 

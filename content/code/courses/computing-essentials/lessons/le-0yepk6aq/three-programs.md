@@ -41,7 +41,7 @@ Two practical consequences:
 ## Desktop, web and mobile are three different products
 
 They share a name and a file format and they do not share a feature list. The web versions are
-genuinely capable and are missing things: mail merge, most of the advanced statistical functions,
+capable and are missing things: mail merge, most of the advanced statistical functions,
 pivot table refinements, macros.
 
 **Work in the desktop version for anything complicated and use the web version for anything

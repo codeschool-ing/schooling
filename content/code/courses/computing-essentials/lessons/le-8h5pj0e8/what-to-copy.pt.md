@@ -60,7 +60,7 @@ em vez de todo mês:
 **As fotografias.** Para a maioria das pessoas o único dado verdadeiramente insubstituível são
 imagens, e a maior parte delas está num celular e não na máquina de que esta aula tratou.
 
-Um celular que copia para um serviço de nuvem é uma cópia em um lugar, e esse é o arranjo de que
-a terceira linha da grade tratava. Algo automático, mais uma cópia puxada para o computador uma
+Um celular que copia para um serviço de nuvem é uma cópia em um lugar, e esse é o arranjo da
+primeira coluna da grade, um serviço de sincronia. Algo automático, mais uma cópia puxada para o computador uma
 vez por trimestre, é a resposta inteira — e é a única tarefa doméstica deste curso de que as
 pessoas se arrependem de não ter feito.
