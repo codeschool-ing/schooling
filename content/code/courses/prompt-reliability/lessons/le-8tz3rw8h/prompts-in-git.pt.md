@@ -12,8 +12,8 @@ está valendo, e nada que registre que essa pessoa decidiu.
 Então daqui em diante o laboratório também tem o `prompts/triage.txt`, o prompt como seria
 publicado, e o passado dele está no git. No trabalho real esse passado é feito um commit de cada
 vez, conforme o prompt muda. Aqui ele é feito de uma vez, a partir dos arquivos de prompt que as
-aulas anteriores salvaram, por um script que faz o commit de cada versão com uma data e um autor
-escritos nele, para que os hashes dos commits que ele cria sejam os que esta aula cita. Ele precisa
+aulas anteriores salvaram. Um script faz o commit de cada versão com uma data e um autor escritos
+nele, para que os hashes dos commits que ele cria sejam os que esta aula cita. Ele precisa
 do git, que o Ubuntu instala com `sudo apt install git` se o `git --version` disser que falta.
 Salve-o como `history.sh`:
 

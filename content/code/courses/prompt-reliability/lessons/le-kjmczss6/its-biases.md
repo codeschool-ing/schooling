@@ -38,7 +38,7 @@ agrees AND keeps its verdict: 3 of 16
 ```
 
 **Twelve of sixteen verdicts flip.** Read the two columns together: in the first order the judge
-chose `b`, the reply shown second, thirteen times; with the order swapped it chose `a`, which was now
+chose `b`, the reply shown second, fourteen times; with the order swapped it chose `a`, which was now
 the reply shown second, twelve times. Whatever it is reading, it is mostly reading the position. **A
 verdict that changes when only the order changes is a verdict about the order.** Of the eight pairs
 it agreed with the person on in the first run, only three keep their verdict in both orders.

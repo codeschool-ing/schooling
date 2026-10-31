@@ -40,7 +40,7 @@ mais difíceis, com os rótulos que uma pessoa deu. Salve-as como `cases/holdout
 {"id": "h30", "message": "Thank you for sorting out the refund so quickly last week.", "expect": {"category": "other", "urgency": "low"}}
 ```
 
-Junte os dois conjuntos num arquivo só, que as aulas 12, 18, 19 e 20 também usam, e rode os dois
+Junte os dois conjuntos num arquivo só, que as aulas 6, 7, 12 e 18 a 21 também usam, e rode os dois
 prompts nas setenta:
 
 ```

@@ -73,7 +73,7 @@ up, the other up, and a reason to think the first was worth the second.
 
 `5b2d8d0`, *"Ask for the JSON object and nothing else"*, added 574 tokens over forty calls and the
 score went from 28 to 26. `a0f1d2a`, the tags and the sentence saying the message is data, added
-another 1682 and the score went to 24. Two lines each, so lesson 11's warning applies, and it is
+another 1682 and the score went to 24. Two messages each, so lesson 11's warning applies, and it is
 worth knowing what they were for before anybody reverts them. **A score that falls on dev does not
 mean the change did nothing**; it may mean dev does not test what the change was for. The tags were
 about instructions hidden in a message, and the attack set is where those live:

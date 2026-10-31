@@ -53,7 +53,7 @@ anybody reading the results later has no way to tell them apart.** Lesson 8 is w
 itself is measured; here it is only the easiest setting to change by accident.
 
 That is the reason the harness reads parameters from the top of the prompt file, as lesson 4's
-`v6-header.txt` and lesson 8's `reply-varied.txt` do: a file may start with `name: value` lines and
+`v6-header.txt` and lesson 8's `reply-varied.txt` do. A file may start with `name: value` lines and
 a line `---`, and everything above the `---` is a setting. **A parameter written there is part of
 the bytes, so changing it changes the id. A parameter passed on the command line belongs to the
 run, and nothing records it.**

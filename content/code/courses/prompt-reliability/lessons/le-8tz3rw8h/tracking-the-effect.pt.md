@@ -74,7 +74,7 @@ há um motivo para achar que o primeiro valeu o segundo.
 
 O `5b2d8d0`, *"Ask for the JSON object and nothing else"*, acrescentou 574 tokens em quarenta
 chamadas e a nota foi de 28 para 26. O `a0f1d2a`, as tags e a frase dizendo que a mensagem é dado,
-acrescentou mais 1682 e a nota foi para 24. Duas linhas cada, então o aviso da aula 11 vale, e vale
+acrescentou mais 1682 e a nota foi para 24. Duas mensagens cada, então o aviso da aula 11 vale, e vale
 saber para que eles serviam antes de alguém revertê-los. **Uma nota que cai no dev não quer dizer que
 a mudança não fez nada**; pode querer dizer que o dev não testa aquilo para que a mudança servia. As
 tags eram sobre instruções escondidas numa mensagem, e o conjunto de ataques é onde elas moram:
