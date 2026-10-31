@@ -103,13 +103,13 @@ Of an Ethernet link's 1500 bytes, about 20 are the packet's own header. So rough
 your data** fit in one packet — and if TCP is in use, another 20 or so go to its header, leaving
 around **1460**.
 
-Which is why a 4000-byte message is three packets and not two, and why the third one is mostly
-empty. Cutting anything into fixed sizes leaves a remainder, and the remainder costs a whole
+Which is why a 4000-byte message is three packets and not two, and why the third one is only
+partly full. Cutting anything into fixed sizes leaves a remainder, and the remainder costs a whole
 packet's worth of label.
 
 ## Where this leaves you
 
-There is a ceiling on how much travels in one go, it is 1500 bytes on ordinary Ethernet, and a
+There is a ceiling on how much travels in one go, and on ordinary Ethernet it is 1500 bytes. A
 packet that will not fit is either cut up — which multiplies the risk — or refused with a message
 back to the sender, which works unless somebody is discarding those messages.
 

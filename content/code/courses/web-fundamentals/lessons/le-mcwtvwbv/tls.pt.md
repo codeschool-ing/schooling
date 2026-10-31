@@ -42,8 +42,8 @@ ela.
 A parte que vale lembrar é o formato e não a criptografia: **isto custa idas e voltas**, e uma ida e
 volta custa a latência da aula três. Num link com 100 ms de latência, uma troca a mais são 100 ms
 durante os quais nada seu andou. A versão mais nova do protocolo foi desenhada para fazer isso em
-uma troca em vez de duas, e tem um modo que manda a primeira requisição sem troca alguma quando os
-dois já conversaram antes — o que diz o quanto aquele tempo valia para alguém.
+uma troca em vez de duas. Ela também tem um modo que manda a primeira requisição sem troca alguma
+quando os dois já conversaram antes, o que diz o quanto aquele tempo valia para alguém.
 
 Duas coisas seguem daí para o resto do curso. Conexões valem a pena reaproveitar, porque a parte cara
 acontece uma vez por conexão. E uma página montada a partir de seis hosts diferentes paga esse custo
@@ -113,7 +113,7 @@ incomodar sumiu. E navegadores começaram a marcar HTTP puro como *não seguro* 
 o que transformou uma escolha técnica invisível em algo que visitantes conseguem ver.
 
 Hoje um site em HTTP puro é tratado como defeito por navegadores, por buscadores e por qualquer um
-olhando a barra de endereços, e o trabalho de consertar é quase todo um arquivo de configuração. Há
-mais uma peça que vale conhecer: um site que já migrou costuma mandar também um cabeçalho pedindo
-que o navegador recuse HTTP puro para aquele nome no futuro, para que nem o primeiro redirecionamento
-siga sendo uma oportunidade para alguém no meio.
+olhando a barra de endereços, e o trabalho de consertar é quase todo um arquivo de configuração. Um
+site que já migrou costuma mandar também um cabeçalho pedindo que o navegador recuse HTTP puro para
+aquele nome no futuro. A partir daí, nem o redirecionamento a partir do HTTP puro segue sendo uma
+oportunidade para alguém no meio.

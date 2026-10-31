@@ -55,9 +55,8 @@ Two mechanisms exist to stop a name being moved without you, and they are worth 
 control panel.
 
 A **transfer lock** is a flag at the registry that refuses transfers outright. It is on by default
-on most names, and turning it off is the first step of a legitimate move — and of a hostile one,
-which is why turning it off should be something a person does deliberately rather than a setting
-somebody leaves off.
+on most names. Turning it off is the first step of a legitimate move — and of a hostile one. So
+turning it off should be something a person does deliberately, never a setting somebody leaves off.
 
 An **authorisation code** is a per-domain secret the gaining registrar must present. Treat it as a
 credential, because it is one.

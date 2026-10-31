@@ -20,8 +20,8 @@ address at all, the way a date of the 32nd is not a date.
 ```
 
 Thirty-two bits gives about **four and a quarter billion** possible addresses. That sounded
-limitless when the number was chosen, and it is the reason two of the later sections in this
-lesson exist.
+limitless when the number was chosen, and it is the reason this lesson has a section on IPv6 and a
+video on NAT.
 
 ## Yours is probably not yours
 

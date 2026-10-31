@@ -18,7 +18,7 @@ erra — e as aulas seis e sete inteiras estão na tela.
 **Nome** é o arquivo. **Status** são os três dígitos da aula seis. **Tipo** é o que o
 `Content-Type` disse que era. **Tamanho** é o que veio pelo fio, e diz *cache de disco* ou *cache de
 memória* quando nada veio. **Tempo** é a duração inteira daquela requisição. E a **cascata** é onde
-ela ficou em relação a tudo o mais, que é a próxima leitura.
+ela ficou em relação a tudo o mais, que é a leitura duas seções adiante.
 
 Duas dessas valem ação imediata.
 
@@ -39,7 +39,7 @@ redirecionamento. Tudo que aquela aula descreveu como texto está aqui, como tex
 
 **Resposta** — o corpo, exatamente como chegou, que é como você acha um `200` com um erro dentro.
 
-**Tempo** — o detalhamento de que trata a próxima leitura.
+**Tempo** — o detalhamento de que trata a leitura duas seções adiante.
 
 **Cookies** — o que foi enviado e o que voltou, por requisição, que é mais rápido do que ler os
 cabeçalhos para a única pergunta que isso responde.

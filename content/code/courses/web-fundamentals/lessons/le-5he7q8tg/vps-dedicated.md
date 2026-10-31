@@ -56,8 +56,8 @@ traffic. A larger one is a multiple of that.
 
 The relevant thing is the shape rather than the number: **it is fixed.** A quiet month costs what a
 busy month costs. That is an advantage over the pricing in the next reading when your load is
-steady and a disadvantage when it is not, and it is the single most useful thing to know when
-comparing the two.
+steady and a disadvantage when it is not, and it is the most useful thing to know when comparing
+the two.
 
 ## Sizing, which people get wrong in both directions
 
@@ -102,8 +102,6 @@ the application needs turns a compromise into a smaller compromise.
 there is something on it worth losing.
 
 ## The thing that makes it worth it
-
-One practical note to end on, because it is easy to miss while reading a list of chores.
 
 A machine you control is a machine you can **reproduce**. The configuration can be in a file, the
 file can be in a repository, and a new machine can be built from it in minutes. That is not

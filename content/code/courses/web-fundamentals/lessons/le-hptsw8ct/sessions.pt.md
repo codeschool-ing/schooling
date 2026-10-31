@@ -35,7 +35,7 @@ encontrado em sistemas de produção de todos os tamanhos.
 
 A exigência é um valor longo e aleatório vindo de uma fonte feita para segurança, e não de uma
 função aleatória comum. Na prática isso é uma chamada ao que a sua linguagem chame de aleatório
-seguro, e a razão para conhecer a regra é reconhecer o formato de um erro: um identificador de
+seguro. A razão para conhecer a regra é reconhecer o formato de um erro: um identificador de
 sessão que parece um número, ou parece um endereço de e-mail, é um defeito independentemente do que
 mais esteja certo.
 
@@ -88,8 +88,8 @@ linha. Nada no arranjo exige que uma pessoa seja conhecida — exige apenas que 
 volte com a mesma ficha.
 
 Entrar então não cria a sessão. Isso **anexa uma conta a uma que já existe**, que é o que faz o
-carrinho sobreviver ao login em vez de esvaziar no pior momento possível. E como a seção anterior
-disse para emitir um identificador novo naquele ponto, a linha é levada para o novo em vez de
+carrinho sobreviver ao login em vez de esvaziar no pior momento possível. E como um identificador novo é
+emitido naquele ponto, como disse *Gere outro na porta*, a linha é levada para o novo em vez de
 abandonada com o antigo.
 
 Vale ver com clareza, porque é a diferença entre uma loja que funciona e uma loja que as pessoas

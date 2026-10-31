@@ -89,8 +89,8 @@ browser comes back with the same ticket.
 
 Signing in then does not create the session. It **attaches an account to one that already exists**,
 which is what makes the basket survive the login instead of emptying at the worst possible moment.
-And since the previous section said to issue a new identifier at that point, the row is carried
-across to the new one rather than abandoned with the old.
+And since a new identifier is issued at that point, as *Regenerate it at the door* said, the row is
+carried across to the new one rather than abandoned with the old.
 
 It is worth seeing clearly, because it is the difference between a shop that works and a shop
 people give up on: the anonymous session and the signed-in session are the same machinery, and only

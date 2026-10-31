@@ -33,8 +33,7 @@ This is the part worth understanding, because it decides every failure mode.
 
 **The processor and the memory** are shared, so a neighbour under sudden load makes your site slow.
 There is no allocation that is yours; there is a machine, and whoever is busiest gets most of it.
-This is the noisy neighbour problem, and it is the single most common complaint about shared
-hosting.
+This is the noisy neighbour problem, and it is the most common complaint about shared hosting.
 
 **The address** is shared. If a neighbour sends spam or serves
 malware, the address gets a reputation, and that reputation is attached to your mail and sometimes

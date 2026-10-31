@@ -107,9 +107,9 @@ A browser may evict anything at any moment because it is short of disk. A proxy 
 by somebody who disagrees with you. A CDN applies its own rules on top of yours. `max-age` is an
 upper bound on how long a cache may use a copy, not a promise that it will.
 
-So a cache is a thing you can rely on statistically and never individually — which is why
-correctness must never depend on a copy still being there, and why the caching questions worth
-asking are all of the form *what happens if this is missed?*
+So a cache is a thing you can rely on statistically and never individually. Correctness must never
+depend on a copy still being there, and the caching questions worth asking are all of the form
+*what happens if this is missed?*
 
 ## What it is worth
 

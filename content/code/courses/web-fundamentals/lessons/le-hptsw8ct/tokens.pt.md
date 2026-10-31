@@ -49,6 +49,28 @@ revogado — que é uma tabela, num repositório compartilhado, consultada a cad
 voltou. Ela é simplesmente consultada com menos frequência, o que é uma melhoria real e não a coisa
 que foi vendida.
 
+## Onde guardar
+
+Esta é a decisão que de fato chega ao código, e costuma ser tomada copiando um tutorial.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" aria-label=\"Uma credencial guardada num cookie com HttpOnly é ilegível para scripts e precisa de SameSite contra falsificação. Uma credencial guardada no armazenamento local é legível por todo script da página e não tem equivalente de HttpOnly.\"> <text x=\"180\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">num cookie</text> <rect x=\"20\" y=\"36\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"56\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">HttpOnly: nenhum script o lê</text> <rect x=\"20\" y=\"86\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">SameSite: requisição forjada não o leva</text> <rect x=\"20\" y=\"136\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"180\" y=\"156\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">o navegador o anexa por você</text> <text x=\"540\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--amber)\">no armazenamento local</text> <rect x=\"380\" y=\"36\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".28\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"56\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">não existe HttpOnly para ele</text> <rect x=\"380\" y=\"86\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".28\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">todo script da página o lê</text> <rect x=\"380\" y=\"136\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"540\" y=\"156\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">seu código o anexa na mão</text> <text x=\"360\" y=\"216\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">o argumento antigo a favor da direita era a falsificação de requisição</text> <text x=\"360\" y=\"242\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">o SameSite respondeu isso, e nada responde a linha acima dele</text> </svg>", "caption": "A escolha não é onde fica mais organizado guardar. É a qual ataque você está escolhendo se expor."}
+```
+
+**Num cookie**, com `HttpOnly`, `Secure` e `SameSite`. O navegador o anexa, nenhum script o lê, e os
+atributos de duas leituras atrás valem exatamente como antes.
+
+**No armazenamento local**, lido pelo código da própria página e anexado à mão em cada requisição.
+Este é o arranjo que a maioria dos tutoriais mostra, e tem uma propriedade que vale dizer com
+clareza: **não existe `HttpOnly` para o armazenamento local.** Todo script rodando na página lê tudo
+que está ali. O ataque de script entre sites da leitura de atributos — aquele que o `HttpOnly` foi
+inventado para responder — funciona de novo, por inteiro.
+
+A troca que as pessoas descrevem é *cookies são vulneráveis a falsificação de requisição,
+armazenamento local não*, e isso era verdade antes de o `SameSite` existir. Hoje o resumo honesto é
+mais estreito: um cookie com os três atributos definidos é o padrão mais seguro, e o armazenamento
+local é uma escolha que você faz quando algo da sua arquitetura exige, sabendo do que abre mão.
+
 ## O que um deles de fato parece
 
 Vale ver uma vez, porque desmistifica a coisa e torna o aviso acima concreto.
@@ -74,28 +96,6 @@ administrador, disse que não estava assinado, e foi acreditado.
 
 A correção se enuncia como uma regra que vale além de tokens: **quem verifica decide o algoritmo.** O
 que chega pode ser conferido contra o que se esperava; nunca pode ter permissão de escolher.
-
-## Onde guardar
-
-Esta é a decisão que de fato chega ao código, e costuma ser tomada copiando um tutorial.
-
-```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" aria-label=\"Uma credencial guardada num cookie com HttpOnly é ilegível para scripts e precisa de SameSite contra falsificação. Uma credencial guardada no armazenamento local é legível por todo script da página e não tem equivalente de HttpOnly.\"> <text x=\"180\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--phosphor)\">num cookie</text> <rect x=\"20\" y=\"36\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"56\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">HttpOnly: nenhum script o lê</text> <rect x=\"20\" y=\"86\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\" stroke=\"var(--phosphor)\"></rect> <text x=\"180\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">SameSite: requisição forjada não o leva</text> <rect x=\"20\" y=\"136\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"180\" y=\"156\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">o navegador o anexa por você</text> <text x=\"540\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12.5\" fill=\"var(--amber)\">no armazenamento local</text> <rect x=\"380\" y=\"36\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".28\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"56\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">não existe HttpOnly para ele</text> <rect x=\"380\" y=\"86\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--amber)\" fill-opacity=\".28\" stroke=\"var(--amber)\"></rect> <text x=\"540\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">todo script da página o lê</text> <rect x=\"380\" y=\"136\" width=\"320\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"540\" y=\"156\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">seu código o anexa na mão</text> <text x=\"360\" y=\"216\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">o argumento antigo a favor da direita era a falsificação de requisição</text> <text x=\"360\" y=\"242\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">o SameSite respondeu isso, e nada responde a linha acima dele</text> </svg>", "caption": "A escolha não é onde fica mais organizado guardar. É a qual ataque você está escolhendo se expor."}
-```
-
-**Num cookie**, com `HttpOnly`, `Secure` e `SameSite`. O navegador o anexa, nenhum script o lê, e os
-atributos de duas leituras atrás valem exatamente como antes.
-
-**No armazenamento local**, lido pelo código da própria página e anexado à mão em cada requisição.
-Este é o arranjo que a maioria dos tutoriais mostra, e tem uma propriedade que vale dizer com
-clareza: **não existe `HttpOnly` para o armazenamento local.** Todo script rodando na página lê tudo
-que está ali. O ataque de script entre sites da leitura de atributos — aquele que o `HttpOnly` foi
-inventado para responder — funciona de novo, por inteiro.
-
-A troca que as pessoas descrevem é *cookies são vulneráveis a falsificação de requisição,
-armazenamento local não*, e isso era verdade antes de o `SameSite` existir. Hoje o resumo honesto é
-mais estreito: um cookie com os três atributos definidos é o padrão mais seguro, e o armazenamento
-local é uma escolha que você faz quando algo da sua arquitetura exige, sabendo do que abre mão.
 
 ## Escolhendo entre os dois arranjos
 

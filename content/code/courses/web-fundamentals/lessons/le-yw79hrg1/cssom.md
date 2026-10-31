@@ -33,8 +33,6 @@ all.
 
 ## Why the screen stays blank
 
-Here is the part that explains a symptom you have seen.
-
 The browser will not paint until it has the styles. Not because it cannot — it could draw the text
 immediately — but because drawing it unstyled and then drawing it again would produce a flash of
 unstyled content on every page load, and the second version would look nothing like the first.
@@ -97,8 +95,8 @@ thousand rules, of which a page uses forty, costs the download, the parse, and a
 against every element.
 
 Most of that is fast — browsers are extremely good at this — but on a large page on a modest phone
-it is a real number, and it is the reason a build that removes unused rules shows up in
-measurements rather than only in a file size.
+it is a real number. That is why a build that removes unused rules shows up in measurements, and
+not only in a file size.
 
 The instinct: a stylesheet is not a cost you pay once. It is a cost you pay again at every layout,
 and the next readings are about how often those happen.

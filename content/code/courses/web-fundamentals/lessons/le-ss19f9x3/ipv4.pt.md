@@ -20,8 +20,8 @@ um endereço, do mesmo jeito que um dia 32 não é uma data.
 ```
 
 Trinta e dois bits dão cerca de **quatro bilhões e um quarto** de endereços possíveis. Isso parecia
-ilimitado quando o número foi escolhido, e é a razão de duas das seções seguintes desta aula
-existirem.
+ilimitado quando o número foi escolhido, e é a razão de esta aula ter uma seção sobre IPv6 e um
+vídeo sobre NAT.
 
 ## O seu provavelmente não é seu
 

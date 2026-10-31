@@ -18,7 +18,7 @@ gets wrong — and the whole of lessons six and seven is on the screen.
 **Name** is the file. **Status** is the three digits of lesson six. **Type** is what the
 `Content-Type` said it was. **Size** is what came over the wire, and it says *disk cache* or
 *memory cache* when nothing did. **Time** is the whole duration of that request. And the
-**waterfall** is where it sat relative to everything else, which is the next reading.
+**waterfall** is where it sat relative to everything else, which is the reading two sections on.
 
 Two of those are worth acting on immediately.
 
@@ -40,7 +40,7 @@ from lesson seven, the `Set-Cookie` with its attributes, the `Content-Type`, the
 **Response** — the body, exactly as it arrived, which is how you find a `200` with an error inside
 it.
 
-**Timing** — the breakdown that the next reading is about.
+**Timing** — the breakdown that the reading two sections on is about.
 
 **Cookies** — what was sent and what came back, per request, which is faster than reading the
 headers for the one question it answers.

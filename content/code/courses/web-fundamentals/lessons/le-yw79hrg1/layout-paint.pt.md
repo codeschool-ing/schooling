@@ -18,9 +18,9 @@ esta janela nesta largura.
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"A mesma marcação disposta em duas larguras de janela, produzindo posições diferentes, quebras de linha diferentes e uma altura diferente. Nada na marcação deu uma coordenada.\"> <text x=\"180\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">com 1200 pixels de largura</text> <rect x=\"20\" y=\"36\" width=\"320\" height=\"120\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <rect x=\"36\" y=\"52\" width=\"140\" height=\"26\" rx=\"2\" fill=\"var(--phosphor)\" fill-opacity=\".22\" stroke=\"var(--phosphor)\"></rect> <text x=\"106\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">título</text> <rect x=\"184\" y=\"52\" width=\"140\" height=\"26\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"254\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">uma imagem</text> <rect x=\"36\" y=\"90\" width=\"288\" height=\"50\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"180\" y=\"115\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">duas linhas de texto</text> <text x=\"540\" y=\"24\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">com 400 pixels de largura</text> <rect x=\"380\" y=\"36\" width=\"320\" height=\"170\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <rect x=\"396\" y=\"52\" width=\"288\" height=\"26\" rx=\"2\" fill=\"var(--phosphor)\" fill-opacity=\".22\" stroke=\"var(--phosphor)\"></rect> <text x=\"540\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">título</text> <rect x=\"396\" y=\"86\" width=\"288\" height=\"26\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"540\" y=\"99\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">uma imagem, agora abaixo</text> <rect x=\"396\" y=\"120\" width=\"288\" height=\"70\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\"></rect> <text x=\"540\" y=\"155\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">quatro linhas de texto</text> <text x=\"360\" y=\"236\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">um cálculo e não uma consulta — e é por isso que virar o celular é um completo</text> </svg>", "caption": "Cada posição da página pronta foi calculada, para esta janela, nesta largura, há um instante."}
 ```
 
-Essa última parte é a importante. Quase nada numa página tem tamanho fixo: uma largura é uma
-porcentagem de um pai cuja largura é consequência da janela, uma altura é o que o conteúdo acabou
-precisando, uma linha de texto quebra onde por acaso chega à borda.
+Essa última parte é a importante. Quase nada numa página tem tamanho fixo. Uma largura é uma
+porcentagem de um pai cuja largura é consequência da janela; uma altura é o que o conteúdo acabou
+precisando; uma linha de texto quebra onde por acaso chega à borda.
 
 Então layout é um cálculo e não uma consulta, e depende de coisas que mudam. Virar um celular de lado
 é um layout completo. Mudar uma fonte é um layout. Acrescentar uma frase a um parágrafo é um layout de
@@ -52,8 +52,6 @@ Este é o fato mais acionável da aula. **Anime transform e opacity.** Não porq
 causa de onde ficam neste pipeline.
 
 ## O que dispara o quê
-
-Uma tabela curta, e vale saber em vez de consultar.
 
 | uma mudança em | custa |
 |---|---|
