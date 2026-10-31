@@ -165,8 +165,9 @@ context: bigram after ':'
 ```
 
 Ele recua para o que vem depois de dois-pontos em qualquer lugar do arquivo, e `is` e `yes` empatam
-no topo. Só os dois modelos de prompt que terminam em `the {x} is` põem o item onde o modelo
-consegue vê-lo.
+no topo. O `{x}` sozinho mostra ao modelo o item e mais nada, e ele respondeu `is` depois de cada
+um. Só os dois modelos de prompt que terminam em `the {x} is` dão a ele o item e o `is` como as
+duas últimas palavras.
 
 Um modelo grande vê muito mais que duas palavras. Os mesmos cinco modelos de prompt, os mesmos
 quatro exemplos, pontuados no modelo local:

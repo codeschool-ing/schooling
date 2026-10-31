@@ -93,8 +93,8 @@ described is replaced or refunded on the spot. That line says `refunded`, not `r
 three passages that each share one word and answer something else. The second question, with the
 handbook's own words in it, puts the right rule first.
 
-The search has no way to know the difference. **There is no score that means "not relevant"**: the
-top three are returned whatever they are. Given the first question's three, the model judged them
+The search has no way to know the difference. **There is no score that means "not relevant"**: any
+passage that shares a word can make the top three, whatever it answers. Given the first question's three, the model judged them
 correctly:
 
 ```

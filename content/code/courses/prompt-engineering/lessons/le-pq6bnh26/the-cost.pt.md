@@ -102,7 +102,7 @@ classifica os oito exemplos além da mensagem, e pôs a pergunta do leite de ave
 mandado a um modelo que ninguém ajustou, nem foi classificado: duas linhas terminadas em `Category:`
 soam, para este modelo, como um cliente perguntando sobre leite de aveia, e ele respondeu ao cliente.
 **O prompt curto só funciona num modelo treinado para esperá-lo**, e é esse todo o argumento a favor
-do ajuste fino; e o longo ainda não funciona, o que põe este trabalho no primeiro degrau da escada
+do ajuste fino. E o longo ainda não funciona, o que põe este trabalho no primeiro degrau da escada
 abaixo, não no último.
 
 ## Os custos que não aparecem na fatura

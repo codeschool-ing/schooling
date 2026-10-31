@@ -97,9 +97,8 @@ itself took another 2.1 GB, most of it libraries for NVIDIA graphics cards, whic
 one.
 
 The `PROCESSOR` column says where the work ran. The computer these lessons were recorded on has no
-graphics card, and Ollama counted the processor's own matrix unit as an accelerator, which is why
-it does not read `100% CPU`. On yours it says `100% CPU`, or names the share your graphics card
-took.
+graphics card, and Ollama still reported `30%/70% CPU/GPU` there rather than `100% CPU`. Yours may
+say `100% CPU`, or name the share your graphics card took.
 
 `ask` is a program the next section gives you. Until then, `ollama run llama3.2:3b` opens a
 conversation with the model in the terminal; type a question, and Ctrl+D leaves.

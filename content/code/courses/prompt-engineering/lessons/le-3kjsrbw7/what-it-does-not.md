@@ -32,7 +32,8 @@ It's also worth noting that we have a dedicated nut-free baking area, where we p
 
 The model has never seen Café Aurora's kitchen, and it wrote four paragraphs about it in a
 specialist's voice: what the dough contains, that the bakery shares equipment, and then a dedicated
-nut-free baking area, which contradicts the paragraph before it and does not exist. Every sentence
+nut-free baking area. That area contradicts the shared equipment two paragraphs earlier, and it
+does not exist. Every sentence
 sounds like a verdict. The café's handbook says the kitchen uses nuts, so no item can be guaranteed
 nut-free, and no sentence of the reply came from it.
 

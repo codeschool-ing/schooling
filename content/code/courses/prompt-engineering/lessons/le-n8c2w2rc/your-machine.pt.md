@@ -99,9 +99,8 @@ computador. O programa em si ocupou mais 2,1 GB, quase tudo bibliotecas para pla
 NVIDIA, que ele usa se houver uma.
 
 A coluna `PROCESSOR` diz onde o trabalho rodou. O computador em que estas lições foram gravadas não
-tem placa de vídeo, e o Ollama contou a unidade de matrizes do próprio processador como um
-acelerador, por isso não aparece `100% CPU`. No seu aparece `100% CPU`, ou a fatia que a sua placa de
-vídeo assumiu.
+tem placa de vídeo, e mesmo assim o Ollama informou `30%/70% CPU/GPU` lá, e não `100% CPU`. O seu
+pode mostrar `100% CPU`, ou a fatia que a sua placa de vídeo assumiu.
 
 O `ask` é um programa que a próxima seção lhe dá. Até lá, `ollama run llama3.2:3b` abre uma conversa
 com o modelo no terminal; digite uma pergunta, e Ctrl+D sai.

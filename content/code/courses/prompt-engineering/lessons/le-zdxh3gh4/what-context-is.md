@@ -46,7 +46,7 @@ nothing about the shift manager, whose approval the handbook requires above R$ 1
 signed `[Your Name]`. That is lesson 5's hallucination in its most ordinary form: no invented fact
 about the world, only a plausible policy, right by luck in one place and silent in another.
 
-With the refunds page and four lines about the job in the prompt, `with-context.txt`, which the
+With the refunds page and five lines about the job in the prompt, `with-context.txt`, which the
 next section shows whole:
 
 ```

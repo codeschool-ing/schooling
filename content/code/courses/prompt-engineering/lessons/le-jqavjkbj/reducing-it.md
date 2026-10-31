@@ -146,7 +146,7 @@ Question: Who owns the café?
 **Neither source says anything about an owner.** They matched because they mention the café. A
 prompt that only said "use these sources" would leave the model with two lines about opening hours
 and a question it cannot answer from them, and the likeliest continuation of a question is an
-answer. That is why the instruction has its second sentence: if the sources do not contain the
+answer. That is why the instruction has its third sentence: if the sources do not contain the
 answer, say that the handbook does not say. **An explicit way out turns the honest reply into a
 likely one.** It did here:
 

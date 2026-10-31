@@ -3,7 +3,7 @@ title: Quando a preparação falha
 version: 1
 ---
 
-Cinco falhas respondem pela maior parte, e cada uma se apresenta na primeira linha que imprime. As cinco foram produzidas de propósito na máquina em que estas lições foram gravadas, e a primeira também tinha acontecido lá de verdade. Uma sexta, a falta de memória, vem no fim.
+Cinco falhas respondem pela maior parte do que dá errado, e cada uma se apresenta na primeira linha que imprime. As cinco foram produzidas de propósito na máquina em que estas lições foram gravadas, e a primeira também tinha acontecido lá de verdade. Uma sexta, a falta de memória, vem no fim.
 
 ## O instalador para antes de começar
 

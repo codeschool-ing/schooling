@@ -34,7 +34,7 @@ No, the kitchen cannot take the order because it stops taking hot food orders 30
 Every fact needed is in the prompt, and the model got it right: the holiday rule, the 12:00 close,
 the 30 minutes. The question still has the shape step-back prompting is for. It says
 **Wednesday**, the first line of the handbook says Monday to Saturday, and those two match
-strongly; the rule that decides the case is two lines further down, reached through a word,
+strongly; the rule that decides the case is three lines further down, reached through a word,
 *holiday*, in the middle of the question. A model that followed the most obvious match would
 answer yes, from the weekday hours, which is lesson 1's next-token habit: what is likely given the
 text, not what is entailed by it. This one did not, on this run. The technique is for the runs and

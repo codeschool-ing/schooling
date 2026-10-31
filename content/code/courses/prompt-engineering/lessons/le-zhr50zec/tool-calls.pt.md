@@ -233,7 +233,7 @@ done: an answer after 2 steps
 
 Leia as linhas por quem as escreveu. As linhas `model>` são os turnos do modelo. **A linha `tool>`
 foi impressa por uma ferramenta de verdade**: a data veio do `today`. O modelo escreveu os dois
-pedidos no primeiro turno, e o `agent` executou o primeiro, como o `tools.txt` disse que faria; a
+pedidos no primeiro turno, e o `agent` executou só o primeiro, que é o que ele procura; a
 calculadora nunca rodou. Então o total da resposta, R$ 127.50, é conta do próprio modelo. Acontece de
 estar certo, e nada na execução o conferiu. O dia depois de sexta, 2 de outubro, é sábado, 3 de
 outubro, e esse passo também foi do modelo. **Uma ferramenta só fornece um fato quando roda**, e só

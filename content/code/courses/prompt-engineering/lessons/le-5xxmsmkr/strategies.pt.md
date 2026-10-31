@@ -72,8 +72,8 @@ carrega.
 
 ## Enviar o que a pergunta precisa, não tudo o que você tem
 
-O manual da equipe do café são seis arquivos curtos. As lições seguintes fazem buscas nele, citam
-trechos e os passam ao modelo, então crie-o agora, colando este bloco no terminal:
+O manual da equipe do café são seis arquivos curtos. A partir da lição 5, as lições fazem buscas nele,
+citam trechos e os passam ao modelo, então crie-o agora, colando este bloco no terminal:
 
 ```sh
 mkdir -p ~/pe/handbook
