@@ -86,6 +86,6 @@ each format can say about it.**
   answer is fact**, and lesson 11 is about noticing when the two differ.
 
 `yaml.safe_load` turned the YAML into the same kind of Python dictionary the JSON would have given.
-Once parsed, a script cannot tell which format the data came from, which is the point: **the
-formats are for storage and transport, and the program works on the dictionary.** The trouble all
+Once parsed, a script cannot tell which format the data came from. **The formats are for storage
+and transport, and the program works on the dictionary.** The trouble all
 happens at the edges, in parsing and in writing back, and that is where this lesson looks.

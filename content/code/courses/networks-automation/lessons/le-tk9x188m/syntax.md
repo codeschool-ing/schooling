@@ -40,4 +40,4 @@ where they come from and how to stop them.
 
 Conditions look like Python's, with `{% if %}`, `{% elif %}`, `{% else %}` and a closing `{%
 endif %}`. Tests use `is`: `{% if i.description is defined %}` asks whether the key exists at all.
-The template this lesson builds uses both.
+The template this lesson builds uses `if` and `elif`.

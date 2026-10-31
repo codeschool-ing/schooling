@@ -150,5 +150,5 @@ edge2                      : ok=2    changed=0    unreachable=0    failed=0    s
 that stops a run; lesson 13 builds its checks the same way, with `pytest` instead.
 
 Other vendors' collections have many more modules than `frr.frr`: `cisco.ios`, `arista.eos` and
-`junipernetworks.junos` have one per area of configuration, interfaces, VLANs, OSPF, ACLs, each
+`junipernetworks.junos` have one per area of configuration — interfaces, VLANs, OSPF, ACLs — each
 taking data in a shape that is close to the same across the three.

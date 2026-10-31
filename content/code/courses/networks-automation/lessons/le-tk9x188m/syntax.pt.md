@@ -40,4 +40,4 @@ próxima seção trata de onde elas vêm e de como evitá-las.
 
 Condições se parecem com as do Python, com `{% if %}`, `{% elif %}`, `{% else %}` e um `{%
 endif %}` de fechamento. Testes usam `is`: `{% if i.description is defined %}` pergunta se a chave
-existe. O template que esta aula constrói usa os dois.
+existe. O template que esta aula constrói usa `if` e `elif`.

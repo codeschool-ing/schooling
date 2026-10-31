@@ -92,7 +92,7 @@ ana@ctl:~$ cd sdn && python controller.py learning
 Terminated
 ```
 
-Two packet-ins became two flows, and from then on the switch forwarded h1 and h2's traffic without
+Three packets reached the controller through the table-miss and two of them became flows; from then on the switch forwarded h1 and h2's traffic without
 asking. **That is the division of labour**: the controller sees the first packet of a conversation,
 the switch forwards all the rest at its own speed. The `Terminated` at the end is the controller
 being stopped.

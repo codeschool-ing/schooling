@@ -68,6 +68,6 @@ ip prefix-list MGMT seq 10 permit 192.0.12.0/24
 ```
 
 One router right, one wrong, one missing, and each of the three looks fine on its own. The loop
-that asked is plain shell on `ctl`, one `ssh` per router with the command as its argument, and it
-is already a small piece of automation: it asked all three the same thing the same way, which a
+that asked is plain shell on `ctl`, one `ssh` per router with the command as its argument. It is
+already a small piece of automation: it asked all three the same thing the same way, which a
 person reading three terminals does not do.

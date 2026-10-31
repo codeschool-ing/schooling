@@ -41,11 +41,11 @@ momento, um sistema de monitoramento ou outro script, via a configuração antig
 aplicado pela metade**, porque nada foi aplicado até o `commit`.
 
 `edit-config` **mescla** por padrão: o XML enviado é sobreposto à árvore existente, então o `type`
-da interface e as outras folhas dela ficaram como estavam. O protocolo tem outras operações para
-quando mesclar é errado, definidas com um atributo `operation` num elemento: `replace` faz desse
-elemento exatamente o que foi enviado, `delete` o remove e falha se ele não existe, `remove` o
-remove e não falha, e `create` falha se ele já existe.
+da interface e as outras folhas dela ficaram como estavam. Para quando mesclar é errado, o
+protocolo tem outras operações, definidas com um atributo `operation` num elemento. `replace` faz
+desse elemento exatamente o que foi enviado, e `create` falha se ele já existe. `delete` o remove
+e falha se ele não existe; `remove` o remove e não falha.
 
 O candidate é compartilhado. **No `nc1` há um candidate para todas as sessões**, então uma edição
-deixada ali por um script ainda está lá quando o próximo script faz o commit. As duas próximas
-seções são sobre o que isso custa, e como evitar.
+deixada ali por um script ainda está lá quando o próximo script faz o commit. As três próximas
+seções mostram o que isso custa, e como evitar.

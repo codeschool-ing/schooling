@@ -45,7 +45,7 @@ user	0m0.238s
 sys	0m0.137s
 ```
 
-And the question from the first section, asked again:
+And the question asked after the change by hand, asked again:
 
 ```
 ana@ctl:~$ for r in core1 edge1 edge2; do echo "== $r"; ssh netops@$r "show running-config" | grep MGMT; done
@@ -64,5 +64,5 @@ router's CLI, and it is worth checking on every platform before trusting a scrip
 anything. A different line with a different sequence number would have left the typo in place.
 
 `send_config_set` enters and leaves configuration mode on its own, and `save_config` is
-`write memory` for this driver. **The saving is part of the script**, so the mistake from the
-first section, forgetting to save, cannot happen to one router and not the others.
+`write memory` for this driver. **The saving is part of the script**, so the classic mistake named in
+the change by hand, forgetting to save, cannot happen to one router and not the others.

@@ -25,7 +25,7 @@ outras APIs. Esta aula constrói o segundo, e faz ele acionar o primeiro.
 Os roteadores do laboratório enviam webhooks pela sua API, a mesma que a aula 2 usou: uma
 assinatura indica uma URL, uma lista de eventos e um segredo compartilhado, e daí em diante toda
 mudança do estado operacional de uma interface é enviada por POST para essa URL. O sistema de
-chamados é o `tickets`, a central de chamados que a seção anterior ligou; o ServiceNow,
+chamados é o `tickets`, a central de chamados que a seção anterior ligou. O ServiceNow,
 o Jira Service Management e as centrais open source que o pessoal roda têm o mesmo formato,
 chamados com números, status e comentários por trás de uma API JSON autenticada por token.
 

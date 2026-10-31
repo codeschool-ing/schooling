@@ -37,7 +37,7 @@ exit
 **Nenhum erro, nenhum aviso, e uma configuração com `ip address` e nada depois.** Esse é o padrão
 do Jinja2 de propósito: um nome que ele não encontra é renderizado como string vazia, o que serve a
 uma página web com um campo opcional. Para um roteador é o pior resultado possível, porque o arquivo
-parece completo. Enviada ao FRR, essa linha é recusada como `% Command incomplete`; enviado a outra
+parece completo. Enviada ao FRR, essa linha é recusada como incompleta; enviado a outra
 plataforma, um comando incompleto pode significar algo totalmente diferente.
 
 `StrictUndefined` faz de um nome ausente uma exceção:
@@ -53,7 +53,7 @@ jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'address'
 O traceback nomeia o template, a linha, a expressão e a chave que não estava lá, que é toda a
 informação necessária para corrigir os dados. **Nada é renderizado, então nada pode ser enviado.**
 
-Onde um valor é de fato opcional, o template tem de dizer isso, e esse é o ponto: `{% if
+Onde um valor é de fato opcional, o template tem de dizer isso. O `{% if
 i.description %}` no template da próxima seção é a decisão de que uma interface pode não ter
 descrição, escrita onde quem lê consegue ver. Sem `StrictUndefined`, todo valor é opcional, e
 ninguém decidiu isso.

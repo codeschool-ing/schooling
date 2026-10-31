@@ -12,12 +12,12 @@ projetou: nem a configuração antiga nem a nova.
 O NETCONF, RFC 6241, foi escrito por gente que passou por isso. É um protocolo para configuração
 e nada mais, e ele faz quatro promessas que o CLI não faz:
 
-- **Estrutura.** A configuração é uma árvore de dados definida por um **modelo YANG**, não texto a
+- Estrutura. A configuração é uma árvore de dados definida por um **modelo YANG**, não texto a
   ser interpretado. Todo elemento tem um nome, um tipo e um lugar. A aula 5 é sobre os modelos.
-- **Datastores separados.** Uma mudança é escrita numa configuração **candidate**, verificada, e
+- Datastores separados. Uma mudança é escrita numa configuração **candidate**, verificada, e
   só então vira **running**. Há um terceiro, **startup**, para aquilo com que o equipamento liga.
-- **Transações.** Um commit aplica o candidate inteiro ou nada dele.
-- **Um caminho de volta.** Um **confirmed commit** se desfaz sozinho a menos que seja confirmado a
+- Transações. Um commit aplica o candidate inteiro ou nada dele.
+- Um caminho de volta. Um **confirmed commit** se desfaz sozinho a menos que seja confirmado a
   tempo.
 
 ```schooling-figure

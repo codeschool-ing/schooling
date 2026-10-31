@@ -89,7 +89,7 @@ edge2: matches
 ```
 
 **The route is not in the data, so pushing removes it.** That is the point of a whole-configuration
-template, and it is also why it should not be turned on for a network one afternoon: every hand-made
-line that nobody wrote into the data is removed by the first `--commit`. The safe order is the one
+template. It is also why one should not be switched on for a network in an afternoon: the first
+`--commit` removes every hand-made line that nobody wrote into the data. The safe order is the one
 this lesson followed. First render, compare and make the data match the network, with nothing
 pushed; only then let the data decide.

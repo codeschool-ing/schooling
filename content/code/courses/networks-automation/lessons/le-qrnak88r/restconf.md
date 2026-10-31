@@ -56,9 +56,10 @@ HTTP/2 204
 Credentials are HTTP Basic, read by `curl -n` from `~/.netrc` so no password appears in a command.
 `netlab.sh` writes that file with one line, for `nc1`, and checks the same password on the other
 end through the plugin from the start of the lesson.
+
 **The client manages no candidate here**: each RESTCONF edit is validated and committed by the
-server in one step, and an invalid one is refused before anything changes. The error is the NETCONF error
-wrapped in JSON, with the same tag and the same message:
+server in one step, and an invalid one is refused before anything changes. The error is the
+NETCONF error wrapped in JSON, with the same tag and the same message:
 
 ```
 ana@ctl:~$ curl -si -n --cacert lab-ca.pem -X PATCH -H "Content-Type: application/yang-data+json" -d '{"ietf-interfaces:interface": [{"name": "eth2", "ietf-ip:ipv4": {"address": [{"ip": "192.0.2.99", "prefix-length": 33}]}}]}' https://nc1.example.net/restconf/data/ietf-interfaces:interfaces/interface=eth2

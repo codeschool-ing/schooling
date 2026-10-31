@@ -3,7 +3,7 @@ title: Secrets in a repository
 version: 2
 ---
 
-A playbook directory lives in Git, and lesson 14 runs it from a pipeline. **Passwords and tokens
+A playbook directory lives in Git, and lesson 14 runs a repository like it from a pipeline. **Passwords and tokens
 cannot be in it as text**, and they have to be somewhere the playbook can read. Ansible's answer is
 **Vault**: a value or a whole file encrypted with a vault password, decrypted in memory when the
 playbook runs.
@@ -95,5 +95,5 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=0    s
 `INC-1001` was opened. Look at the task's status, though: **`ok`, not `changed`**, although it
 created a ticket. `uri` has no way to know that a POST changed something on the other side, so it
 reports what it knows. A task like this should say so itself, with `changed_when: true` or a
-condition on the status code, or the recap lies and the nightly report of lesson 14 says nothing
+condition on the status code, or the recap lies and a nightly report built on it says nothing
 happened.

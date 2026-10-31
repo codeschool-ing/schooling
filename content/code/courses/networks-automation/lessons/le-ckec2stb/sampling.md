@@ -83,7 +83,7 @@ rather than the time the message arrived, which includes the network's delay.
     },
     {
       "code": "        if n == 6:\n            stream.cancel()\n            break",
-      "note": "**A stream does not end by itself**, so the script cancels it after six messages."
+      "note": "**A stream does not end by itself**, so the script cancels it after six samples."
     }
   ]
 }

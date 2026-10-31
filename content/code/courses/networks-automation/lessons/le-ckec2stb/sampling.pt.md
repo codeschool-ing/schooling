@@ -84,7 +84,7 @@ equipamento e não a hora em que a mensagem chegou, que inclui o atraso da rede.
     },
     {
       "code": "        if n == 6:\n            stream.cancel()\n            break",
-      "note": "**Um stream não termina sozinho**, então o script o cancela depois de seis mensagens."
+      "note": "**Um stream não termina sozinho**, então o script o cancela depois de seis amostras."
     }
   ]
 }

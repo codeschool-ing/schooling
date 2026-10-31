@@ -28,8 +28,8 @@ e o argumento sobrevive a qualquer palpite razoável:
 
 A coluna do script é uma extrapolação do segundo e pouco por roteador medido acima, então leia-a
 como um tamanho e não como uma promessa. **Duas coisas crescem com o número de roteadores quando
-o trabalho é manual, e só uma delas é tempo.** A outra é o número de chances de cometer os erros
-da seção anterior: mil sessões são mil oportunidades de digitar `192.0.12.0`.
+o trabalho é manual, e só uma delas é tempo.** A outra é o número de chances de cometer os três erros
+da mudança à mão: mil sessões são mil oportunidades de digitar `192.0.12.0`.
 
 Um script também não precisa trabalhar em sequência. O Nornir, na aula 8, roda a mesma tarefa em
 muitos equipamentos ao mesmo tempo, o que transforma "cerca de 2 minutos" em pouco mais que o

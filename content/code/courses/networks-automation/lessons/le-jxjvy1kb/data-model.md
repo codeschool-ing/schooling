@@ -82,9 +82,10 @@ also leaves `address` missing; `interfaces.1.address` has `300` where an octet s
 `interfaces.1.ospf` says which two words it would have accepted. The template never ran, and the
 exit status is 1.
 
-That is three kinds of mistake caught by one declaration, and none of them needed a router. They
-would have reached one by three different routes: a `KeyError`, a configuration FRR refuses, and an
-interface with no OSPF and no error at all.
+That is three kinds of mistake caught by one declaration, and none of them needed a router. Without
+the model they would have surfaced in three different ways: an `UndefinedError` from
+`StrictUndefined`, a `ValueError` from the `network` filter, and an interface with no OSPF line and
+no error at all.
 
 Below the model there is YAML itself. `yamllint` checks the syntax and the layout of the files:
 

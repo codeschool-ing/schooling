@@ -28,7 +28,7 @@ ana@ctl:~$ grep example.net /etc/hosts
 | `pc1`, `pc2` | one computer on each branch's LAN, to test the network from |
 | `sw1`, `h1` to `h3` | an OpenFlow switch and three computers plugged into it, for lesson 15 |
 
-`ctl` has one interface, on the management network:
+`ctl` has one interface besides loopback, on the management network:
 
 ```
 ana@ctl:~$ ip -br addr
@@ -106,5 +106,5 @@ Connection to edge1 (192.0.2.12) 22 port [tcp/ssh] succeeded!
 ```
 
 `ping` answered, and `nc -vz` connected to port 22 without sending anything. The third question is
-an interactive `ssh netops@edge1`, which the next section opens. **A script that fails in any of those
+an interactive `ssh netops@edge1`, which *The change, made by hand* opens two sections on. **A script that fails in any of those
 three places fails for a reason that is not in the script**, and no change to the script fixes it.

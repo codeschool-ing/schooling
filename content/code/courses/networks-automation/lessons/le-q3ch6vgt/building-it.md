@@ -6,7 +6,7 @@ version: 1
 The lab is one script, `netlab.sh`, and it is printed here whole. You do not have to understand it
 before using it: lesson 1 is about why automation exists, and this script is the opposite of what
 the course teaches, a long shell program that builds one particular network by hand. Read it now if
-you want to see how nine machines fit on one computer, or later, when a lesson says "the lab does
+you want to see how thirteen machines fit on one computer, or later, when a lesson says "the lab does
 this", and you want to check.
 
 Make a directory for it in your home on the virtual machine:
@@ -670,11 +670,11 @@ user	0m5.231s
 sys	0m1.078s
 ```
 
-Twenty-five seconds, and most of it is waiting: `wait_ready` at the end of the script holds the
+Not quite twenty-six seconds, and most of it is waiting: `wait_ready` at the end of the script holds the
 prompt until OSPF has formed its two adjacencies and each branch has learnt the other's network.
 **Five lines say `skipped`, and that is right after lesson 1.** Each names the program it is
 waiting for and the lesson that gives it to you. Save the program beside `netlab.sh`, rebuild with
-`reset`, and the line changes to `started`.
+`reset`, and the line stops saying `skipped`.
 
 `enter` opens a shell on one of the lab's machines, as `ana` unless you name somebody else. On
 `ctl` the prompt changes, and from there the routers are a name away:

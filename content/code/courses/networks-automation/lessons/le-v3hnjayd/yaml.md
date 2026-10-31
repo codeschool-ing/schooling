@@ -27,7 +27,7 @@ vlan_name: 010
     },
     {
       "code": "for key, value in yaml.safe_load(open(\"surprises.yaml\")).items():\n    print(f\"{key:11} {type(value).__name__:5} {value!r}\")",
-      "note": "**Six values a person meant as text.** PyYAML reads YAML 1.1, and in YAML 1.1 each of them looks like something else."
+      "note": "**What PyYAML makes of each value, and of which type.** It reads YAML 1.1, and in YAML 1.1 each of the six looks like something else."
     }
   ]
 }

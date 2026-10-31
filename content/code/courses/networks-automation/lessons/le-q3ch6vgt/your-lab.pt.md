@@ -20,7 +20,7 @@ Ubuntu, e as transcrições das aulas foram feitas exatamente com as versões qu
 | caminho | o que é | quanto custa ao seu computador | as transcrições |
 |---|---|---|---|
 | **uma máquina virtual** (recomendado) | Ubuntu Server 24.04 numa VM feita com o Multipass | 2 processadores, 4 GB de memória e 20 GB de disco enquanto roda | batem como impresso |
-| instalado | Ubuntu 24.04 como sistema de um computador que você pode ceder | nada a mais, e o equivalente a nove máquinas de serviços somados a esse computador | batem como impresso |
+| instalado | Ubuntu 24.04 como sistema de um computador que você pode ceder | nada a mais, e todos os serviços do laboratório somados a esse computador | batem como impresso |
 | online | um servidor Ubuntu 24.04 alugado por hora de um provedor de nuvem | nada; o provedor cobra por hora | batem como impresso |
 
 Esses tamanhos têm folga, e a folga foi medida. Na máquina em que este curso foi gravado, o

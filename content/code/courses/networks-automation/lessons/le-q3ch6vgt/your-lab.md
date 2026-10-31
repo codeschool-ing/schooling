@@ -20,7 +20,7 @@ the transcripts in the lessons were made with exactly the versions Ubuntu 24.04 
 | path | what it is | what it costs your computer | the transcripts |
 |---|---|---|---|
 | **a virtual machine** (recommended) | Ubuntu Server 24.04 in a VM made with Multipass | 2 processors, 4 GB of memory and 20 GB of disk while it runs | match as printed |
-| installed | Ubuntu 24.04 as the system of a computer you can spare | nothing extra, and nine machines' worth of services added to that computer | match as printed |
+| installed | Ubuntu 24.04 as the system of a computer you can spare | nothing extra, and every service the lab runs added to that computer | match as printed |
 | online | an Ubuntu 24.04 server rented by the hour from a cloud provider | nothing; the provider charges by the hour | match as printed |
 
 Those sizes have room in them, and the room was measured. On the machine this course was recorded

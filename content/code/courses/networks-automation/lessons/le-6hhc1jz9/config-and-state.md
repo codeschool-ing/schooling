@@ -17,7 +17,7 @@ the device reports. In YANG the difference is one statement, `config false`, and
 The IETF models have been through two ways of arranging it. The older one, still visible in the
 `x--` nodes of `ietf-interfaces`, kept state in a separate tree, `interfaces-state`, so the same
 interface appeared twice. Since **NMDA**, the Network Management Datastore Architecture of 2018,
-state lives beside configuration in the same tree, and the protocol decides which you are reading:
+state lives beside configuration in the same tree. The protocol decides which you are reading:
 the `running` datastore holds only configuration, and a datastore called `operational` holds
 everything the device is actually using, configured or learnt.
 

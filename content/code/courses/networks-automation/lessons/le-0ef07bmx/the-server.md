@@ -10,15 +10,16 @@ JSON output or from the kernel's counters, and every change it accepts is a `vty
 one a person would type. It keeps nothing of its own except login sessions, webhook subscriptions
 and the counter that limits how fast a client may ask.
 
-What it copies from real equipment is the pattern, which is what this lesson and lessons 4 and 7
-teach: a login that returns a token which expires, JSON everywhere, the HTTP verbs with the status
-codes the standard gives them, pages with a `next` link, `429` when a client asks too fast, and
-webhooks signed with a shared secret. Lesson 4's gNMI port is the second half of the same program.
+What it copies from real equipment is the pattern, and the pattern is what this lesson and
+lessons 4 and 7 teach. It has a login that returns a token which expires, JSON everywhere, the
+HTTP verbs with the status codes the standard gives them, pages with a `next` link, `429` when a
+client asks too fast, and webhooks signed with a shared secret. Lesson 4's gNMI port is the second
+half of the same program.
 
 **You do not need to read it to follow the lesson.** It is here because the lesson cannot run
-without it, and because a server you can read is the best way to settle what a client saw: when a
-transcript below answers `422` or `409`, the line that decided it is in this file. Save it as
-`~/netlab/devapid.py`:
+without it. A server you can read is also the best way to settle what a client saw: when a
+transcript in section 06 answers `422` or `409`, the line that decided it is in this file.
+Save it as `~/netlab/devapid.py`:
 
 ```python
 #!/opt/netauto/bin/python

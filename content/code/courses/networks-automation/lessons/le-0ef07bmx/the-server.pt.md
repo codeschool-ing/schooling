@@ -11,16 +11,16 @@ mudança que ele aceita é um comando `vtysh`, o mesmo que uma pessoa digitaria.
 próprio além das sessões de login, das assinaturas de webhook e do contador que limita a velocidade com
 que um cliente pode perguntar.
 
-O que ele copia dos equipamentos reais é o padrão, que é o que esta aula e as aulas 4 e 7 ensinam:
-um login que devolve um token que expira, JSON em tudo, os verbos HTTP com os códigos de status que
-a norma dá a eles, páginas com um link `next`, `429` quando um cliente pergunta rápido demais, e
-webhooks assinados com um segredo compartilhado. A porta gNMI da aula 4 é a segunda metade do mesmo
-programa.
+O que ele copia dos equipamentos reais é o padrão, e o padrão é o que esta aula e as aulas 4 e 7
+ensinam. Ele tem um login que devolve um token que expira, JSON em tudo, os verbos HTTP com os
+códigos de status que a norma dá a eles, páginas com um link `next`, `429` quando um cliente
+pergunta rápido demais, e webhooks assinados com um segredo compartilhado. A porta gNMI da aula 4 é
+a segunda metade do mesmo programa.
 
-**Você não precisa lê-lo para acompanhar a aula.** Ele está aqui porque a aula não roda sem ele, e
-porque um servidor que se pode ler é o melhor jeito de resolver o que um cliente viu: quando uma
-transcrição abaixo responde `422` ou `409`, a linha que decidiu isso está neste arquivo. Salve-o
-como `~/netlab/devapid.py`:
+**Você não precisa lê-lo para acompanhar a aula.** Ele está aqui porque a aula não roda sem ele.
+Um servidor que se pode ler também é o melhor jeito de resolver o que um cliente viu: quando uma
+transcrição da seção 06 responde `422` ou `409`, a linha que decidiu isso está neste
+arquivo. Salve-o como `~/netlab/devapid.py`:
 
 ```python
 #!/opt/netauto/bin/python

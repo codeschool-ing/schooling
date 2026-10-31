@@ -151,5 +151,5 @@ numa falha que interrompe a execução; a aula 13 monta as verificações dela d
 `pytest` no lugar.
 
 As collections de outros fabricantes têm muito mais módulos que a `frr.frr`: `cisco.ios`,
-`arista.eos` e `junipernetworks.junos` têm um por área de configuração, interfaces, VLANs, OSPF,
-ACLs, cada um recebendo dados num formato quase igual entre as três.
+`arista.eos` e `junipernetworks.junos` têm um por área de configuração — interfaces, VLANs, OSPF,
+ACLs — cada um recebendo dados num formato quase igual entre as três.

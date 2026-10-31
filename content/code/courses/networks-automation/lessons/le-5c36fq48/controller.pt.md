@@ -92,7 +92,7 @@ ana@ctl:~$ cd sdn && python controller.py learning
 Terminated
 ```
 
-Dois packet-ins viraram dois flows, e dali em diante o switch encaminhou o tráfego de h1 e h2 sem
+Três pacotes chegaram ao controlador pelo table-miss e dois deles viraram flows; dali em diante o switch encaminhou o tráfego de h1 e h2 sem
 perguntar. **Essa é a divisão do trabalho**: o controlador vê o primeiro pacote de uma conversa, e
 o switch encaminha todo o resto na sua própria velocidade. O `Terminated` no fim é o controlador
 sendo parado.

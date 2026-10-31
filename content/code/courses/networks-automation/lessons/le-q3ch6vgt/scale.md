@@ -28,8 +28,8 @@ argument survives any reasonable guess:
 
 The script's column is an extrapolation of the second or so per router measured above, so read it
 as a size and not as a promise. **Two things grow with the number of routers when the work is
-manual, and only one of them is time.** The other is the number of chances to make the mistakes
-of the previous section: a thousand sessions are a thousand opportunities to type `192.0.12.0`.
+manual, and only one of them is time.** The other is the number of chances to make the three mistakes
+of the change by hand: a thousand sessions are a thousand opportunities to type `192.0.12.0`.
 
 A script also does not have to work in sequence. Nornir, in lesson 8, runs the same task against
 many devices at once, which turns "about 2 minutes" into little more than the time of the slowest router.
